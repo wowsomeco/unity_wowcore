@@ -1,0 +1,10 @@
+{
+	"name": "com.wowsome.core",
+	"version": "0.1.2",
+	"displayName": "Wowsome Core",
+	"description": "A Collection of utilities and extensions as the core foundation of any 2D Game Projects that we do.",
+	"author": {
+		"name": "Jim Irawan",
+		"email": "irawan.jemmy@gmail.com"
+	}
+}
