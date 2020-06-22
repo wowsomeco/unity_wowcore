@@ -90,6 +90,13 @@ namespace Wowsome {
   public static class GameObjectExt {
     public delegate bool ShouldRecursive(GameObject go);
 
+    public static void DestroyChildren(this GameObject gameObject) {
+      Transform goTransform = gameObject.transform;
+      for (int i = goTransform.childCount - 1; i >= 0; i--) {
+        GameObject.DestroyImmediate(goTransform.GetChild(i).gameObject);
+      }
+    }
+
     public static void IterateChildren(GameObject gameObject, ShouldRecursive shouldRecursive) {
       DoIterate(gameObject, shouldRecursive);
     }
