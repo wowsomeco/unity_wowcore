@@ -4,17 +4,15 @@ using UnityEngine;
 namespace Wowsome {
   namespace Serialization {
     public interface IDataSerializer {
-      void Save<T>(T data, string path);
+      void Save<T>(T data, string path, bool isPrettyPrint = false);
       T Load<T>(string path);
       bool Exists(string path);
       void Delete(string path);
     }
 
     public class JsonDataSerializer : IDataSerializer {
-      public void Save<T>(T data, string path) {
-        bool isPrettyPrint = false;
+      public void Save<T>(T data, string path, bool isPrettyPrint = false) {
 #if UNITY_EDITOR
-        isPrettyPrint = true;
         Debug.Log(path);
 #endif
         string jsondata = JsonUtility.ToJson(data, isPrettyPrint);
