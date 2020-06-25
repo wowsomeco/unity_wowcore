@@ -9,19 +9,17 @@ namespace Wowsome {
       public GameObject[] m_listeners;
 
       IViewManager m_viewManager;
-      CGestureHandler m_tapHandler;
       SfxManager m_sfxManager;
 
       public override void Setup(ISceneStarter sceneStarter, IViewManager viewManager) {
-        //cache the sfx manager
-        m_sfxManager = sceneStarter.Engine.GetSystem<AudioSystem>().GetManager<SfxManager>();
-        Debug.Assert(null != m_sfxManager);
-        //cache the view manager
+        // cache the sfx manager
+        AudioSystem audio = sceneStarter.Engine.GetSystem<AudioSystem>();
+        m_sfxManager = audio.GetManager<SfxManager>();
+        // cache the view manager
         m_viewManager = viewManager;
-        //setup tap handler
-        m_tapHandler = new CGestureHandler(gameObject);
-        m_tapHandler.OnTapListeners += OnTap;
-        //add this as view listener if there's at least 1 obj in m_listeners
+        // setup tap handler
+        new CTapHandler(gameObject, OnTap);
+        // add this as view listener if there's at least 1 obj in m_listeners
         if (m_listeners.Length > 0) {
           m_viewManager.AddViewListener(this);
         }
@@ -29,7 +27,7 @@ namespace Wowsome {
 
       void OnTap(Vector2 pos) {
         if (m_viewManager.SwitchView(m_data.m_viewId, m_data.m_flag)) {
-          m_sfxManager.PlaySound(m_data.m_sfx);
+          if (null != m_sfxManager) m_sfxManager.PlaySound(m_data.m_sfx);
         }
       }
 

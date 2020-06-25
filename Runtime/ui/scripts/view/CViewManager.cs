@@ -14,28 +14,28 @@ namespace Wowsome {
       string m_hideTweenId;
 
       public CViewManager(TweenerType transitionType, bool isStackable, string showTweenId, string hideTweenId) {
-        //instantiate the tweener
+        // instantiate the tweener
         m_tweener = new CTweenChainer(transitionType);
-        //set is unique
+        // set is unique
         m_isStackable = isStackable;
-        //set the tween ids
+        // set the tween ids
         m_showTweenId = showTweenId;
         m_hideTweenId = hideTweenId;
       }
 
       public void SetupViewComponents(ISceneStarter sceneStarter, IViewComponent[] vcs) {
-        //setup the components
+        // setup the components
         for (int i = 0; i < vcs.Length; ++i) {
           vcs[i].Setup(sceneStarter, this);
         }
-        //start the views afterwards
+        // start the views afterwards
         StartView();
       }
 
       public void StartView() {
         foreach (KeyValuePair<string, IView> kvp in m_views) {
           IView view = kvp.Value;
-          //show if default, hide immediately otherwise
+          // show if default, hide immediately otherwise
           if (view.ViewData.m_isDefault) {
             ShowView(view, true);
           } else {
@@ -50,9 +50,9 @@ namespace Wowsome {
       }
 
       public void AddView(IView view, bool isDefault = false) {
-        //add to the dictionary
+        // add to the dictionary
         m_views.Add(view.ViewData.m_viewId, view);
-        //setup the tweens
+        // setup the tweens
         foreach (ITween tween in view.Tweens) {
           tween.Setup();
         }
@@ -64,7 +64,7 @@ namespace Wowsome {
 
       public bool SwitchView(string viewId, bool flag) {
         IView view = null;
-        //if the view exists, try showing it
+        // if the view exists, try showing it
         if (m_views.TryGetValue(viewId, out view)) {
           return TryShow(view, flag);
         }
@@ -83,28 +83,28 @@ namespace Wowsome {
       #endregion
 
       bool TryShow(IView view, bool flag) {
-        //dont process if the flag is same as the visibility
+        // dont process if the flag is same as the visibility
         if (view.Visible == flag) {
           return false;
         }
-        //or if the tweener is currently playing and it's not stackable
+        // or if the tweener is currently playing and it's not stackable
         if (IsTransitioning && !m_isStackable) {
           return false;
         }
-        //check whether the view manager is not stackable
+        // check whether the view manager is not stackable
         if (!m_isStackable && flag) {
-          //hide the current showing if so
+          // hide the current showing if so
           if (m_showings.Count > 0) {
             ShowView(m_showings.Peek(), false);
           }
         }
-        //finally, show time
+        // finally, show time
         ShowView(view, flag);
         return true;
       }
 
       void ShowView(IView view, bool flag) {
-        //get the tween
+        // get the tween
         HashSet<ITween> tweens = new HashSet<ITween>();
         string tweenId = flag ? m_showTweenId : m_hideTweenId;
         foreach (ITween viewTween in view.Tweens) {
@@ -112,28 +112,28 @@ namespace Wowsome {
             tweens.Add(viewTween);
           }
         }
-        //check if the tween exists
+        // check if the tween exists
         if (tweens.Count > 0) {
-          //set visibly on appear
+          // set visibly on appear
           if (flag) {
             view.Visible = true;
           }
-          //broadcast will appear msg
+          // broadcast will appear msg
           OnSwitchedView(view.ViewData.m_viewId, flag ? ViewState.WillAppear : ViewState.WillDisappear);
-          //add to the chainer and play the hide/show tween
+          // add to the chainer and play the hide/show tween
           m_tweener.PlayOnly(tweens, () => {
             OnSwitchedView(view.ViewData.m_viewId, flag ? ViewState.DidAppear : ViewState.DidDisappear);
-            //hide on did disappear
+            // hide on did disappear
             if (!flag) {
               view.Visible = false;
             }
           });
         }
-        //otherwise if no tweens, just set the visibility directly
+        // otherwise if no tweens, just set the visibility directly
         else {
           view.Visible = flag;
         }
-        //add the view to the showing stack if flag is true
+        // add the view to the showing stack if flag is true
         if (flag) {
           m_showings.Push(view);
         } else {

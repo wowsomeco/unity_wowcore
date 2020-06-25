@@ -145,5 +145,20 @@ namespace Wowsome {
       }
       #endregion
     }
+
+    public class CTapHandler {
+      CGestureHandler m_gesture;
+
+      public OnTap OnTapListeners {
+        set { m_gesture.OnTapListeners += value; }
+        get { return m_gesture.OnTapListeners; }
+      }
+
+      public CTapHandler(GameObject go, OnTap listener) {
+        m_gesture = new CGestureHandler(go);
+        m_gesture.SetTappable();
+        OnTapListeners = listener;
+      }
+    }
   }
 }
