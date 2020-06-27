@@ -36,5 +36,13 @@ namespace Wowsome {
 
       return false;
     }
+
+    public static string ToUnderscore(this string str) {
+      return str.Replace(" ", "_");
+    }
+
+    public static string ToUnderscoreLower(this string str) {
+      return str.ToUnderscore().ToLower();
+    }
   }
 }

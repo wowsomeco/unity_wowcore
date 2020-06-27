@@ -18,6 +18,9 @@ namespace Tests {
       str2 = "cba";
       Assert.AreEqual(str1.Matches(str2, ComparisonType.Match), false);
 
+      str1 = "Abc Def";
+      Assert.AreEqual(str1.ToUnderscoreLower(), "abc_def");
+
       yield return null;
     }
 
@@ -29,15 +32,50 @@ namespace Tests {
       strings2.Shuffle();
       Assert.AreEqual(strings1.IsEqual(strings2), false);
 
+      // map test
+      List<Vector2> vecs = new List<Vector2>() {
+        new Vector2(10f, 20f),
+        new Vector2(20f, 30f),
+        new Vector2(30f, 40f),
+      };
+
+      List<float> toFloats = vecs.Map(item => item.x + item.y);
+      toFloats.Loop((item, i) => {
+        switch (i) {
+          case 0:
+            Assert.AreEqual(Mathf.Approximately(item, 30f), true);
+            break;
+          case 1:
+            Assert.AreEqual(Mathf.Approximately(item, 50f), true);
+            break;
+          case 2:
+            Assert.AreEqual(Mathf.Approximately(item, 70f), true);
+            break;
+          default:
+            break;
+        }
+      });
+
+      // fold test
+      float sumX = vecs.Fold(0f, (prev, cur) => prev += cur.x);
+      float sumY = vecs.Fold(0f, (prev, cur) => prev += cur.y);
+      Assert.AreEqual(Mathf.Approximately(sumX, 60f), true);
+      Assert.AreEqual(Mathf.Approximately(sumY, 90f), true);
+
       yield return null;
     }
 
     [UnityTest]
     public IEnumerator TestVec2Extensions() {
       // clamp & equality test
-      Vector2 v1 = new Vector2(10f, 10f);
+      Vector2 v1 = new Vector2(10f, 20f);
       v1 = v1.ClampVec2(Vector2.zero, Vector2.one);
       Assert.AreEqual(v1.IsEqual(Vector2.one), true);
+
+      // aspect ratio test
+      Vector2 v = new Vector2(320f, 160f);
+      v = v.AspectRatio(160f);
+      Assert.AreEqual(v.IsEqual(new Vector2(160f, 80f)), true);
 
       yield return null;
     }

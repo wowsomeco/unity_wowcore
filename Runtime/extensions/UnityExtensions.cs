@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Wowsome {
   public static class AnimatorExtensions {
@@ -73,17 +74,17 @@ namespace Wowsome {
     }
 
     public static bool IsEqual(this Vector2 lhs, Vector2 rhs) {
-      return (Mathf.Approximately(lhs.x, rhs.y) && Mathf.Approximately(lhs.x, rhs.y));
-    }
-  }
-
-  public static class FloatExt {
-    public static Vector2 ToVector2(this float[] self) {
-      return new Vector2(self[0], self[1]);
+      return (Mathf.Approximately(lhs.x, rhs.x) && Mathf.Approximately(lhs.y, rhs.y));
     }
 
-    public static Color ToColor(this float[] f) {
-      return new Color(f[0], f[1], f[2], f[3]);
+    public static Vector2 AspectRatio(this Vector2 v, float maxSize) {
+      float max = Mathf.Max(v.x, v.y);
+      if (max > maxSize) {
+        float ratio = maxSize / max;
+        v *= ratio;
+        return v;
+      }
+      return v;
     }
   }
 
@@ -99,6 +100,15 @@ namespace Wowsome {
 
     public static void IterateChildren(GameObject gameObject, ShouldRecursive shouldRecursive) {
       DoIterate(gameObject, shouldRecursive);
+    }
+
+    public static T Clone<T>(this GameObject go, Transform parent, string name = "") {
+      GameObject instance = GameObject.Instantiate(go) as GameObject;
+      instance.transform.SetParent(parent, false);
+      if (!string.IsNullOrEmpty(name)) {
+        instance.name = name;
+      }
+      return instance.GetComponent<T>();
     }
 
     private static void DoIterate(GameObject gameObject, ShouldRecursive shouldRecursive) {

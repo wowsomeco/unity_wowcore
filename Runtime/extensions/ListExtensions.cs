@@ -2,7 +2,53 @@
 using System;
 
 namespace Wowsome {
+  /// <summary>
+  /// Collection of List Extensions that are currently non existent in C# Lib.
+  /// </summary>
   public static class ListExt {
+    public delegate U Mapper<T, U>(T t);
+    public delegate T Reducer<T, U>(T prev, U current);
+    public delegate void Iterator<T>(T item, int idx);
+
+    /// <summary>
+    /// Maps the current IEnumerable into a new List<U>
+    /// </summary>
+    /// <param name="list">The origin list</param>
+    /// <param name="mapper">The callback that gets called during the iteration which gives the origin list item and returns U</param>
+    /// <typeparam name="T">The origin type of the list</typeparam>
+    /// <typeparam name="U">The new type of the return.</typeparam>
+    /// <example>
+    /// <code>
+    /// List<Vector2> vecs = new List<Vector2>() {
+    ///   new Vector2(10f, 20f),
+    ///   new Vector2(20f, 30f),
+    ///   new Vector2(30f, 40f),
+    /// };
+    /// List<float> toFloats = vecs.Map(item => item.x + item.y);    
+    /// </code>
+    /// </example>
+    public static List<U> Map<T, U>(this IEnumerable<T> list, Mapper<T, U> mapper) {
+      List<U> newList = new List<U>();
+      foreach (T itm in list) {
+        newList.Add(mapper(itm));
+      }
+      return newList;
+    }
+
+    public static T Fold<T, U>(this IEnumerable<U> l, T initialValue, Reducer<T, U> reducer) {
+      T cur = initialValue;
+      foreach (U itm in l) {
+        cur = reducer(cur, itm);
+      }
+      return cur;
+    }
+
+    public static void Loop<T>(this IList<T> l, Iterator<T> iter) {
+      for (int i = 0; i < l.Count; ++i) {
+        iter(l[i], i);
+      }
+    }
+
     public static void Swap<T>(this IList<T> list, int indexA, int indexB) {
       T tmp = list[indexA];
       list[indexA] = list[indexB];
