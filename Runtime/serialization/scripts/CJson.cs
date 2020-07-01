@@ -5,13 +5,14 @@ using System.Collections.Generic;
 
 namespace Wowsome {
   namespace Serialization {
-    /// @class  CJson
-    ///
-    /// @brief
+    /// <summary>
+    /// CJson
+    /// </summary>
+    /// <description>
     /// uses for deserializing a json string to dictionary of string key(s) and value(s)
-    /// the format must be like a common json where consists of kvp 
+    /// the format must be like a common json where consists of KVP 
     /// with colon as a separator in between a key and value
-    /// { "key1" : "value1", "key2" : "value2", "k3" : "v3" }
+    /// </description>
     public class CJson {
       StringReader m_jsonReader;
 
@@ -30,56 +31,56 @@ namespace Wowsome {
 
       public Dictionary<string, string> Deserialize(string json) {
         Dictionary<string, string> result = new Dictionary<string, string>();
-        //instantiate the reader
+        // instantiate the reader
         m_jsonReader = new StringReader(json);
 
         while (true) {
-          //keep reading
+          // keep reading
           m_jsonReader.Read();
-          //until it reaches the end
+          // until it reaches the end
           if (m_jsonReader.Peek() != -1) {
-            //if a new quote is found
+            // if a new quote is found
             if (PeekChar == Quotes) {
-              //ditch the quote
+              // ditch the quote
               m_jsonReader.Read();
-              //instantiate the key builder
+              // instantiate the key builder
               StringBuilder keyBuilder = new StringBuilder();
-              //loop until 
+              // loop until 
               while (PeekChar != Quotes) {
                 keyBuilder.Append(PeekChar);
-                //next char
+                // next char
                 m_jsonReader.Read();
               }
-              //ditch the last quote for the key	
+              // ditch the last quote for the key	
               m_jsonReader.Read();
-              //eat the white space after the quote, if any
+              // eat the white space after the quote, if any
               EatWhitespace();
-              //check whether the next char is colon
+              // check whether the next char is colon
               if (NextChar == KvSeparator) {
-                //eat the whitespace after the colon, if any
+                // eat the whitespace after the colon, if any
                 EatWhitespace();
-                //ditch the quote
+                // ditch the quote
                 m_jsonReader.Read();
-                //create a value builder
+                // create a value builder
                 StringBuilder valueBuilder = new StringBuilder();
-                //loop until
+                // loop until
                 while (PeekChar != Quotes) {
                   valueBuilder.Append(PeekChar);
-                  //next char
+                  // next char
                   m_jsonReader.Read();
                 }
-                //add kvp to the dict
+                // add kvp to the dict
                 result.Add(keyBuilder.ToString(), valueBuilder.ToString());
               }
             }
           } else {
-            //break the loop when reached the end of the string
+            // break the loop when reached the end of the string
             break;
           }
         }
-        //dispose the reader
+        // dispose the reader
         m_jsonReader.Dispose();
-        //return the dict result
+        // return the dict result
         return result;
       }
 

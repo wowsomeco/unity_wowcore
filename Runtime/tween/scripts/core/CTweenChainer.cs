@@ -4,9 +4,12 @@ using UnityEngine;
 
 namespace Wowsome {
   namespace Tween {
-    /// @enum   TweenerType
-    ///
-    /// @brief  Values that represent tweener types.
+    /// <summary>
+    /// TweenerType
+    /// </summary>
+    /// <description>
+    /// Values that represent tweener types.
+    /// </description>
     [Serializable]
     public enum TweenerType {
       Simultaneous,
@@ -205,9 +208,12 @@ namespace Wowsome {
       }
     }
 
-    /// @class  ContainerParallel
-    ///
-    /// @brief  Tweener container that will be used for playing tweens simultaneously
+    /// <summary>
+    /// TweenPlayer
+    /// </summary>
+    /// <description>
+    /// Tweener container that will be used for playing multiple tweens simultaneously.
+    /// </description>
     class TweenPlayer {
       List<TweenChunk> m_chunks;
       TweenerType m_type;

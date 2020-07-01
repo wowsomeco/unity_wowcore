@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 
 namespace Wowsome {
-  /// @class  CSequence<T>
-  ///
-  /// @brief
+  /// <summary>
+  /// CSequence<T>
+  /// </summary>
+  /// <description>
   /// this class is geared toward a queue that has an ability to reset and add the previous
   /// sequences back in.
-  ///
-  /// @tparam T   Generic type parameter.
+  /// </description>
+  /// <typeparam name="T">Generic type parameter</typeparam>
   public class CSequence<T> {
     Queue<T> m_sequences = new Queue<T>();
     List<T> m_initialSequences = new List<T>();

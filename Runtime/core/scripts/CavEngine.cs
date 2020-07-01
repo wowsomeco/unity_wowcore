@@ -5,11 +5,14 @@ using Wowsome.Generic;
 
 namespace Wowsome {
   namespace Core {
-    /// @class  CavEngine
-    ///
-    /// @brief
-    /// A game engine that consists of all the associated systems in a form of components.
-    /// e.g. LocaleSystem, ParticleSystem, TextureSystem, etc.
+    /// <summary>
+    /// Wowsome Core Engine
+    /// </summary>
+    /// <description>
+    /// A Singleton that doesn't get destroyed whenever scene changes consists of one or many ISystem.
+    /// ISystem in this case could be anything that you expect to be available globally and needs to be only instatiated once,
+    /// such as AudioManager, LocalizationManager, etc.    
+    /// </description>
     public class CavEngine : MonoBehaviour {
       internal static CavEngine Instance { get; private set; }
       public List<GameObject> m_systemPrefabs = new List<GameObject>();

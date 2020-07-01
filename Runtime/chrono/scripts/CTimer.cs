@@ -23,14 +23,16 @@
       }
     }
 
-    /// @class  Timer
-    ///
-    /// @brief
+    /// <summary>
+    /// Timer
+    /// </summary>
+    /// <description>
     /// used mainly to perform delays in the game
     /// e.g. Timer timer = new Timer(1f);
     /// call UpdateTimer() in your Update loop until it returns false, means that the timer has
     /// completed the countdown call Reset() to re use the timer once done you might want to set it
     /// to null i.e. timer = null.
+    /// </description>
     public class Timer {
       TimerData m_data;
 

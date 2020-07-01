@@ -3,9 +3,6 @@ using UnityEngine;
 
 namespace Wowsome {
   namespace Tween {
-    /// @class  TweenUnitTest3
-    ///
-    /// @brief  test the tween individually without the chainer, attach this to a gameobject.
     public class TweenUnitTest3 : MonoBehaviour {
       ITween m_tweenRotation;
       CTweenMove m_tweenMove;
