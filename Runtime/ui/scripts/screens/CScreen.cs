@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 using Wowsome.Tween;
 using Wowsome.Core;
 
 namespace Wowsome {
   namespace UI {
-    public class CScreen : ViewComponent, IView {
+    public class CScreen : MonoBehaviour, IView, IViewComponent {
       public ViewData m_data;
 
       IViewManager m_viewManager;
 
-      #region ViewComponent
-      public override void Setup(ISceneStarter sceneStarter, IViewManager viewManager) {
+      #region IViewComponent
+      public void Setup(ISceneStarter sceneStarter, IViewManager viewManager) {
         //cache the listener
         m_viewManager = viewManager;
         //init the tweens

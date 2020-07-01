@@ -4,32 +4,32 @@ using Wowsome.Audio;
 
 namespace Wowsome {
   namespace UI {
-    public class ScreenNavigator : ViewComponent, IViewListener {
+    public class ScreenNavigator : MonoBehaviour, IViewListener, IViewComponent {
       public ViewNavigatorData m_data;
       public GameObject[] m_listeners;
 
       IViewManager m_viewManager;
       SfxManager m_sfxManager;
 
-      public override void Setup(ISceneStarter sceneStarter, IViewManager viewManager) {
+      #region IViewComponent
+      public void Setup(ISceneStarter sceneStarter, IViewManager viewManager) {
         // cache the sfx manager
         AudioSystem audio = sceneStarter.Engine.GetSystem<AudioSystem>();
         m_sfxManager = audio.GetManager<SfxManager>();
         // cache the view manager
         m_viewManager = viewManager;
         // setup tap handler
-        new CTapHandler(gameObject, OnTap);
+        new CTapHandler(gameObject, pos => {
+          if (m_viewManager.SwitchView(m_data.m_viewId, m_data.m_flag)) {
+            if (null != m_sfxManager) m_sfxManager.PlaySound(m_data.m_sfx);
+          }
+        });
         // add this as view listener if there's at least 1 obj in m_listeners
         if (m_listeners.Length > 0) {
           m_viewManager.AddViewListener(this);
         }
       }
-
-      void OnTap(Vector2 pos) {
-        if (m_viewManager.SwitchView(m_data.m_viewId, m_data.m_flag)) {
-          if (null != m_sfxManager) m_sfxManager.PlaySound(m_data.m_sfx);
-        }
-      }
+      #endregion      
 
       #region IViewListener implementation
       public void OnChangeVisibility(string viewId, ViewState state) {

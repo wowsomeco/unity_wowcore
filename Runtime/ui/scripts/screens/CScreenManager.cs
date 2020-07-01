@@ -7,8 +7,6 @@ namespace Wowsome {
     public class CScreenManager : MonoBehaviour, ISceneController {
       [Tooltip("determines how the transition between the screens should be, either in parralel or one at a time")]
       public TweenerType m_transitionType;
-      [Tooltip("e.g. Screen, ScreenNavigator, etc.")]
-      public ViewComponent[] m_viewComponents;
       [Tooltip("true = the screens are stackable, false = if it's showing one at a time")]
       public bool m_isStackable;
       public string m_onShowTweenId = "onshowscreen";
@@ -21,7 +19,7 @@ namespace Wowsome {
         //instantiate the view manager
         m_viewManager = new CViewManager(m_transitionType, m_isStackable, m_onShowTweenId, m_onHideTweenId);
         //setup the view components
-        m_viewManager.SetupViewComponents(sceneStarter, m_viewComponents);
+        m_viewManager.SetupViewComponents(sceneStarter, GetComponentsInChildren<IViewComponent>(true));
       }
 
       public void StartSceneController(ISceneStarter sceneStarter) { }
