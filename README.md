@@ -40,10 +40,10 @@ A Collection of utilities and extensions as the core foundation of any Unity 2D 
 
     Take a look at the [Unit Tests](https://github.com/wowsomeco/unity_wowcore/tree/master/Runtime/tween/scripts/test) for more details of how to use the Tweens.
 
-### Extensions
+- Extensions
     - C# Native Extensions e.g. List Extensions, Int Extensions, Float Extensions, String Extensions, etc.
 
-    ### Extension Samples
+    - Extension Samples
 
     ```csharp
     // List Extensions
@@ -60,7 +60,7 @@ A Collection of utilities and extensions as the core foundation of any Unity 2D 
     ```
     - Unity Extensions e.g. UI Extensions, Rect Transform Extensions, etc.
     
-### UI Helpers
+- UI Helpers
     - Screen Manager
     - Gesture Handlers
     - etc.
