@@ -44,5 +44,18 @@ namespace Wowsome {
     public static string ToUnderscoreLower(this string str) {
       return str.ToUnderscore().ToLower();
     }
+
+    public static string Capitalize(this string str, char separator = ' ', string replaceWith = " ") {
+      string capitalized = "";
+      string[] splits = str.Split(separator);
+
+      for (int i = 0; i < splits.Length; i++) {
+        String s = splits[i];
+        capitalized += $"{s[0].ToString().ToUpper()}{s.Substring(1)}";
+        if (i < splits.Length - 1) capitalized += replaceWith;
+      }
+
+      return capitalized;
+    }
   }
 }

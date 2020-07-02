@@ -21,6 +21,13 @@ namespace Tests {
       str1 = "Abc Def";
       Assert.AreEqual(str1.ToUnderscoreLower(), "abc_def");
 
+      str1 = "abc abc";
+      Assert.AreEqual(str1.Capitalize(), "Abc Abc");
+      str1 = "abc_def";
+      Assert.AreEqual(str1.Capitalize('_'), "Abc Def");
+      str1 = "abc abc";
+      Assert.AreEqual(str1.Capitalize(' ', ","), "Abc,Abc");
+
       yield return null;
     }
 
