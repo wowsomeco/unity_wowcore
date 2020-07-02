@@ -1,6 +1,6 @@
 # Wowcore
 
-A Collection of utilities and extensions as the core foundation of any 2D Game Projects that we do.
+A Collection of utilities and extensions as the core foundation of any Unity 2D Game Projects that we do. It focuses more on extending the methods as well as other stuffs that are currently not available natively.
 
 ## Contents
 
@@ -8,7 +8,7 @@ A Collection of utilities and extensions as the core foundation of any 2D Game P
     - Can be attached directly to a Gameobject, where each Gameobject can have one or more Tween(s).
     - Can be also instantiated programmatically accordingly.
 
-    > Tween Samples
+    ### Tween Samples
 
     ```csharp
     // Fade Tween
@@ -30,7 +30,7 @@ A Collection of utilities and extensions as the core foundation of any 2D Game P
                 ));
     ```
 
-    > You can also Chain the tween(s) accordingly
+    ### You can also Chain the tween(s) accordingly
 
     ```csharp
     // this chainer will play all the tweens one at a time.
@@ -40,10 +40,27 @@ A Collection of utilities and extensions as the core foundation of any 2D Game P
 
     Take a look at the [Unit Tests](https://github.com/wowsomeco/unity_wowcore/tree/master/Runtime/tween/scripts/test) for more details of how to use the Tweens.
 
-- Extensions
+### Extensions
     - C# Native Extensions e.g. List Extensions, Int Extensions, Float Extensions, String Extensions, etc.
+
+    ### Extension Samples
+
+    ```csharp
+    // List Extensions
+    // Map method that maps List<T> to List<U>
+    List<Vector2> vecs = new List<Vector2>() {
+        new Vector2(10f, 20f),
+        new Vector2(20f, 30f),
+        new Vector2(30f, 40f),
+      };
+
+    List<float> toFloats = vecs.Map(item => item.x + item.y);
+    // Fold method that has a callback for each of the list item that can be used to get a total of some numeric values, get the biggest number a List<int> , etc.
+    float sumX = vecs.Fold(0f, (prev, cur) => prev += cur.x);    
+    ```
     - Unity Extensions e.g. UI Extensions, Rect Transform Extensions, etc.
-- UI Helpers
+    
+### UI Helpers
     - Screen Manager
     - Gesture Handlers
     - etc.
