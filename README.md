@@ -12,13 +12,13 @@ A Collection of utilities and extensions as the core foundation of any Unity 2D 
 
     ```csharp
     // Fade Tween
-    ITween m_tweenFade = new CTweenFade(TargetType.Image, gameObject, new FadeData(0f, 1f));
+    ITween tweenFade = new CTweenFade(TargetType.Image, gameObject, new FadeData(0f, 1f));
     // Rotation Tween
-    ITween m_tweenRotation = new CTweenRotation(TargetType.RectTransform, gameObject, new RotationData(50f, 0.5f))
+    ITween tweenRotation = new CTweenRotation(TargetType.RectTransform, gameObject, new RotationData(50f, 0.5f))
             .SetCompleteCallback(OnCompleteRotation)
             .SetLoop(3, Loop.Yoyo);
     // Move Tween
-    ITween m_tweenMove = new CTweenMove(
+    ITween tweenMove = new CTweenMove(
             TargetType.RectTransform
             , gameObject
             , new MoveData(
@@ -35,7 +35,7 @@ A Collection of utilities and extensions as the core foundation of any Unity 2D 
     ```csharp
     // this chainer will play all the tweens one at a time.
     m_chainer = new CTweenChainer(TweenerType.StepByStep); // either StepByStep OR Simultaneously
-    m_chainer.Add(m_tweenRotation).Add(m_tweenMove).Add(m_tweenFade).PlayExistingAll(() => print("On Done"));
+    m_chainer.Add(tweenRotation).Add(tweenMove).Add(tweenFade).PlayExistingAll(() => print("On Done"));
     ```
 
     Take a look at the [Unit Tests](https://github.com/wowsomeco/unity_wowcore/tree/master/Runtime/tween/scripts/test) for more details of how to use the Tweens.
