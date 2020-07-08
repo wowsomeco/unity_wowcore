@@ -62,7 +62,7 @@ namespace Wowsome {
             }
           }
           // check loop count here
-          if (m_curAnim.Loop > -1 && m_counter >= m_curAnim.Loop) {
+          if (m_curAnim.Loop > -1 && m_counter > m_curAnim.Loop) {
             m_onDone();
             m_curAnim = null;
           } else {
