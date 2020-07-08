@@ -23,6 +23,8 @@ namespace Wowsome {
       #region ISceneStarter
       public CavEngine Engine { get; private set; }
 
+      public StartSceneController OnStartSceneController { get; set; }
+
       public T GetController<T>() where T : class, ISceneController {
         foreach (ISceneController controller in m_controllers) {
           T t = controller as T;
@@ -53,9 +55,8 @@ namespace Wowsome {
           controller.InitSceneController(this);
         }
 
-        foreach (ISceneController controller in m_controllers) {
-          controller.StartSceneController(this);
-        }
+        // broadcast on start scene controller
+        OnStartSceneController?.Invoke(this);
       }
 
       void Update() {

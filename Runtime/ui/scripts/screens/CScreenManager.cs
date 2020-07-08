@@ -22,8 +22,6 @@ namespace Wowsome {
         m_viewManager.SetupViewComponents(sceneStarter, GetComponentsInChildren<IViewComponent>(true));
       }
 
-      public void StartSceneController(ISceneStarter sceneStarter) { }
-
       public void UpdateSceneController(float dt) {
         m_viewManager.UpdateViewManager(dt);
       }

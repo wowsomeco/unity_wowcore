@@ -14,16 +14,18 @@ namespace Wowsome {
     /// such as AudioManager, LocalizationManager, etc.    
     /// </description>
     public class CavEngine : MonoBehaviour {
+      public delegate void ChangeScene(int idx);
+
       internal static CavEngine Instance { get; private set; }
+
+      public ChangeScene OnChangeScene { get; set; }
       public List<GameObject> m_systemPrefabs = new List<GameObject>();
 
       List<ISystem> m_systems = new List<ISystem>();
       CMessenger m_globalMessenger = new CMessenger();
 
       void OnSceneLoaded(Scene scene, LoadSceneMode m) {
-        for (int i = 0; i < m_systems.Count; ++i) {
-          m_systems[i].OnChangeScene(scene.buildIndex);
-        }
+        OnChangeScene?.Invoke(scene.buildIndex);
       }
 
       void Awake() {

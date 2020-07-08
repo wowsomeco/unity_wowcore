@@ -28,6 +28,10 @@ namespace Tests {
       str1 = "abc abc";
       Assert.AreEqual(str1.Capitalize(' ', ","), "Abc,Abc");
 
+      str1 = "Abc Def";
+      // replaces the string with '-' 3 times and check whether the string now contains exactly 3 '-'
+      Assert.AreEqual(str1.ReplaceRandom(3, '-').CountChar('-'), 3);
+
       yield return null;
     }
 

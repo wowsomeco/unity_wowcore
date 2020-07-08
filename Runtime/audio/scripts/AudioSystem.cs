@@ -24,17 +24,17 @@ namespace Wowsome {
         }
       }
 
-      public void StartSystem(CavEngine gameEngine) { }
+      public void StartSystem(CavEngine gameEngine) {
+        gameEngine.OnChangeScene += index => {
+          for (int i = 0; i < m_audioManagers.Length; ++i) {
+            m_audioManagers[i].OnChangeScene(index);
+          }
+        };
+      }
 
       public void UpdateSystem(float dt) {
         for (int i = 0; i < m_audioManagers.Length; ++i) {
           m_audioManagers[i].UpdateAudio(dt);
-        }
-      }
-
-      public void OnChangeScene(int index) {
-        for (int i = 0; i < m_audioManagers.Length; ++i) {
-          m_audioManagers[i].OnChangeScene(index);
         }
       }
       #endregion
