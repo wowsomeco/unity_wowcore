@@ -14,8 +14,6 @@ namespace Wowsome {
     /// such as AudioManager, LocalizationManager, etc.    
     /// </description>
     public class CavEngine : MonoBehaviour {
-      public delegate void ChangeScene(int idx);
-
       internal static CavEngine Instance { get; private set; }
 
       public ChangeScene OnChangeScene { get; set; }
@@ -25,7 +23,7 @@ namespace Wowsome {
       CMessenger m_globalMessenger = new CMessenger();
 
       void OnSceneLoaded(Scene scene, LoadSceneMode m) {
-        OnChangeScene?.Invoke(scene.buildIndex);
+        OnChangeScene?.Invoke(scene);
       }
 
       void Awake() {

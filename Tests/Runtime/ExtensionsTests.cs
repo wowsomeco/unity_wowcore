@@ -37,8 +37,14 @@ namespace Tests {
 
     [UnityTest]
     public IEnumerator TestListExtensions() {
-      // shuffle test
+      List<string> empty = new List<string>();
+      Assert.AreEqual(empty.Last(), null);
+
       List<string> strings1 = new List<string>() { "a", "b", "c" };
+      Assert.AreEqual(strings1.Exists(x => x == "b"), true);
+      Assert.AreEqual(strings1.Exists(x => x == "z"), false);
+      Assert.AreEqual(strings1.Last(), "c");
+      // shuffle test
       List<string> strings2 = new List<string>(strings1);
       strings2.Shuffle();
       Assert.AreEqual(strings1.IsEqual(strings2), false);

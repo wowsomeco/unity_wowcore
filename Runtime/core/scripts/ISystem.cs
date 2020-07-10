@@ -1,5 +1,9 @@
-﻿namespace Wowsome {
+﻿using UnityEngine.SceneManagement;
+
+namespace Wowsome {
   namespace Core {
+    public delegate void ChangeScene(Scene scene);
+
     public interface ISystem {
       void InitSystem();
       void StartSystem(CavEngine gameEngine);

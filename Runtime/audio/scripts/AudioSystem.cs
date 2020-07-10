@@ -25,9 +25,9 @@ namespace Wowsome {
       }
 
       public void StartSystem(CavEngine gameEngine) {
-        gameEngine.OnChangeScene += index => {
+        gameEngine.OnChangeScene += scene => {
           for (int i = 0; i < m_audioManagers.Length; ++i) {
-            m_audioManagers[i].OnChangeScene(index);
+            m_audioManagers[i].OnChangeScene(scene);
           }
         };
       }

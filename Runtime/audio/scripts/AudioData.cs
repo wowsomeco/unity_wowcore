@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine.SceneManagement;
 
 namespace Wowsome {
   namespace Audio {
@@ -8,26 +9,6 @@ namespace Wowsome {
     , OUT
     , NONE
     };
-
-    [Serializable]
-    public struct BgmLevelData {
-      public string m_name;
-      public int m_loopCount;
-      public bool m_isFadeOnStart;
-      public float m_fadeSpeed;
-
-      public BgmLevelData(string name, int loopCount, bool isFadeOnStart, float fadeSpeed) {
-        m_name = name;
-        m_loopCount = loopCount;
-        m_isFadeOnStart = isFadeOnStart;
-        m_fadeSpeed = fadeSpeed;
-      }
-    }
-
-    [Serializable]
-    public struct BgmLevelsData {
-      public BgmLevelData[] m_bgmLevels;
-    }
 
     [Serializable]
     public struct SfxData {
@@ -51,7 +32,7 @@ namespace Wowsome {
     public interface IAudioManager {
       float Volume { get; set; }
       void InitAudioManager();
-      void OnChangeScene(int idx);
+      void OnChangeScene(Scene scene);
       void UpdateAudio(float dt);
     }
   }

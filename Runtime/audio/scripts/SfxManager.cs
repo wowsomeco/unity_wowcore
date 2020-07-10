@@ -1,5 +1,6 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Wowsome {
   namespace Audio {
@@ -9,9 +10,6 @@ namespace Wowsome {
 
       Dictionary<string, AudioClip> m_audioClips = new Dictionary<string, AudioClip>();
       float m_volume;
-      float m_BGMVolume;
-      string m_menuBGM = "";
-      string m_gameBGM = "";
 
       #region IAudioManager
       public float Volume {
@@ -19,9 +17,7 @@ namespace Wowsome {
         set {
           m_volume = value;
           foreach (CSound soundFX in m_sources) {
-            if ((soundFX.GetAudioName() != m_gameBGM) && (soundFX.GetAudioName() != m_menuBGM)) {
-              soundFX.Volume = m_volume;
-            }
+            soundFX.Volume = m_volume;
           }
         }
       }
@@ -38,7 +34,7 @@ namespace Wowsome {
         }
       }
 
-      public void OnChangeScene(int idx) { }
+      public void OnChangeScene(Scene scene) { }
 
       public void UpdateAudio(float dt) {
         for (int i = 0; i < m_sources.Length; ++i) {
@@ -46,24 +42,6 @@ namespace Wowsome {
         }
       }
       #endregion
-
-      public float BGMVolume {
-        get { return m_BGMVolume; }
-        set {
-          m_BGMVolume = value;
-          foreach (CSound soundFX in m_sources) {
-            if ((soundFX.GetAudioName() == m_gameBGM) || (soundFX.GetAudioName() == m_menuBGM)) {
-              soundFX.Volume = m_BGMVolume;
-            }
-          }
-        }
-      }
-
-      public void SetBGMName(string menuBGM, string gameBGM) {
-        m_menuBGM = menuBGM;
-        m_gameBGM = gameBGM;
-      }
-
 
       public void PlaySound(string audioClipName, int loopCount = 1, float delay = 0f, bool isFade = false, System.Action onStopCallback = null) {
         bool isContainAudioClip = m_audioClips.ContainsKey(audioClipName);

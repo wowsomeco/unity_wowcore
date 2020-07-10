@@ -104,5 +104,13 @@ namespace Wowsome {
       }
       return null;
     }
+
+    public static bool Exists<T>(this List<T> l, Predicate<T> predicate) {
+      return l.Find(predicate) != null;
+    }
+
+    public static T Last<T>(this IList<T> l) {
+      return l.Count > 0 ? l[l.Count - 1] : default(T);
+    }
   }
 }
