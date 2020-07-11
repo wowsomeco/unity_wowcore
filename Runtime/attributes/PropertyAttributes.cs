@@ -19,3 +19,5 @@ public class ConditionalHideAttribute : PropertyAttribute {
     HideInInspector = hideInInspector;
   }
 }
+
+public class ReadonlyAttribute : PropertyAttribute { }
