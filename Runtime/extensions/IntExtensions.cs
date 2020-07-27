@@ -26,7 +26,8 @@ namespace Wowsome {
       return string.Format("{0}:{1}", minutes, seconds.ToString("00"));
     }
 
-    public static int PreviousPOT(this int v) {
+    public static int PrevPowerOfTwo(this int v) {
+      if (v.IsPowerOfTwo()) return v;
 
       v |= v >> 1;
       v |= v >> 2;
@@ -35,6 +36,10 @@ namespace Wowsome {
       v |= v >> 16;
 
       return v - (v >> 1);
+    }
+
+    public static bool IsPowerOfTwo(this int x) {
+      return (x != 0) && ((x & (x - 1)) == 0);
     }
   }
 }

@@ -1,34 +1,6 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Wowsome {
-  public static class AnimatorExtensions {
-    public static bool HasParameterOfType(this Animator self, string name, AnimatorControllerParameterType type) {
-      var parameters = self.parameters;
-      foreach (var currParam in parameters) {
-        if (currParam.type == type && currParam.name == name) {
-          return true;
-        }
-      }
-      return false;
-    }
-    public static bool HasFinishedPlayingAnim(this Animator self, string tag) {
-      var curAnimStateInfo = self.GetCurrentAnimatorStateInfo(0);
-      if (curAnimStateInfo.normalizedTime >= 1 && !self.IsInTransition(0)) {
-        if (curAnimStateInfo.IsTag(tag)) {
-          return true;
-        }
-      }
-      return false;
-    }
-    public static bool IsPlayingTag(this Animator self, string tag) {
-      if (self.GetCurrentAnimatorStateInfo(0).IsTag(tag)) {
-        return true;
-      }
-      return false;
-    }
-  }
-
   public static class ColorExt {
     public static string ColorToHex(Color32 color) {
       string hex = color.r.ToString("X2") + color.g.ToString("X2") + color.b.ToString("X2") + color.a.ToString("X2");
