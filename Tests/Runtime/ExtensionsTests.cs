@@ -96,5 +96,17 @@ namespace Tests {
 
       yield return null;
     }
+
+    [UnityTest]
+    public IEnumerator TestIntExtensions() {
+      int num = 256;
+      Assert.AreEqual(num.IsPowerOfTwo(), true);
+      // makes sure prev power of two is not 128
+      Assert.AreEqual(num.PrevPowerOfTwo(), 256);
+      num = 300;
+      Assert.AreEqual(num.PrevPowerOfTwo(), 256);
+
+      yield return null;
+    }
   }
 }
