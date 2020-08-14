@@ -14,6 +14,10 @@ namespace Wowsome {
 
       CViewManager m_viewManager;
 
+      public bool IsTransitioning {
+        get { return m_viewManager.IsTransitioning; }
+      }
+
       #region ISceneController implementation
       public void InitSceneController(ISceneStarter sceneStarter) {
         //instantiate the view manager
