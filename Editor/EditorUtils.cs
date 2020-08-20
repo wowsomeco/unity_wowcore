@@ -19,6 +19,10 @@ namespace Wowsome {
       UnityEditor.AssetDatabase.Refresh();
     }
 
+    public static void ApplyPrefab(this Component c) {
+      c.gameObject.ApplyPrefab();
+    }
+
     public static void SetSceneDirty() {
       Scene curScene = SceneManager.GetActiveScene();
       EditorSceneManager.MarkSceneDirty(curScene);
@@ -57,6 +61,14 @@ namespace Wowsome {
       GUILayout.EndHorizontal();
     }
 
+    public static string TextfieldWithOk(string label, string value, Action<string> onSubmit, string submitLbl = "OK") {
+      EU.HGroup(() => {
+        value = EditorGUILayout.TextField(label, value);
+        EU.Btn(submitLbl, () => onSubmit.Invoke(value));
+      });
+      return value;
+    }
+
     public static Rect Resize(this Rect rect, Vector2 size) {
       Rect r = new Rect(rect);
       r.size = size;
@@ -76,7 +88,7 @@ namespace Wowsome {
       get { return State ? 1 : 0; }
     }
 
-    public ToggleState(bool state) {
+    public ToggleState(bool state = false) {
       State = state;
     }
 
@@ -113,34 +125,7 @@ namespace Wowsome {
     }
   }
 
-  #endregion
-
-  public class ClassField<T> where T : class, new() {
-    public T Model = null;
-
-    public void Build(string addLbl, Action<T> builder, Action onCancel = null) {
-      if (null == Model) {
-        return;
-      } else {
-        EU.VPadding(() => {
-          EU.HGroup(() => {
-            EditorGUILayout.LabelField(addLbl, EditorStyles.boldLabel);
-            GUILayout.FlexibleSpace();
-            EU.Btn("X", () => {
-              Reset();
-              onCancel?.Invoke();
-            });
-          });
-        });
-
-        if (null != Model) builder(Model);
-      }
-    }
-
-    public void Reset() { Model = null; }
-
-    public void New() { Model = new T(); }
-  }
+  #endregion  
 
   #region Selectable
 
@@ -201,25 +186,55 @@ namespace Wowsome {
       }
     }
 
+    public class MoveAction {
+      public string Label;
+      public Action<int> Move;
+      public Action OnMoved;
+      public MoveAction(Action onMoved = null, Action<int> move = null, string lbl = "V") {
+        OnMoved = onMoved;
+        Move = move;
+        Label = lbl;
+      }
+    }
+
     public class BuildCallback {
       public string Label;
-      public T Value;
+      public T Value = null;
       public List<T> Origins;
       public ListExt.Mapper<T, string> Mapper;
       public Action<SelectState<T>> OnSelected = null;
       public AddAction AddAction = null;
       public DeleteAction DelAction = null;
+      public MoveAction MoveAction = null;
       public Action<T> Prefix = null;
       public Action<T> Suffix = null;
 
-      public BuildCallback(string lbl, T v, List<T> or, ListExt.Mapper<T, string> mapper, Action<SelectState<T>> os, AddAction addAction, DeleteAction delAction) {
+      public BuildCallback(string lbl, List<T> or, ListExt.Mapper<T, string> mapper, Action<SelectState<T>> os) {
         Label = lbl;
-        Value = v;
         Origins = or;
         Mapper = mapper;
         OnSelected = os;
+      }
+
+      public BuildCallback(string lbl, List<T> or, ListExt.Mapper<T, string> mapper, Action<SelectState<T>> os, DeleteAction delAction)
+      : this(lbl, or, mapper, os) {
+        DelAction = delAction;
+      }
+
+      public BuildCallback(string lbl, T v, List<T> or, ListExt.Mapper<T, string> mapper, Action<SelectState<T>> os)
+      : this(lbl, or, mapper, os) {
+        Value = v;
+      }
+
+      public BuildCallback(string lbl, T v, List<T> or, ListExt.Mapper<T, string> mapper, Action<SelectState<T>> os, AddAction addAction, DeleteAction delAction)
+      : this(lbl, v, or, mapper, os) {
         AddAction = addAction;
         DelAction = delAction;
+      }
+
+      public BuildCallback(string lbl, T v, List<T> or, ListExt.Mapper<T, string> mapper, Action<SelectState<T>> os, AddAction addAction, DeleteAction delAction, MoveAction moveAction)
+      : this(lbl, v, or, mapper, os, addAction, delAction) {
+        MoveAction = moveAction;
       }
 
       public BuildCallback(string lbl, T v, List<T> or, ListExt.Mapper<T, string> mapper, Action<SelectState<T>> os, AddAction addAction, DeleteAction delAction, Action<T> prefix)
@@ -237,7 +252,7 @@ namespace Wowsome {
 
     Align m_alignment;
 
-    public Menu(Align align = Align.V) {
+    public Menu(bool canMove = false, Align align = Align.V) {
       m_alignment = align;
     }
 
@@ -269,6 +284,13 @@ namespace Wowsome {
             }
 
             if (null != cb.Suffix) cb.Suffix(t);
+
+            if (null != cb.MoveAction && cb.Origins.Count > idx + 1) {
+              EU.BtnWithAlert("V", () => {
+                if (cb.MoveAction.OnMoved != null) { cb.MoveAction.Move(idx); } else { cb.Origins.Swap(idx, idx + 1); }
+                cb.MoveAction.OnMoved?.Invoke();
+              }, GUILayout.Width(20f));
+            }
 
             if (null != cb.DelAction) {
               EU.BtnWithAlert(cb.DelAction.Label, () => {
