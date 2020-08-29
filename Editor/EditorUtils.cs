@@ -287,7 +287,7 @@ namespace Wowsome {
 
             if (null != cb.MoveAction && cb.Origins.Count > idx + 1) {
               EU.BtnWithAlert("V", () => {
-                if (cb.MoveAction.OnMoved != null) { cb.MoveAction.Move(idx); } else { cb.Origins.Swap(idx, idx + 1); }
+                if (cb.MoveAction.Move != null) { cb.MoveAction.Move(idx); } else { cb.Origins.Swap(idx, idx + 1); }
                 cb.MoveAction.OnMoved?.Invoke();
               }, GUILayout.Width(20f));
             }
