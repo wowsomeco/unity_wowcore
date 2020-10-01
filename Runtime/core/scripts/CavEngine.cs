@@ -14,9 +14,12 @@ namespace Wowsome {
     /// such as AudioManager, LocalizationManager, etc.    
     /// </description>
     public class CavEngine : MonoBehaviour {
+      public delegate void EvStarted();
+
       internal static CavEngine Instance { get; private set; }
 
       public ChangeScene OnChangeScene { get; set; }
+      public EvStarted OnStarted { get; set; }
       public List<GameObject> m_systemPrefabs = new List<GameObject>();
 
       List<ISystem> m_systems = new List<ISystem>();
@@ -67,6 +70,8 @@ namespace Wowsome {
         for (int i = 0; i < m_systems.Count; ++i) {
           m_systems[i].StartSystem(this);
         }
+
+        OnStarted?.Invoke();
       }
 
       public T GetSystem<T>() where T : class, ISystem {

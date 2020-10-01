@@ -70,18 +70,17 @@ namespace Wowsome {
     /// </code>
     /// </example>
     public static string Shuffle(this string str) {
-      string newStr = "";
-
-      while (str.Length > 0) {
-        System.Random rand = new System.Random();
-        int randIdx = rand.Next(0, str.Length);
-
-        newStr += str[randIdx];
-
-        str = str.Remove(randIdx, 1);
+      char[] array = str.ToCharArray();
+      Random rng = new Random();
+      int n = array.Length;
+      while (n > 1) {
+        n--;
+        int k = rng.Next(n + 1);
+        var value = array[k];
+        array[k] = array[n];
+        array[n] = value;
       }
-
-      return newStr;
+      return new string(array);
     }
 
     /// <summary>
