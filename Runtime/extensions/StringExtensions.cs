@@ -145,8 +145,32 @@ namespace Wowsome {
       return count;
     }
 
+    /// <summary>
+    /// Checks whether the string is empty
+    /// </summary>
     public static bool IsEmpty(this string str) {
       return string.IsNullOrEmpty(str);
+    }
+
+    /// <summary>
+    /// Returns the last character from a string.
+    /// </summary>
+    public static string Last(this string str) {
+      if (str.IsEmpty()) return null;
+      return str[str.Length - 1].ToString();
+    }
+
+    /// <summary>
+    /// Returns the numbers that might exist in a string.
+    /// </summary>
+    public static int ExtractNumbers(this string str) {
+      string num = string.Empty;
+      foreach (char ch in str) {
+        if (char.IsNumber(ch)) {
+          num += ch;
+        }
+      }
+      return num.IsEmpty() ? -1 : int.Parse(num);
     }
   }
 }

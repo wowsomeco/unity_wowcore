@@ -7,6 +7,12 @@ using UnityEngine.UI;
 namespace Wowsome {
   #region Rect Transform
   public static class RectTransformExtensions {
+    public static void Normalize(this RectTransform rt) {
+      rt.SetPos(Vector2.zero);
+      rt.SetScale(Vector2.one);
+      rt.SetRotation(0f);
+    }
+
     #region Position
     public static void SetPos(this RectTransform rt, Vector2 pos) {
       rt.anchoredPosition = pos;
@@ -406,6 +412,14 @@ namespace Wowsome {
 
     public static void SetPos(this Image img, Vector2 pos) {
       img.rectTransform.SetPos(pos);
+    }
+
+    public static void SetScale(this Image img, Vector2 scale) {
+      img.rectTransform.SetScale(scale);
+    }
+
+    public static void SetRotation(this Image img, float rot) {
+      img.rectTransform.SetRotation(rot);
     }
 
     public static void SetParent(this Image img, RectTransform parent) {

@@ -15,22 +15,18 @@ namespace Wowsome {
       byte g = byte.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
       byte b = byte.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
       //Only use alpha if the string has enough characters
-
       if (hex.Length == 8) {
         a = byte.Parse(hex.Substring(6, 2), System.Globalization.NumberStyles.HexNumber);
       }
       return new Color32(r, g, b, a);
-
-    }
-
-    public static string ColorWithNewAlpha(string hex, float alpha) {
-      var col = HexToColor(hex);
-      col.a = alpha;
-      return ColorToHex(col);
     }
 
     public static float[] ToFloats(this Color col) {
       return new float[] { col.r, col.g, col.b, col.a };
+    }
+
+    public static Color SetAlpha(this Color col, float a) {
+      return new Color(col.r, col.g, col.b, a);
     }
   }
 
