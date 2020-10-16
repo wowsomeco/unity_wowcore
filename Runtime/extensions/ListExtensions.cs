@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Wowsome {
   /// <summary>
@@ -107,6 +107,17 @@ namespace Wowsome {
 
     public static T Last<T>(this IList<T> l) {
       return l.Count > 0 ? l[l.Count - 1] : default(T);
+    }
+
+    public static bool IsEmpty<T>(this IList<T> l) {
+      return null == l || l.Count == 0;
+    }
+
+    public static List<T> RemoveWhere<T>(this List<T> l, Predicate<T> p) {
+      List<T> found = l.FindAll(p);
+      if (found.Count > 0) l.RemoveAll(p);
+
+      return found;
     }
   }
 }

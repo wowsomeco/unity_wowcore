@@ -26,7 +26,7 @@ namespace Wowsome {
       CMessenger m_globalMessenger = new CMessenger();
 
       void OnSceneLoaded(Scene scene, LoadSceneMode m) {
-        OnChangeScene?.Invoke(scene);
+        if (null != OnChangeScene) OnChangeScene.Invoke(scene);
       }
 
       void Awake() {
@@ -71,7 +71,7 @@ namespace Wowsome {
           m_systems[i].StartSystem(this);
         }
 
-        OnStarted?.Invoke();
+        if (null != OnStarted) OnStarted.Invoke();
       }
 
       public T GetSystem<T>() where T : class, ISystem {

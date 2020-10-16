@@ -56,7 +56,7 @@ namespace Wowsome {
         }
 
         // broadcast on start scene controller
-        OnStartSceneController?.Invoke(this);
+        if (null != OnStartSceneController) OnStartSceneController.Invoke(this);
       }
 
       void Update() {

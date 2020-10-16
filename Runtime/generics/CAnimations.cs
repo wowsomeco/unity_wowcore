@@ -45,7 +45,7 @@ namespace Wowsome {
           m_counter = m_curIdx = 0;
           m_onDone = onDone;
         } else {
-          Debug.LogError($"Can't find anim with id {id}");
+          Debug.LogError("Can't find anim with id=" + id);
         }
       }
 

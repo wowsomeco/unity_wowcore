@@ -71,25 +71,28 @@ namespace Wowsome {
         }
       }
 
-      public void SetTappable() {
+      public CGestureHandler SetTappable() {
         //add tap listener
         m_eventTrigger.AddEventTriggerListener(EventTriggerType.PointerClick, OnTap);
+        return this;
       }
 
-      public void SetDraggable() {
+      public CGestureHandler SetDraggable() {
         //add begin drag listener
         m_eventTrigger.AddEventTriggerListener(EventTriggerType.BeginDrag, OnBeginDrag);
         //add drag listener
         m_eventTrigger.AddEventTriggerListener(EventTriggerType.Drag, OnDragging);
         //add end drag listener
         m_eventTrigger.AddEventTriggerListener(EventTriggerType.EndDrag, OnEndDrag);
+        return this;
       }
 
-      public void SetPressable() {
+      public CGestureHandler SetPressable() {
         //add on pointer up
         m_eventTrigger.AddEventTriggerListener(EventTriggerType.PointerUp, OnPointerUp);
         //add on pointer down
         m_eventTrigger.AddEventTriggerListener(EventTriggerType.PointerDown, OnPointerDown);
+        return this;
       }
 
       #region Tap

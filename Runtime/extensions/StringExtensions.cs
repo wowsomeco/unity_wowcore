@@ -52,11 +52,21 @@ namespace Wowsome {
 
       for (int i = 0; i < splits.Length; i++) {
         String s = splits[i];
-        capitalized += $"{s[0].ToString().ToUpper()}{s.Substring(1)}";
+        capitalized += Concat(s[0].ToString().ToUpper(), s.Substring(1));
         if (i < splits.Length - 1) capitalized += replaceWith;
       }
 
       return capitalized;
+    }
+
+    public static string Concat(params string[] str) {
+      string concat = string.Empty;
+
+      foreach (string s in str) {
+        concat += s;
+      }
+
+      return concat;
     }
 
     /// <summary>
