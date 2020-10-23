@@ -9,6 +9,7 @@ namespace Wowsome {
     public delegate U Mapper<T, U>(T t);
     public delegate T Reducer<T, U>(T prev, U current);
     public delegate void Iterator<T>(T item, int idx);
+    public delegate void IteratorWithPointer<T>(T item, int idx, bool first, bool last);
 
     /// <summary>
     /// Maps the current IEnumerable into a new List<U>
@@ -46,6 +47,12 @@ namespace Wowsome {
     public static void Loop<T>(this IList<T> l, Iterator<T> iter) {
       for (int i = 0; i < l.Count; ++i) {
         iter(l[i], i);
+      }
+    }
+
+    public static void LoopWithPointer<T>(this IList<T> l, IteratorWithPointer<T> iter) {
+      for (int i = 0; i < l.Count; ++i) {
+        iter(l[i], i, i == 0, i == l.Count - 1);
       }
     }
 

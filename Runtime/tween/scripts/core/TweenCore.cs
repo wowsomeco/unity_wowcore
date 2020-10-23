@@ -208,5 +208,96 @@ namespace Wowsome {
       void SetTargetData(T data);
     }
     #endregion
+
+    /// <summary>
+    /// Can use it to simplify the tween job.
+    /// </summary>
+    public class Tweener {
+      /// <summary>
+      /// Scale up once then scale down again to the origin scale
+      /// </summary>
+      /// <param name="go">The target object</param>
+      /// <param name="targetScale">Vector2 of the up scale</param>
+      /// <param name="duration">Duration of pulse</param>    
+      public static ITween Pulse(GameObject go, float targetScale = 1.05f, float duration = 0.1f) {
+        return new CTweenScale(
+          TargetType.RectTransform, go,
+          new ScaleData(targetScale.ToVector2(), duration, Easing.OutQuad), new LoopData(1, Loop.Yoyo)
+        );
+      }
+
+      /// <summary>
+      /// Fades a gameobject to the alpha defined
+      /// </summary>
+      public static ITween Fade(GameObject go, float alpha, TargetType type = TargetType.Image, float duration = 0.3f) {
+        return new CTweenFade(go, alpha, duration, type, true);
+      }
+
+      /// <summary>
+      /// Fade alpha in to 1f, forces it to begin at 0f 
+      /// </summary>
+      public static ITween FadeIn(GameObject go, TargetType type = TargetType.Image, float duration = 0.3f) {
+        return Fade(go, 1f, type, duration);
+      }
+
+      /// <summary>
+      /// Fade alpha out to 0f, forces it to begin at 1f 
+      /// </summary>
+      public static ITween FadeOut(GameObject go, TargetType type = TargetType.Image, float duration = 0.3f) {
+        return Fade(go, 0f, type, duration);
+      }
+
+      public static ITween FadeInOut(GameObject go, float duration = 0.2f, TargetType type = TargetType.CanvasGroup) {
+        return new CTweenFade(
+          go.name,
+          type,
+          go,
+          new FadeData[] { new FadeData(1f, new TweenData(Easing.OutQuad, new TimeData(duration, 0f))) },
+          new LoopData(1, Loop.Yoyo),
+          true
+        );
+      }
+
+      public static ITween Slide(RectTransform rt, Vector2 from, float duration = 0.1f) {
+        Vector2 curPos = rt.Pos();
+        rt.SetPos(curPos - from);
+        return new CTweenMove(rt.gameObject, curPos, duration, Easing.OutQuad);
+      }
+
+      public static ITween SlideFromBottom(RectTransform rt, float duration = 0.1f) {
+        return Slide(rt, new Vector2(0f, 10f));
+      }
+
+      public static ITween SlideFromRight(RectTransform rt, float duration = 0.1f) {
+        return Slide(rt, new Vector2(-10f, 0f));
+      }
+
+      ITween _tween;
+      Action _callback;
+      bool _playing = false;
+
+      public Tweener(ITween tw) {
+        _tween = tw;
+      }
+
+      public void Play(Action callback = null) {
+        _tween.FastForward();
+        _tween.Play();
+
+        _callback = callback;
+        _playing = true;
+      }
+
+      public bool Update(float dt) {
+        if (_playing) {
+          if (!_tween.UpdateTween(dt)) {
+            _playing = false;
+            if (null != _callback) _callback();
+          }
+          return true;
+        }
+        return false;
+      }
+    }
   }
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Wowsome {
   public static class ColorExt {
@@ -30,6 +31,12 @@ namespace Wowsome {
     }
   }
 
+  public static class Vector3Ext {
+    public static Vector2 ToVector2(this Vector3 v) {
+      return new Vector2(v.x, v.y);
+    }
+  }
+
   public static class Vector2Ext {
     public static float[] ToFloats(this Vector2 self) {
       return new float[2] { self.x, self.y };
@@ -53,6 +60,29 @@ namespace Wowsome {
         return v;
       }
       return v;
+    }
+
+    public static float Max(this Vector2 v) {
+      return Mathf.Max(v.x, v.y);
+    }
+  }
+
+  public static class ComponentExt {
+    public static void SetVisible(this Component c, bool flag) {
+      c.gameObject.SetActive(flag);
+    }
+
+    public static List<T> GetComponentsWithoutSelf<T>(this Component obj, bool includeInactive) where T : Component {
+      List<T> components = new List<T>();
+      var comps = obj.GetComponentsInChildren<T>(includeInactive);
+      // might be slow though ...
+      foreach (T c in comps) {
+        // dont include self
+        if (c.GetInstanceID() != obj.GetInstanceID()) {
+          components.Add(c);
+        }
+      }
+      return components;
     }
   }
 

@@ -13,6 +13,8 @@ namespace Wowsome {
       return nearest;
     }
 
+    public static Vector2 ToVector2(this float v) { return new Vector2(v, v); }
+
     public static Vector2 ToVector2(this float[] self) {
       return new Vector2(self[0], self[1]);
     }
