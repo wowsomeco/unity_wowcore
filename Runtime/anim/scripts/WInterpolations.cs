@@ -20,7 +20,9 @@ namespace Wowsome.Anim {
       yoyo = yo;
     }
 
-    public Timing(double duration) : this(duration, 0f, Easing.Linear, 0, false) { }
+    public Timing(double duration, Easing easing) : this(duration, 0f, easing, 0, false) { }
+
+    public Timing(double duration) : this(duration, Easing.Linear) { }
   }
 
   [Serializable]
