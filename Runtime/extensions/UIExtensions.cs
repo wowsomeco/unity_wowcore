@@ -7,10 +7,11 @@ using UnityEngine.UI;
 namespace Wowsome {
   #region Rect Transform
   public static class RectTransformExtensions {
-    public static void Normalize(this RectTransform rt) {
+    public static RectTransform Normalize(this RectTransform rt) {
       rt.SetPos(Vector2.zero);
       rt.SetScale(Vector2.one);
       rt.SetRotation(0f);
+      return rt;
     }
 
     #region Position
@@ -99,11 +100,13 @@ namespace Wowsome {
       return trans.rect.height;
     }
 
-    public static void SetSize(this RectTransform trans, Vector2 newSize) {
+    public static RectTransform SetSize(this RectTransform trans, Vector2 newSize) {
       Vector2 oldSize = trans.rect.size;
       Vector2 deltaSize = newSize - oldSize;
       trans.offsetMin = trans.offsetMin - new Vector2(deltaSize.x * trans.pivot.x, deltaSize.y * trans.pivot.y);
       trans.offsetMax = trans.offsetMax + new Vector2(deltaSize.x * (1f - trans.pivot.x), deltaSize.y * (1f - trans.pivot.y));
+
+      return trans;
     }
 
     public static void SetSize(this RectTransform rt, Rect rect, bool ignorePos = false) {
@@ -139,6 +142,12 @@ namespace Wowsome {
         SetSize(trans, newSize *= ratio);
       }
     }
+
+    public static void Copy(this RectTransform rectTransform, RectTransform other) {
+      rectTransform.SetSize(other.Size());
+      rectTransform.SetScale(other.Scale());
+      rectTransform.SetPos(other.Pos());
+    }
     #endregion
 
     #region Rotation
@@ -146,8 +155,9 @@ namespace Wowsome {
       return Mathf.Round(rt.eulerAngles.z);
     }
 
-    public static void SetRotation(this RectTransform rt, float angle) {
+    public static RectTransform SetRotation(this RectTransform rt, float angle) {
       rt.rotation = Quaternion.Euler(0f, 0f, angle);
+      return rt;
     }
 
     public static void SetRotation(this RectTransform rt, Vector3 eulerAngles) {

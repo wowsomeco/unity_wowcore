@@ -1,29 +1,27 @@
 ﻿using System.Collections.Generic;
-using Wowsome.Tween;
+using UnityEngine;
 using Wowsome.Core;
+using Wowsome.Tween;
 
 namespace Wowsome {
   namespace UI {
-    public class CViewManager : IViewManager {
+    public class CViewManager : MonoBehaviour, IViewManager {
+      [Tooltip("determines how the transition between the screens should be, either in parralel or one at a time")]
+      public TweenerType m_transitionType;
+      [Tooltip("true = the screens are stackable, false = if it's showing one at a time")]
+      public bool m_isStackable;
+      public string m_onShowTweenId = "onshowscreen";
+      public string m_onHideTweenId = "onhidescreen";
+
       Dictionary<string, IView> m_views = new Dictionary<string, IView>();
       Stack<IView> m_showings = new Stack<IView>();
       HashSet<IViewListener> m_viewListeners = new HashSet<IViewListener>();
       CTweenChainer m_tweener;
-      bool m_isStackable;
-      string m_showTweenId;
-      string m_hideTweenId;
 
-      public CViewManager(TweenerType transitionType, bool isStackable, string showTweenId, string hideTweenId) {
+      public void InitViewManager(ISceneStarter sceneStarter) {
+        var vcs = GetComponentsInChildren<IViewComponent>(true);
         // instantiate the tweener
-        m_tweener = new CTweenChainer(transitionType);
-        // set is unique
-        m_isStackable = isStackable;
-        // set the tween ids
-        m_showTweenId = showTweenId;
-        m_hideTweenId = hideTweenId;
-      }
-
-      public void SetupViewComponents(ISceneStarter sceneStarter, IViewComponent[] vcs) {
+        m_tweener = new CTweenChainer(m_transitionType);
         // setup the components
         for (int i = 0; i < vcs.Length; ++i) {
           vcs[i].Setup(sceneStarter, this);
@@ -80,6 +78,14 @@ namespace Wowsome {
       public void UpdateViewManager(float dt) {
         m_tweener.Update(dt);
       }
+
+      public void ShowScreen(string screenId, bool flag) {
+        SwitchView(screenId, flag);
+      }
+
+      public void ShowScreen(ViewNavigatorData navData) {
+        ShowScreen(navData.m_viewId, navData.m_flag);
+      }
       #endregion
 
       bool TryShow(IView view, bool flag) {
@@ -106,7 +112,7 @@ namespace Wowsome {
       void ShowView(IView view, bool flag) {
         // get the tween
         HashSet<ITween> tweens = new HashSet<ITween>();
-        string tweenId = flag ? m_showTweenId : m_hideTweenId;
+        string tweenId = flag ? m_onShowTweenId : m_onHideTweenId;
         foreach (ITween viewTween in view.Tweens) {
           if (viewTween.TweenId.IsEqual(tweenId)) {
             tweens.Add(viewTween);

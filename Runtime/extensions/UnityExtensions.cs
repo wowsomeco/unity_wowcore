@@ -38,6 +38,10 @@ namespace Wowsome {
   }
 
   public static class Vector2Ext {
+    public static bool IsZero(this Vector2 v) {
+      return Mathf.FloorToInt(v.x) == 0 && Mathf.FloorToInt(v.y) == 0;
+    }
+
     public static float[] ToFloats(this Vector2 self) {
       return new float[2] { self.x, self.y };
     }
@@ -84,6 +88,15 @@ namespace Wowsome {
       }
       return components;
     }
+
+    public static T Clone<T>(this Component c, Transform parent, string name = "") {
+      return c.gameObject.Clone<T>(parent, name);
+    }
+
+    public static T CreateComponent<T>(Transform parent, string objName) where T : Component {
+      GameObject go = GameObjectExt.CreateGameObject(objName, parent);
+      return go.AddComponent<T>();
+    }
   }
 
   public static class GameObjectExt {
@@ -107,6 +120,12 @@ namespace Wowsome {
         instance.name = name;
       }
       return instance.GetComponent<T>();
+    }
+
+    public static GameObject CreateGameObject(string name, Transform parent) {
+      GameObject go = new GameObject(name);
+      go.transform.SetParent(parent, false);
+      return go;
     }
 
     private static void DoIterate(GameObject gameObject, ShouldRecursive shouldRecursive) {
