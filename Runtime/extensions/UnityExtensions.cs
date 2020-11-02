@@ -46,6 +46,10 @@ namespace Wowsome {
       return new float[2] { self.x, self.y };
     }
 
+    public static List<float> ToListFloat(this Vector2 self) {
+      return new List<float> { self.x, self.y };
+    }
+
     public static Vector2 ClampVec2(this Vector2 v, Vector2 min, Vector2 max) {
       v.x = Mathf.Clamp(v.x, min.x, max.x);
       v.y = Mathf.Clamp(v.y, min.y, max.y);
@@ -96,6 +100,19 @@ namespace Wowsome {
     public static T CreateComponent<T>(Transform parent, string objName) where T : Component {
       GameObject go = GameObjectExt.CreateGameObject(objName, parent);
       return go.AddComponent<T>();
+    }
+
+    public static T CreateFromResource<T>(string resourcePath, Transform parent, string name = "") where T : Component {
+      GameObject obj = GameObject.Instantiate(Resources.Load(resourcePath)) as GameObject;
+      Debug.Assert(obj != null, "gamobject is null");
+
+      obj.transform.SetParent(parent, false);
+      if (!name.IsEmpty()) obj.name = name;
+
+      T c = obj.GetComponent<T>();
+      Debug.Assert(c != null, "component is null");
+
+      return c;
     }
   }
 

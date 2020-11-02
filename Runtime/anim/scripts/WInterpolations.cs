@@ -12,6 +12,10 @@ namespace Wowsome.Anim {
     public int repeat;
     public bool yoyo;
 
+    public bool PingPong {
+      get { return yoyo && repeat > 0 && (repeat % 2 != 0); }
+    }
+
     public Timing(double duration, double delay, Easing eas, int rep, bool yo) {
       dur = duration;
       dly = delay;

@@ -100,6 +100,11 @@ namespace Wowsome {
       return trans.rect.height;
     }
 
+    public static RectTransform SetPivot(this RectTransform rt, Vector2 pivot) {
+      rt.pivot = pivot;
+      return rt;
+    }
+
     public static RectTransform SetSize(this RectTransform trans, Vector2 newSize) {
       Vector2 oldSize = trans.rect.size;
       Vector2 deltaSize = newSize - oldSize;

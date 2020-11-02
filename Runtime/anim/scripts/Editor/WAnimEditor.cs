@@ -9,6 +9,31 @@ namespace Wowsome.Anim {
 
   [CustomEditor(typeof(WAnimatable))]
   public class WAnimEditor : Editor {
+    public class Initial {
+      public Vector2 Pos { get; private set; }
+      public Vector2 Scale { get; private set; }
+      public float Rotation { get; private set; }
+      public Vector2 Pivot { get; private set; }
+
+      RectTransform _rt;
+
+      public Initial(RectTransform target) {
+        _rt = target;
+
+        Pos = target.Pos();
+        Scale = target.Scale();
+        Rotation = target.Rotation();
+        Pivot = target.pivot;
+      }
+
+      public void Revert() {
+        _rt.SetPos(Pos);
+        _rt.SetScale(Scale);
+        _rt.SetRotation(Rotation);
+        _rt.SetPivot(Pivot);
+      }
+    }
+
     public class AnimJson {
       public List<WAnimFrame> frames = new List<WAnimFrame>();
 
@@ -19,8 +44,15 @@ namespace Wowsome.Anim {
 
     bool _recording = false;
     WAnimatable _target = null;
+    Initial _initial = null;
     FileBrowser _fileBrowser = new FileBrowser(Directory.GetCurrentDirectory());
     string _saveFileAs = string.Empty;
+
+    void OnDisable() {
+      if (null != _initial) _initial.Revert();
+
+      EditorApplication.update -= DoUpdate;
+    }
 
     public override void OnInspectorGUI() {
       base.OnInspectorGUI();
@@ -40,42 +72,20 @@ namespace Wowsome.Anim {
       });
 
       if (!_recording) {
-        /*
-        EU.Btn("Start Recording", () => {
-          _recording = true;
-          // _curFrame = new AnimFrame();
-        });
-        */
-
         EU.Btn("Play", () => {
+          _initial = new Initial(_target.GetComponent<RectTransform>());
           _target.Play();
           EditorApplication.update += DoUpdate;
         });
 
-        EU.Btn("Stop", () => {
-          EditorApplication.update -= DoUpdate;
+        EU.Btn("Reset", () => {
+          OnDisable();
         });
 
         _saveFileAs = EditorGUILayout.TextField("Save As", _saveFileAs);
         if (!_saveFileAs.IsEmpty()) {
           EU.Btn("Save", () => SaveModel(_saveFileAs));
         }
-      }
-
-      if (_recording) {
-        EU.Btn("Record", () => {
-          // TODO : handle recording
-          // Image img = _target.GetComponent<Image>();
-          // _target.TryAddSprite(img.sprite);
-          // _curFrame.FromImage(img, _selectedAnim.frames.Last(), _posTiming, _scaleTiming, _rotTiming);
-          // _selectedAnim.frames.Add(_curFrame);
-          // _curFrame = new AnimFrame();
-          EU.SetSceneDirty();
-        });
-
-        EU.Btn("Stop Recording", () => {
-          _recording = false;
-        });
       }
     }
 
@@ -89,7 +99,7 @@ namespace Wowsome.Anim {
       string resourceFolder = Directory.GetCurrentDirectory() + "/Assets/Resources";
       Directory.CreateDirectory(resourceFolder);
       IDataSerializer serializer = new JsonDataSerializer();
-      serializer.Save<AnimJson>(new AnimJson(_target.Frames), StringExt.Concat(resourceFolder, "/", fname));
+      serializer.Save<AnimJson>(new AnimJson(_target.Frames), StringExt.Concat(resourceFolder, "/", fname, ".json"));
       UnityEditor.AssetDatabase.Refresh();
     }
   }
