@@ -182,5 +182,12 @@ namespace Wowsome {
       }
       return num.IsEmpty() ? -1 : int.Parse(num);
     }
+
+    public static bool EndsWithMulti(this string str, IList<string> candidates) {
+      foreach (string c in candidates) {
+        if (str.EndsWith(c)) return true;
+      }
+      return false;
+    }
   }
 }
