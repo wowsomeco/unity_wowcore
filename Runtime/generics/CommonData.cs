@@ -2,6 +2,9 @@
 using UnityEngine;
 
 namespace Wowsome {
+  public delegate T Delegate<T>(T t);
+  public delegate T Delegate<T, U>(U t);
+
   public class CapacityData {
     public int Max { get; private set; }
     public int Cur { get; private set; }
@@ -53,33 +56,6 @@ namespace Wowsome {
 
     public void Reset() {
       Cur = m_initCur;
-    }
-  }
-
-  [Serializable]
-  public struct ImageData {
-    public string m_spriteName;
-    public Vector2 m_pos;
-    public Vector2 m_size;
-    public float m_rotation;
-
-    public ImageData(
-      string spriteName
-      , Vector2 pos
-      , Vector2 size
-      , float rot
-    ) {
-      m_spriteName = spriteName;
-      m_pos = pos;
-      m_size = size;
-      m_rotation = rot;
-    }
-
-    public ImageData(string spriteName, ImageData other) {
-      m_spriteName = spriteName;
-      m_pos = other.m_pos;
-      m_size = other.m_size;
-      m_rotation = other.m_rotation;
     }
   }
 

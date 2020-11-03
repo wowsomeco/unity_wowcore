@@ -7,10 +7,39 @@ using UnityEngine.UI;
 namespace Wowsome {
   #region Rect Transform
   public static class RectTransformExtensions {
+    public static RectTransform SetLeft(this RectTransform rt, float left) {
+      rt.offsetMin = new Vector2(left, rt.offsetMin.y);
+      return rt;
+    }
+
+    public static RectTransform SetRight(this RectTransform rt, float right) {
+      rt.offsetMax = new Vector2(-right, rt.offsetMax.y);
+      return rt;
+    }
+
+    public static RectTransform SetTop(this RectTransform rt, float top) {
+      rt.offsetMax = new Vector2(rt.offsetMax.x, -top);
+      return rt;
+    }
+
+    public static RectTransform SetBottom(this RectTransform rt, float bottom) {
+      rt.offsetMin = new Vector2(rt.offsetMin.x, bottom);
+      return rt;
+    }
+
     public static RectTransform Normalize(this RectTransform rt) {
       rt.SetPos(Vector2.zero);
       rt.SetScale(Vector2.one);
       rt.SetRotation(0f);
+      return rt;
+    }
+
+    public static RectTransform Stretch(this RectTransform rt) {
+      rt.anchorMin = Vector2.zero;
+      rt.anchorMax = Vector2.one;
+      rt.pivot = new Vector2(0.5f, 0.5f);
+      rt.SetLeft(0f).SetRight(0f).SetTop(0f).SetBottom(0f);
+
       return rt;
     }
 
@@ -379,25 +408,6 @@ namespace Wowsome {
 
   #region Image
   public static class ImageExtensions {
-    public static void SetImageData(this Image img, Sprite sprite, ImageData imgData) {
-      img.sprite = sprite;
-      img.rectTransform.SetRotation(imgData.m_rotation);
-      img.rectTransform.SetSize(imgData.m_size);
-      img.rectTransform.SetPos(imgData.m_pos);
-    }
-
-    public static string SpriteName(this Image img) {
-      return img.sprite == null ? string.Empty : img.sprite.name;
-    }
-
-    public static ImageData ImageData(this Image img) {
-      return new ImageData(
-          img.SpriteName()
-          , img.rectTransform.Pos()
-          , img.rectTransform.Size(true)
-          , img.rectTransform.Rotation());
-    }
-
     public static void SetMaxSize(this Image img, float maxSize) {
       img.SetNativeSize();
       img.rectTransform.SetMaxSize(maxSize);

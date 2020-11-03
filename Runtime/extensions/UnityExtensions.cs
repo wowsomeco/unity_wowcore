@@ -76,6 +76,10 @@ namespace Wowsome {
   }
 
   public static class ComponentExt {
+    public static bool Same(this Component c, Component other) {
+      return c.GetInstanceID() == other.GetInstanceID();
+    }
+
     public static void SetVisible(this Component c, bool flag) {
       c.gameObject.SetActive(flag);
     }
@@ -114,11 +118,19 @@ namespace Wowsome {
 
       return c;
     }
+
+    public static void IterateParent(this Transform t, Delegate<bool, Transform> shouldRecursive) {
+      Transform parent = t.parent;
+      if (null != parent) {
+        bool recursive = shouldRecursive(parent);
+        if (recursive) {
+          IterateParent(parent, shouldRecursive);
+        }
+      }
+    }
   }
 
   public static class GameObjectExt {
-    public delegate bool ShouldRecursive(GameObject go);
-
     public static void DestroyChildren(this GameObject gameObject) {
       Transform goTransform = gameObject.transform;
       for (int i = goTransform.childCount - 1; i >= 0; i--) {
@@ -126,7 +138,7 @@ namespace Wowsome {
       }
     }
 
-    public static void IterateChildren(GameObject gameObject, ShouldRecursive shouldRecursive) {
+    public static void IterateChildren(GameObject gameObject, Delegate<bool, GameObject> shouldRecursive) {
       DoIterate(gameObject, shouldRecursive);
     }
 
@@ -145,7 +157,18 @@ namespace Wowsome {
       return go;
     }
 
-    private static void DoIterate(GameObject gameObject, ShouldRecursive shouldRecursive) {
+    public static void DestroyComponent<T>(this GameObject g) where T : Component {
+      T c = g.GetComponent<T>();
+      if (c == null) return;
+
+#if UNITY_EDITOR
+      GameObject.DestroyImmediate(c);
+#else
+      GameObject.Destroy(c);
+#endif
+    }
+
+    private static void DoIterate(GameObject gameObject, Delegate<bool, GameObject> shouldRecursive) {
       foreach (Transform child in gameObject.transform) {
         bool recursive = shouldRecursive(child.gameObject);
         if (recursive) {

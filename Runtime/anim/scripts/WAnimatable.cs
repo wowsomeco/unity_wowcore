@@ -1,18 +1,18 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Wowsome.Anim {
   /// <summary>
   /// Generic animation helper.
-  /// Right now it can only handle UI Image.
+  /// Right now it can only handle Rect Transform.
+  /// Dont use it yet! some stuff might not work as expected for now.
   /// </summary>
-  [RequireComponent(typeof(Image))]
+  [RequireComponent(typeof(RectTransform))]
   public class WAnimatable : MonoBehaviour {
     public class Controller {
       public class ActionHandler {
-        public delegate void Lerp(Image target, Vector2 cur);
-        public delegate Vector2 GetCur(Image target);
+        public delegate void Lerp(RectTransform target, Vector2 cur);
+        public delegate Vector2 GetCur(RectTransform target);
 
         public Lerp OnLerp { get; private set; }
         public GetCur Current { get; private set; }
@@ -23,7 +23,7 @@ namespace Wowsome.Anim {
         }
       }
 
-      Image _target;
+      RectTransform _target;
       WAnimFrame _frame;
       Dictionary<WFrameType, ActionHandler> _handlers = new Dictionary<WFrameType, ActionHandler>();
       InterpolationVec _interpolation = null;
@@ -31,26 +31,26 @@ namespace Wowsome.Anim {
       Dictionary<int, List<Controller>> _playingSub = new Dictionary<int, List<Controller>>();
 
       public Controller(GameObject go, WAnimFrame frame) {
-        _target = go.GetComponent<Image>();
+        _target = go.GetComponent<RectTransform>();
 
         _handlers[WFrameType.Position] = new ActionHandler(
-          (img, cur) => img.SetPos(cur),
-          img => img.rectTransform.Pos()
+          (rt, cur) => rt.SetPos(cur),
+          rt => rt.Pos()
         );
 
         _handlers[WFrameType.Scale] = new ActionHandler(
-          (img, cur) => img.SetScale(cur),
-          img => img.rectTransform.Scale()
+          (rt, cur) => rt.SetScale(cur),
+          rt => rt.Scale()
         );
 
         _handlers[WFrameType.Rotation] = new ActionHandler(
-          (img, cur) => img.SetRotation(cur[0]),
-          img => new Vector2(img.rectTransform.Rotation(), 0f)
+          (rt, cur) => rt.SetRotation(cur[0]),
+          rt => new Vector2(rt.Rotation(), 0f)
         );
 
         _handlers[WFrameType.Pivot] = new ActionHandler(
-          (img, cur) => img.rectTransform.SetPivot(cur),
-          img => img.rectTransform.pivot
+          (rt, cur) => rt.SetPivot(cur),
+          rt => rt.pivot
         );
 
         _frame = frame;
@@ -105,7 +105,6 @@ namespace Wowsome.Anim {
 
     public void Play() {
       _controllers.Clear();
-
       Frames.ForEach(fr => {
         _controllers.Add(new Controller(gameObject, fr));
       });
