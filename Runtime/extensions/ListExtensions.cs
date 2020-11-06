@@ -126,5 +126,44 @@ namespace Wowsome {
 
       return found;
     }
+
+    public static void TryFind<T>(this List<T> l, Predicate<T> predicate, Action<T> found, Action notFound = null) {
+      T t = l.Find(predicate);
+      if (t == null) {
+        notFound?.Invoke();
+      } else {
+        found(t);
+      }
+    }
+
+    public static List<T> Combine<T>(params IList<T>[] lists) {
+      List<T> newList = new List<T>();
+      foreach (IList<T> l in lists) {
+        newList.AddRange(l);
+      }
+      return newList;
+    }
+
+    public static T Push<T>(this IList<T> list, T item) {
+      list.Add(item);
+      return item;
+    }
+
+    public static bool RemoveLast<T>(this IList<T> list) {
+      if (list.Count > 0) {
+        list.RemoveAt(list.Count - 1);
+        return true;
+      }
+      return false;
+    }
+
+    public static T TryGet<T>(this IList<T> list, int idx) {
+      if (list != null && idx > -1 && list.Count > idx) { return list[idx]; }
+      return default(T);
+    }
+
+    public static T First<T>(this IList<T> arr) {
+      return arr[0];
+    }
   }
 }

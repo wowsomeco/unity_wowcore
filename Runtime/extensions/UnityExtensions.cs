@@ -1,7 +1,47 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 namespace Wowsome {
+  public static class Print {
+    /// <summary>
+    /// Wrapper around unity Debug.Log but only gets printed on unity editor,
+    /// it wont be printed during production e.g. on mobile devices.
+    /// </summary>
+    /// <param name="msg">The message to print on the editor</param>
+    public static void Log(object msg) {
+#if UNITY_EDITOR
+      Debug.Log(msg);
+#endif
+    }
+  }
+
+  public static class Assert {
+    public static void Null(object obj, string err = null) {
+#if UNITY_EDITOR
+      Debug.Assert(null != obj, string.IsNullOrEmpty(err) ? $"obj is null" : err);
+#endif
+    }
+  }
+
+  public static class TextureExt {
+    public static Sprite ToSprite(this Texture2D texture) {
+      Sprite sprite = Sprite.Create(texture, new Rect(Vector2.zero, new Vector2(texture.width, texture.height)), Vector2.one * 0.5f);
+      return sprite;
+    }
+
+    public static Sprite ToSprite(this string filePath) {
+      return filePath.ToTexture2D().ToSprite();
+    }
+
+    public static Texture2D ToTexture2D(this string filePath) {
+      Texture2D t = new Texture2D(1, 1);
+      t.LoadImage(File.ReadAllBytes(filePath));
+      return t;
+    }
+  }
+
   public static class ColorExt {
     public static string ColorToHex(Color32 color) {
       string hex = color.r.ToString("X2") + color.g.ToString("X2") + color.b.ToString("X2") + color.a.ToString("X2");
@@ -99,6 +139,21 @@ namespace Wowsome {
 
     public static T Clone<T>(this Component c, Transform parent, string name = "") {
       return c.gameObject.Clone<T>(parent, name);
+    }
+
+    /// <summary>
+    /// Given a list that consists of 1 component in it, then clone to the same parent of that component,
+    /// then add the cloned to the list afterwards
+    /// </summary>
+    /// <param name="l">The List</param>
+    /// <param name="count">The number of clone</param>
+    /// <typeparam name="T">Any Component.</typeparam>
+    public static void CloneToParent<T>(this List<T> l, int count, Action<T> onClone = null) where T : Component {
+      for (int i = 0; i < count; ++i) {
+        T cloned = l[0].gameObject.Clone<T>(l[0].transform.parent);
+        l.Add(cloned);
+        onClone?.Invoke(cloned);
+      }
     }
 
     public static T CreateComponent<T>(Transform parent, string objName) where T : Component {

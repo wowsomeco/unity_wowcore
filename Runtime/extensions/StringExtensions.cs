@@ -189,5 +189,40 @@ namespace Wowsome {
       }
       return false;
     }
+
+    public static bool ContainsDigit(this string str) {
+      foreach (char ch in str) {
+        if (char.IsDigit(ch)) return true;
+      }
+      return false;
+    }
+
+    public static string RemoveDigit(this string str) {
+      if (str.ContainsDigit()) {
+        string s = string.Empty;
+        foreach (char ch in str) {
+          if (!char.IsDigit(ch)) s += ch;
+        }
+        return s.Trim();
+      }
+      return str;
+    }
+
+    public static string RemoveNonLetters(this string str) {
+      string s = string.Empty;
+      foreach (char ch in str) {
+        // include whitespace too for now
+        if (char.IsLetter(ch) || char.IsWhiteSpace(ch)) s += ch;
+      }
+      return s.Trim();
+    }
+
+    public static string LastSplit(this string str, char separator = '/') {
+      return str.Split(separator).Last();
+    }
+
+    public static string FirstSplit(this string str, char separator = '/') {
+      return str.Split(separator).First();
+    }
   }
 }

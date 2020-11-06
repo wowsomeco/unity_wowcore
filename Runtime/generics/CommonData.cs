@@ -139,30 +139,4 @@ namespace Wowsome {
       m_delay = delay;
     }
   }
-
-  [Serializable]
-  public struct GridData {
-    public int m_row;
-    public int m_col;
-
-    public GridData(int r, int c) {
-      m_row = r;
-      m_col = c;
-    }
-
-    public bool IsEqual(GridData other) {
-      return m_row == other.m_row && m_col == other.m_col;
-    }
-
-    public int this[int idx] {
-      get { return idx == 0 ? m_row : m_col; }
-      set {
-        if (idx == 0) {
-          m_row = value;
-        } else {
-          m_col = value;
-        }
-      }
-    }
-  }
 }

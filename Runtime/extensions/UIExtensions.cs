@@ -3,10 +3,18 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Wowsome.Tween;
+using Wowsome.UI;
 
 namespace Wowsome {
   #region Rect Transform
   public static class RectTransformExtensions {
+    public static Vector3 ScreenToWorldPos(this RectTransform rectTransform, Vector2 screenPos) {
+      Vector3 worldPos = Vector3.zero;
+      RectTransformUtility.ScreenPointToWorldPointInRectangle(rectTransform, screenPos, null, out worldPos);
+      return worldPos;
+    }
+
     public static RectTransform SetLeft(this RectTransform rt, float left) {
       rt.offsetMin = new Vector2(left, rt.offsetMin.y);
       return rt;
@@ -520,5 +528,29 @@ namespace Wowsome {
       return false;
     }
   }
+  #endregion
+
+  #region Utils
+
+  public class CommonButton {
+    /// <summary>
+    /// On Tap Tween
+    /// </summary>
+    Tweener _tw;
+
+    public CommonButton(GameObject gameObject, System.Action onTap, ITween tween = null) {
+      _tw = new Tweener(tween == null ? Tweener.Pulse(gameObject) : tween);
+      // init tap handler
+      new CTapHandler(gameObject, pos => {
+        _tw.Play();
+        onTap();
+      });
+    }
+
+    public void Update(float dt) {
+      _tw.Update(dt);
+    }
+  }
+
   #endregion
 }
