@@ -20,7 +20,7 @@ namespace Wowsome {
   public static class Assert {
     public static void Null(object obj, string err = null) {
 #if UNITY_EDITOR
-      Debug.Assert(null != obj, string.IsNullOrEmpty(err) ? $"obj is null" : err);
+      Debug.Assert(null != obj, string.IsNullOrEmpty(err) ? "obj is null" : err);
 #endif
     }
   }
@@ -152,7 +152,7 @@ namespace Wowsome {
       for (int i = 0; i < count; ++i) {
         T cloned = l[0].gameObject.Clone<T>(l[0].transform.parent);
         l.Add(cloned);
-        onClone?.Invoke(cloned);
+        if (onClone != null) onClone.Invoke(cloned);
       }
     }
 

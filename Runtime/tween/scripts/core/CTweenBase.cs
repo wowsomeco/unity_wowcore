@@ -270,22 +270,15 @@ namespace Wowsome {
           fr = i == 0 ? m_tween.Values[0] : to;
           to = m_data[i].m_tween.m_tweenType == TweenType.To ?
               m_data[i].m_rotation : fr + m_data[i].m_rotation;
-
-          fr = ClampRotation(fr);
-
-          nodes[i] = new TweenLerpData(
-            fr
-            , to
-            , m_data[i].m_tween
-          );
+          // this needs to be done because minus angle will be incremented with 360 degrees by the unity euler angle
+          // i.e. -30 degrees will be forced and returned as 330 degrees instead, hence below          
+          if (fr > 180f) {
+            fr -= 360f;
+          }
+          nodes[i] = new TweenLerpData(fr, to, m_data[i].m_tween);
         }
 
         m_tween.Play(nodes, m_loop);
-      }
-
-      float ClampRotation(float r) {
-        // e.g. -90 returns 270, 450 returns 90
-        return r < 0f ? r + 360f : r % 360f;
       }
     }
     #endregion

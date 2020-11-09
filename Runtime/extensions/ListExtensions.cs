@@ -130,7 +130,7 @@ namespace Wowsome {
     public static void TryFind<T>(this List<T> l, Predicate<T> predicate, Action<T> found, Action notFound = null) {
       T t = l.Find(predicate);
       if (t == null) {
-        notFound?.Invoke();
+        if (null != notFound) notFound.Invoke();
       } else {
         found(t);
       }
