@@ -5,14 +5,37 @@ using UnityEngine;
 
 namespace Wowsome {
   public static class Print {
-    /// <summary>
-    /// Wrapper around unity Debug.Log but only gets printed on unity editor,
-    /// it wont be printed during production e.g. on mobile devices.
-    /// </summary>
-    /// <param name="msg">The message to print on the editor</param>
-    public static void Log(object msg) {
+    public class Txt {
+      public string Text { get; private set; }
+      public string Color { get; private set; }
+
+      public string GetText {
+        get { return string.Format("<color={0}>{1}</color>", Color, Text); }
+      }
+
+      public Txt(string t, string c) {
+        Text = t;
+        Color = c;
+      }
+
+      public Txt(string t) : this(t, "black") { }
+    }
+
+    public static Txt D(string t, string c = "black") {
+      return new Txt(t, c);
+    }
+
+    public static void Log(string msg, string color = "black") {
 #if UNITY_EDITOR
-      Debug.Log(msg);
+      Txt t = new Txt(msg, color);
+      Debug.Log(t.GetText);
+#endif
+    }
+
+    public static void Log(params Txt[] texts) {
+#if UNITY_EDITOR
+      string t = texts.Fold(string.Empty, (p, c) => p += (c.GetText + " "));
+      Debug.Log(t);
 #endif
     }
   }

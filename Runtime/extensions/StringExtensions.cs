@@ -224,5 +224,23 @@ namespace Wowsome {
     public static string FirstSplit(this string str, char separator = '/') {
       return str.Split(separator).First();
     }
+
+    public static string Flatten(this List<String> strs, char separator = ' ') {
+      string s = string.Empty;
+      strs.LoopWithPointer((str, idx, first, last) => {
+        s += str;
+        if (!last) s += separator;
+      });
+
+      return s;
+    }
+
+    public static string Standardize(this string str) {
+      return str.Trim().ToLower();
+    }
+
+    public static bool CompareStandard(this string str, string other) {
+      return str.Standardize() == other.Standardize();
+    }
   }
 }
