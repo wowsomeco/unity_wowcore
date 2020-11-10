@@ -18,14 +18,14 @@ namespace Wowsome {
         Color = c;
       }
 
-      public Txt(string t) : this(t, "black") { }
+      public Txt(string t) : this(t, "white") { }
     }
 
-    public static Txt D(string t, string c = "black") {
+    public static Txt D(string t, string c = "white") {
       return new Txt(t, c);
     }
 
-    public static void Log(string msg, string color = "black") {
+    public static void Log(string msg, string color = "white") {
 #if UNITY_EDITOR
       Txt t = new Txt(msg, color);
       Debug.Log(t.GetText);
