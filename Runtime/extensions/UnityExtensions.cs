@@ -140,7 +140,7 @@ namespace Wowsome {
 
   public static class ComponentExt {
     public static bool Same(this Component c, Component other) {
-      return c.GetInstanceID() == other.GetInstanceID();
+      return c.gameObject.Same(other.gameObject);
     }
 
     public static void SetVisible(this Component c, bool flag) {
@@ -209,6 +209,14 @@ namespace Wowsome {
   }
 
   public static class GameObjectExt {
+    public static bool Same(this GameObject g, GameObject other) {
+      return g.GetInstanceID() == other.GetInstanceID();
+    }
+
+    public static bool HasComponent<T>(this GameObject g) where T : Component {
+      return g.GetComponent<T>() != null;
+    }
+
     public static void DestroyChildren(this GameObject gameObject) {
       Transform goTransform = gameObject.transform;
       for (int i = goTransform.childCount - 1; i >= 0; i--) {
@@ -216,8 +224,15 @@ namespace Wowsome {
       }
     }
 
-    public static void IterateChildren(GameObject gameObject, Delegate<bool, GameObject> shouldRecursive) {
+    public static void IterateChildren(this GameObject gameObject, Delegate<bool, GameObject> shouldRecursive) {
       DoIterate(gameObject, shouldRecursive);
+    }
+
+    public static void IterateSelfAndChildren(this GameObject g, Delegate<bool, GameObject> shouldRecursive) {
+      // if it's self, it wont check should recursive.
+      shouldRecursive(g);
+      // iterate children
+      DoIterate(g, shouldRecursive);
     }
 
     public static T Clone<T>(this GameObject go, Transform parent, string name = "") {
