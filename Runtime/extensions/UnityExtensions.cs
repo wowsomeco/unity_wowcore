@@ -136,6 +136,10 @@ namespace Wowsome {
     public static float Max(this Vector2 v) {
       return Mathf.Max(v.x, v.y);
     }
+
+    public static Vector2 Mul(this Vector2 v, Vector2 other) {
+      return new Vector2(v.x * other.x, v.y * other.y);
+    }
   }
 
   public static class ComponentExt {
