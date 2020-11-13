@@ -26,5 +26,9 @@ namespace Wowsome.Generic {
     public void Broadcast() {
       if (null != _observers) _observers.Invoke(Value);
     }
+
+    public void Clear() {
+      _observers = null;
+    }
   }
 }
