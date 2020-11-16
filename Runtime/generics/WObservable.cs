@@ -6,7 +6,7 @@ namespace Wowsome.Generic {
 
     Action<T> _observers = null;
 
-    public WObservable(T v) {
+    public WObservable(T v = default(T)) {
       Value = v;
     }
 
