@@ -8,6 +8,7 @@ namespace Wowsome {
       IDataSerializer m_serializer = new JsonDataSerializer();
 
       #region ISystem implementation
+
       public void InitSystem() {
         //get all the persisters from this object
         m_persisters = GetComponentsInChildren<IPersister>(true);
@@ -25,7 +26,6 @@ namespace Wowsome {
 
       public void UpdateSystem(float dt) { }
 
-      public void OnChangeScene(int index) { }
       #endregion
 
       public T GetPersister<T>() where T : class, IPersister {
