@@ -242,5 +242,12 @@ namespace Wowsome {
     public static bool CompareStandard(this string str, string other) {
       return str.Standardize() == other.Standardize();
     }
+
+    public static string Ellipsis(this string str, int maxLength = 10) {
+      if (str.IsEmpty() || str.Length < maxLength) return str;
+
+      string sub = str.Substring(0, maxLength);
+      return sub + "...";
+    }
   }
 }
