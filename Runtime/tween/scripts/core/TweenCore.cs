@@ -219,10 +219,10 @@ namespace Wowsome {
       /// <param name="go">The target object</param>
       /// <param name="targetScale">Vector2 of the up scale</param>
       /// <param name="duration">Duration of pulse</param>    
-      public static ITween Pulse(GameObject go, float targetScale = 1.05f, float duration = 0.1f) {
+      public static ITween Pulse(GameObject go, float targetScale = 1.05f, float duration = 0.1f, int loop = 1) {
         return new CTweenScale(
           TargetType.RectTransform, go,
-          new ScaleData(targetScale.ToVector2(), duration, Easing.OutQuad), new LoopData(1, Loop.Yoyo)
+          new ScaleData(targetScale.ToVector2(), duration, Easing.OutQuad), new LoopData(loop, Loop.Yoyo)
         );
       }
 
