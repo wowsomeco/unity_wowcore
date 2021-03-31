@@ -276,6 +276,10 @@ namespace Wowsome {
       Action _callback;
       bool _playing = false;
 
+      public bool IsPlaying {
+        get { return _tween.IsPlaying; }
+      }
+
       public Tweener(ITween tw) {
         _tween = tw;
       }
