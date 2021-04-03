@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using Wowsome.Chrono;
+using Wowsome.Generic;
 using Wowsome.Tween;
 
 namespace Wowsome.Anim {
