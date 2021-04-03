@@ -36,30 +36,14 @@ namespace Wowsome.Anim {
     Timer _delay = null;
     int _counter = 0;
 
-    public int Percent {
-      get {
-        if (null != _timer) {
-          return (int)(Time * 100f);
-        }
+    public WObservable<int> Percent { get; private set; }
 
-        return 100;
-      }
-    }
-
-    public float Time {
-      get {
-        if (null != _timer) {
-          float t = CEasings.GetEasing(_timer.GetPercentage(), _timing.easing);
-          // reverse t if it's yoyo and counter is odd
-          // e.g when counter is 0 it goes forward, 1 goes backwards, etc.
-          if (_timing.yoyo && _counter % 2 != 0) t = 1f - t;
-          return t;
-        }
-        return 1f;
-      }
-    }
+    public WObservable<float> Time { get; private set; }
 
     public Interpolation(Timing timing) {
+      Percent = new WObservable<int>(0);
+      Time = new WObservable<float>(0f);
+
       _timing = timing;
     }
 
@@ -90,6 +74,20 @@ namespace Wowsome.Anim {
         }
       }
 
+      // update observables
+      if (null != _timer) {
+        float t = CEasings.GetEasing(_timer.GetPercentage(), _timing.easing);
+        // reverse t if it's yoyo and counter is odd
+        // e.g when counter is 0 it goes forward, 1 goes backwards, etc.
+        if (_timing.yoyo && _counter % 2 != 0) t = 1f - t;
+        Time.Next(t);
+
+        Percent.Next((int)(Time.Value * 100f));
+      } else {
+        Time.Next(1f);
+        Percent.Next(100);
+      }
+
       return _timer != null;
     }
   }
@@ -105,7 +103,7 @@ namespace Wowsome.Anim {
     }
 
     public float Lerp() {
-      return Mathf.Lerp(from, to, Time);
+      return Mathf.Lerp(from, to, Time.Value);
     }
   }
 
@@ -120,7 +118,7 @@ namespace Wowsome.Anim {
     }
 
     public int Lerp() {
-      return (int)Mathf.Lerp(from, to, Time);
+      return (int)Mathf.Lerp(from, to, Time.Value);
     }
   }
 
@@ -135,7 +133,7 @@ namespace Wowsome.Anim {
     }
 
     public Vector2 Lerp() {
-      return Vector2.Lerp(from, to, Time);
+      return Vector2.Lerp(from, to, Time.Value);
     }
   }
 }

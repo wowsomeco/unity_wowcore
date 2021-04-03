@@ -72,7 +72,7 @@ namespace Wowsome.Anim {
         if (updating) {
           _handlers[_frame.type].OnLerp(_target, _interpolation.Lerp());
 
-          int percent = _interpolation.Percent;
+          int percent = _interpolation.Percent.Value;
           if (_subController.ContainsKey(percent)) {
             _playingSub[percent] = _subController[percent];
           }
