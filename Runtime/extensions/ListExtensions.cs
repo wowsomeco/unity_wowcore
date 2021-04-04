@@ -165,5 +165,9 @@ namespace Wowsome {
     public static T First<T>(this IList<T> arr) {
       return arr[0];
     }
+
+    public static List<T> ToList<T>(this T[] arr) {
+      return new List<T>(arr);
+    }
   }
 }
