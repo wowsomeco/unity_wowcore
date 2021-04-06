@@ -249,5 +249,11 @@ namespace Wowsome {
       string sub = str.Substring(0, maxLength);
       return sub + "...";
     }
+
+    public static char GetRandomLetter() {
+      string chars = "abcdefghijklmnopqrstuvwxyz";
+      int idx = MathExtensions.GetRandom().Next(0, chars.Length);
+      return chars[idx];
+    }
   }
 }
