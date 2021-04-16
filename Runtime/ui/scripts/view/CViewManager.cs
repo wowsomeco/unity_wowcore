@@ -6,6 +6,14 @@ using Wowsome.Tween;
 namespace Wowsome {
   namespace UI {
     public class CViewManager : MonoBehaviour, IViewManager {
+      public string OnShowTweenId {
+        get { return m_onShowTweenId; }
+      }
+
+      public string OnHideTweenId {
+        get { return m_onHideTweenId; }
+      }
+
       [Tooltip("determines how the transition between the screens should be, either in parralel or one at a time")]
       public TweenerType m_transitionType;
       [Tooltip("true = the screens are stackable, false = if it's showing one at a time")]

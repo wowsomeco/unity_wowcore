@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Wowsome.Tween;
 using Wowsome.Audio;
 using Wowsome.Core;
+using Wowsome.Tween;
 
 namespace Wowsome {
   namespace UI {
@@ -48,6 +48,8 @@ namespace Wowsome {
     }
 
     public interface IViewManager {
+      string OnShowTweenId { get; }
+      string OnHideTweenId { get; }
       bool IsTransitioning { get; }
       void AddView(IView view, bool isDefault = false);
       void AddViewListener(IViewListener listener);

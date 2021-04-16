@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using Wowsome.Tween;
 using Wowsome.Core;
+using Wowsome.Tween;
 
 namespace Wowsome {
   namespace UI {
@@ -12,11 +12,15 @@ namespace Wowsome {
 
       #region IViewComponent
       public void Setup(ISceneStarter sceneStarter, IViewManager viewManager) {
-        //cache the listener
+        // cache the listener
         m_viewManager = viewManager;
-        //init the tweens
-        Tweens = new HashSet<ITween>(GetComponentsInChildren<ITween>(true));
-        //add this view to the view manager
+        // get all ITween component(s) in this CScreen
+        List<ITween> allTweens = GetComponentsInChildren<ITween>(true).ToList();
+        // just grab the ones with onshow / onhide id defined in the view manager
+        Tweens = allTweens.FindAll(x =>
+          x.TweenId.CompareStandard(viewManager.OnShowTweenId) || x.TweenId.CompareStandard(viewManager.OnHideTweenId)
+        );
+        // add this view to the view manager
         m_viewManager.AddView(this, m_data.m_isDefault);
       }
       #endregion
