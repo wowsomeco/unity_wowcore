@@ -43,5 +43,13 @@ namespace Wowsome {
       }
       return angle % 360f;
     }
+
+    public static float Multiply(this float v, float multiplier) {
+      return v * multiplier;
+    }
+
+    public static float Half(this float v) {
+      return v.Multiply(.5f);
+    }
   }
 }
