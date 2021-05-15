@@ -13,19 +13,19 @@ namespace Wowsome {
         get { return string.Format("<color={0}>{1}</color>", Color, Text); }
       }
 
-      public Txt(string t, string c) {
-        Text = t;
+      public Txt(object t, string c) {
+        Text = t.ToString();
         Color = c;
       }
 
-      public Txt(string t) : this(t, "white") { }
+      public Txt(object t) : this(t, "white") { }
     }
 
-    public static Txt D(string t, string c = "white") {
+    public static Txt D(object t, string c = "white") {
       return new Txt(t, c);
     }
 
-    public static void Log(string msg, string color = "white") {
+    public static void Log(object msg, string color = "white") {
 #if UNITY_EDITOR
       Txt t = new Txt(msg, color);
       Debug.Log(t.GetText);
@@ -41,9 +41,21 @@ namespace Wowsome {
   }
 
   public static class Assert {
+    public static void Null<T>(object obj, string err = null) {
+#if UNITY_EDITOR
+      Debug.Assert(null != obj, string.IsNullOrEmpty(err) ? (typeof(T).Name + " is null") : err);
+#endif
+    }
+
     public static void Null(object obj, string err = null) {
 #if UNITY_EDITOR
       Debug.Assert(null != obj, string.IsNullOrEmpty(err) ? "obj is null" : err);
+#endif
+    }
+
+    public static void If(bool condition, string err) {
+#if UNITY_EDITOR
+      Debug.Assert(condition, err);
 #endif
     }
   }
@@ -140,6 +152,21 @@ namespace Wowsome {
     public static Vector2 Mul(this Vector2 v, Vector2 other) {
       return new Vector2(v.x * other.x, v.y * other.y);
     }
+
+    public static Vector2 Add(this Vector2 v, Vector2 other) {
+      return new Vector2(v.x + other.x, v.y + other.y);
+    }
+
+    public static Vector2 ScreenToLocalPos(this Vector2 screenPos, RectTransform parent, Camera camera = null) {
+      Vector2 pos;
+      RectTransformUtility.ScreenPointToLocalPointInRectangle(parent, screenPos, camera, out pos);
+      return pos;
+    }
+
+    public static Vector2 WorldToLocalPos(this Vector3 worldPos, RectTransform parent, Camera camera = null) {
+      Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(camera, worldPos);
+      return screenPos.ScreenToLocalPos(parent, camera);
+    }
   }
 
   public static class ComponentExt {
@@ -208,6 +235,15 @@ namespace Wowsome {
         if (recursive) {
           IterateParent(parent, shouldRecursive);
         }
+      }
+    }
+
+    public static void AddComponentsInChildren<T>(this IList<T> list, GameObject parent, Action<T> onEachComponent, bool includeInactive = true) {
+      var components = parent.GetComponentsInChildren<T>(includeInactive);
+      for (int i = 0; i < components.Length; ++i) {
+        T comp = components[i];
+        onEachComponent(comp);
+        list.Add(comp);
       }
     }
   }

@@ -1,128 +1,165 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Wowsome {
-  namespace Audio {
-    public class SfxManager : MonoBehaviour, IAudioManager {
-      public CSound[] m_sources;
-      public string m_path;
+namespace Wowsome.Audio {
+  public class SfxManager : MonoBehaviour, IAudioManager {
+    public string path = "audio/sfx";
+    public CSound prefabSound;
+    public int sfxChannel = 16;
 
-      Dictionary<string, AudioClip> m_audioClips = new Dictionary<string, AudioClip>();
-      float m_volume;
+    List<CSound> _sources = new List<CSound>();
+    List<CSound> _currentPlaying = new List<CSound>();
+    Dictionary<string, AudioClip> _audioClips = new Dictionary<string, AudioClip>();
+    float _volume;
 
-      #region IAudioManager
-      public float Volume {
-        get { return m_volume; }
-        set {
-          m_volume = value;
-          foreach (CSound soundFX in m_sources) {
-            soundFX.Volume = m_volume;
-          }
+    #region IAudioManager
+
+    public float Volume {
+      get { return _volume; }
+      set {
+        _volume = value;
+        foreach (CSound soundFX in _sources) {
+          soundFX.Volume = _volume;
+        }
+      }
+    }
+
+    public void InitAudioManager() {
+      AudioClip[] audioClipsFromResources = Resources.LoadAll<AudioClip>(path);
+      for (int i = 0; i < audioClipsFromResources.Length; ++i) {
+        if (!_audioClips.ContainsKey(audioClipsFromResources[i].name)) {
+          _audioClips.Add(audioClipsFromResources[i].name, audioClipsFromResources[i]);
         }
       }
 
-      public void InitAudioManager() {
-        AudioClip[] audioClipsFromResources = Resources.LoadAll<AudioClip>(m_path);
-        for (int i = 0; i < audioClipsFromResources.Length; ++i) {
-          if (!m_audioClips.ContainsKey(audioClipsFromResources[i].name)) {
-            m_audioClips.Add(audioClipsFromResources[i].name, audioClipsFromResources[i]);
-          }
-        }
-        foreach (CSound soundFX in m_sources) {
-          soundFX.gameObject.SetActive(false);
-        }
+      for (int i = 0; i < sfxChannel; ++i) {
+        CSound sound = prefabSound.Clone<CSound>(transform);
+        sound.InitSound();
+        sound.OnDeactivated += () => _currentPlaying.Remove(sound);
+
+        _sources.Add(sound);
       }
 
-      public void OnChangeScene(Scene scene) { }
+      Volume = 1f;
+    }
 
-      public void UpdateAudio(float dt) {
-        for (int i = 0; i < m_sources.Length; ++i) {
-          m_sources[i].UpdateSound(dt);
+    public void OnChangeScene(Scene scene) { }
+
+    public void UpdateAudio(float dt) {
+      for (int i = 0; i < _currentPlaying.Count; ++i) {
+        _currentPlaying[i].UpdateSound(dt);
+      }
+    }
+
+    #endregion
+
+    public void PlaySound(string audioClipName, int loopCount = 1, float delay = 0f, bool isFade = false, Action onStopCallback = null) {
+      bool containsAudioClip = _audioClips.ContainsKey(audioClipName);
+      if (containsAudioClip) {
+        CSound soundFX = GetAvailableSound();
+        if (null != soundFX) {
+          soundFX.PlaySound(_audioClips[audioClipName], loopCount, isFade, delay, 0.5f, onStopCallback);
+          _currentPlaying.Add(soundFX);
         }
       }
-      #endregion
+    }
 
-      public void PlaySound(string audioClipName, int loopCount = 1, float delay = 0f, bool isFade = false, System.Action onStopCallback = null) {
-        bool isContainAudioClip = m_audioClips.ContainsKey(audioClipName);
-        if (isContainAudioClip) {
-          CSound soundFX = GetAvailableSound();
-          if (null != soundFX) {
-            soundFX.PlaySound(m_audioClips[audioClipName], loopCount, isFade, delay, 0.5f, onStopCallback);
-          }
-        }
+    /// <summary>
+    /// Stops a current playing sounds first if no available sounds to be found
+    ///  before playing a new one.
+    /// </summary>
+    public void PlayRecycleSound(string audioClipName) {
+      StopCurrentPlaying(audioClipName);
+      PlaySound(audioClipName);
+    }
+
+    /// <summary>
+    /// Stops the currently playing sound if no sounds are available in the pool
+    /// it will try to stop the one that has same audioClipName first.
+    /// if it's not found then it will stop the first one from the _currentPlaying list instead 
+    /// </summary>
+    public void StopCurrentPlaying(string audioClipName) {
+      if (GetAvailableSound() == null) {
+        CSound curPlaying = GetPlayingSound(audioClipName) ?? _currentPlaying.First();
+        curPlaying.StopSoundImmediate();
       }
+    }
 
-      public void PlaySound(SfxData sfxData) {
-        //bail if no sfx name defined
-        if (string.IsNullOrEmpty(sfxData.m_sfxName)) {
-          return;
-        }
-        //if it should stop, stop and bail
-        if (sfxData.m_shouldStop) {
-          StopAudioByName(sfxData.m_sfxName);
-          return;
-        }
-        //also bail if there's a sound for the name playing where it should be unique
-        if (sfxData.m_shouldUnique && IsSoundPlaying(sfxData.m_sfxName)) {
-          return;
-        }
-        //finally play the sound
-        PlaySound(sfxData.m_sfxName
-            , sfxData.m_loopCount > -1 ? (sfxData.m_loopCount + 1) : -1
-            , sfxData.m_delay
-            , sfxData.m_isFadeOnPlay);
+    public void PlaySound(SfxData sfxData) {
+      // bail if no sfx name defined
+      if (string.IsNullOrEmpty(sfxData.sfxName)) {
+        return;
       }
-
-      public void PlaySound(SfxData[] sfxData) {
-        for (int i = 0; i < sfxData.Length; ++i) {
-          PlaySound(sfxData[i]);
-        }
+      // if it should stop, stop and bail
+      if (sfxData.shouldStop) {
+        StopAudioByName(sfxData.sfxName);
+        return;
       }
-
-      public void StopAllAudio() {
-        foreach (var sfx in m_sources) {
-          sfx.StopSoundImmediate();
-        }
+      // also bail if there's a sound for the name playing where it should be unique
+      if (sfxData.shouldUnique && IsSoundPlaying(sfxData.sfxName)) {
+        return;
       }
+      // finally play the sound
+      PlaySound(
+        sfxData.sfxName
+        , sfxData.loopCount > -1 ? (sfxData.loopCount + 1) : -1
+        , sfxData.delay
+        , sfxData.isFadeOnPlay
+      );
+    }
 
-      public void StopAudioByName(string audioClipName, bool isFade = false, float delay = 1f) {
-        List<CSound> bSounds = new List<CSound>(); //to prevent from same sound that is still playing in the background
-        foreach (var soundFX in m_sources) {
-          if (/*soundFX.IsPlaying() &&*/  soundFX.GetAudioName() == audioClipName) {
-            bSounds.Add(soundFX);
-          }
-        }
+    public void PlaySound(SfxData[] sfxData) {
+      for (int i = 0; i < sfxData.Length; ++i) {
+        PlaySound(sfxData[i]);
+      }
+    }
 
-        foreach (CSound bSound in bSounds) {
-          if (isFade) {
-            bSound.StopFadeSound(delay, () => {
-              bSound.StopSoundImmediate();
-            });
-          } else {
+    public void StopAllAudio() {
+      foreach (var sfx in _sources) {
+        sfx.StopSoundImmediate();
+      }
+    }
+
+    public void StopAudioByName(string audioClipName, bool isFade = false, float delay = 1f) {
+      List<CSound> bSounds = _sources.FindAll(x => x.AudioName == audioClipName);
+
+      foreach (CSound bSound in bSounds) {
+        if (isFade) {
+          bSound.StopFadeSound(delay, () => {
             bSound.StopSoundImmediate();
-          }
+          });
+        } else {
+          bSound.StopSoundImmediate();
+        }
+      }
+    }
+
+    public bool IsSoundPlaying(string audioClipName) {
+      var source = _sources.Find(x => x.IsPlaying && x.AudioName == audioClipName);
+      return source != null;
+    }
+
+    public CSound GetPlayingSound(string audioClipName) {
+      for (int i = 0; i < _currentPlaying.Count; ++i) {
+        CSound sound = _currentPlaying[i];
+        if (sound.IsPlaying && sound.AudioName == audioClipName) {
+          return sound;
         }
       }
 
-      public bool IsSoundPlaying(string audioClipName) {
-        foreach (var soundFX in m_sources) {
-          if (soundFX.IsPlaying() && soundFX.GetAudioName() == audioClipName) {
-            return true;
-          }
-        }
-        return false;
-      }
+      return null;
+    }
 
-      CSound GetAvailableSound() {
-        foreach (var soundFX in m_sources) {
-          if (!soundFX.gameObject.activeSelf) {
-            soundFX.gameObject.SetActive(true);
-            return soundFX;
-          }
+    CSound GetAvailableSound() {
+      foreach (var soundFX in _sources) {
+        if (!soundFX.IsPlaying) {
+          soundFX.gameObject.SetActive(true);
+          return soundFX;
         }
-        return null;
       }
+      return null;
     }
   }
 }

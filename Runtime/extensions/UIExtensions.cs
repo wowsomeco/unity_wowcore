@@ -111,6 +111,14 @@ namespace Wowsome {
       rt.localScale = scale;
     }
 
+    public static void SetScaleX(this RectTransform rt, float x) {
+      rt.localScale = new Vector2(x, rt.localScale.y);
+    }
+
+    public static void SetScaleY(this RectTransform rt, float y) {
+      rt.localScale = new Vector2(rt.localScale.x, y);
+    }
+
     public static void SetDefaultScale(this RectTransform trans) {
       trans.SetScale(Vector2.one);
     }

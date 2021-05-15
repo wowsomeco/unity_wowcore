@@ -56,6 +56,12 @@ namespace Wowsome {
       }
     }
 
+    public static void LoopReverse<T>(this IList<T> l, IteratorWithPointer<T> iter) {
+      for (int i = (l.Count - 1); i >= 0; --i) {
+        iter(l[i], i, i == 0, i == l.Count - 1);
+      }
+    }
+
     public static void Swap<T>(this IList<T> list, int indexA, int indexB) {
       T tmp = list[indexA];
       list[indexA] = list[indexB];

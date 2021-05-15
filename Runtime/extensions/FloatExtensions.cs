@@ -19,6 +19,10 @@ namespace Wowsome {
       return new Vector2(self[0], self[1]);
     }
 
+    public static Vector2 ToVector2(this List<float> v) {
+      return new Vector2(v[0], v.Count > 1 ? v[1] : 0f);
+    }
+
     public static Color ToColor(this float[] f) {
       return new Color(f[0], f[1], f[2], f[3]);
     }

@@ -55,7 +55,7 @@ namespace Wowsome {
         //count down the delay
         if (null != m_delayTimer) {
           if (!m_delayTimer.UpdateTimer(dt)) {
-            m_lerpTimer = new Timer(m_tweenData.m_timeData.m_duration.GetRand());
+            m_lerpTimer = new Timer(m_tweenData.m_timeData.duration.GetRand());
             m_delayTimer = null;
           }
           isLerping = true;
@@ -93,7 +93,7 @@ namespace Wowsome {
       public void Replay() {
         //set initial values as the start
         SetValues(m_start);
-        m_delayTimer = new Timer(m_tweenData.m_timeData.m_delay.GetRand());
+        m_delayTimer = new Timer(m_tweenData.m_timeData.delay.GetRand());
         m_lerpTimer = null;
       }
 

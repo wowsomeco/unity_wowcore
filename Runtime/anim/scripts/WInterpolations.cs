@@ -7,8 +7,8 @@ using Wowsome.Tween;
 namespace Wowsome.Anim {
   [Serializable]
   public class Timing {
-    public double dur;
-    public double dly;
+    public float dur;
+    public float dly;
     public Easing easing;
     public int repeat;
     public bool yoyo;
@@ -17,7 +17,7 @@ namespace Wowsome.Anim {
       get { return yoyo && repeat > 0 && (repeat % 2 != 0); }
     }
 
-    public Timing(double duration, double delay, Easing eas, int rep, bool yo) {
+    public Timing(float duration, float delay, Easing eas, int rep, bool yo) {
       dur = duration;
       dly = delay;
       easing = eas;
@@ -25,9 +25,9 @@ namespace Wowsome.Anim {
       yoyo = yo;
     }
 
-    public Timing(double duration, Easing easing) : this(duration, 0f, easing, 0, false) { }
+    public Timing(float duration, Easing easing) : this(duration, 0f, easing, 0, false) { }
 
-    public Timing(double duration) : this(duration, Easing.Linear) { }
+    public Timing(float duration) : this(duration, Easing.Linear) { }
   }
 
   [Serializable]

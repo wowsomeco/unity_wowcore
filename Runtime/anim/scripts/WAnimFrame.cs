@@ -1,41 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Wowsome.Tween;
 
 namespace Wowsome.Anim {
   [Serializable]
-  public enum WFrameType { Position, Scale, Rotation, Pivot }
+  public enum FrameType { Position, Scale, Rotation, Sprite }
 
   [Serializable]
-  public class WAnimCallback {
-    public int percent;
-    public List<WAnimFrameNode> frames = new List<WAnimFrameNode>();
-  }
+  public class AnimFrame {
+    public Timing Timing => new Timing(duration, delay, easing, 0, false);
 
-  [Serializable]
-  public class WAnimFrame {
-    public WFrameType type;
     public List<float> to;
-    public Timing timing;
-    public List<WAnimCallback> progressCallbacks = new List<WAnimCallback>();
-
-    public WAnimFrame(WAnimFrameNode node) {
-      type = node.type;
-      to = node.to;
-      timing = node.timing;
-    }
+    public float duration;
+    public float delay;
+    public Easing easing;
   }
 
   [Serializable]
-  public class WAnimFrameNode {
-    public WFrameType type;
-    public List<float> to;
-    public Timing timing;
-  }
-
-  public static class Extensions {
-    public static Vector2 ToVec2(this List<float> v) {
-      return new Vector2(v[0], v.Count > 1 ? v[1] : 0f);
-    }
+  public class AnimStep {
+    public WAnimClip clip;
+    [Tooltip("the anim delta time multiplier. the more, the faster")]
+    public float timeMultiplier = 1f;
+    [Tooltip("the current value modifier e.g. set to {-1,1} to flip the x value. set to {1,1} if nothing should change")]
+    public Vector2 valueMultiplier = Vector2.one;
+    [Tooltip("how many times the animation should repeat e.g 1 = 1 repeat, 0 = no repeats, -1 = repeat forever")]
+    public int repeat;
+    public TweenType tweenType;
+    public float startDelay;
   }
 }
