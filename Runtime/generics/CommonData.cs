@@ -8,6 +8,9 @@ namespace Wowsome {
   public class CapacityData {
     public int Max { get; private set; }
     public int Cur { get; private set; }
+    public float Percentage => ((float)Cur / Max) * 100f;
+    public bool IsAny => Cur > 0;
+    public bool IsFull => Cur == Max;
 
     int _initCur;
 
@@ -29,16 +32,8 @@ namespace Wowsome {
       _initCur = Cur;
     }
 
-    public bool IsAny() {
-      return Cur > 0;
-    }
-
-    public bool IsFull() {
-      return Cur == Max;
-    }
-
     public bool Add() {
-      if (IsFull()) {
+      if (IsFull) {
         return false;
       }
       ++Cur;

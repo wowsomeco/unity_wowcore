@@ -5,10 +5,6 @@ using UnityEngine.EventSystems;
 
 namespace Wowsome.UI {
   public class WTouchSurface : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IBeginDragHandler, IDragHandler, IEndDragHandler {
-    public interface ITouchListener {
-      void InitTouchListener(WTouchSurface surface);
-    }
-
     public class Touch {
       public PointerEventData PointerData { get; private set; }
       public Vector2 ScreenPos {
@@ -59,15 +55,6 @@ namespace Wowsome.UI {
 
     public void OnEndDrag(PointerEventData eventData) {
       _touches.Remove(eventData.pointerId);
-    }
-
-    public void InitTouchSurface() {
-      foreach (GameObject go in _listeners) {
-        var listeners = go.GetComponentsInChildren<ITouchListener>(true);
-        foreach (ITouchListener l in listeners) {
-          l.InitTouchListener(this);
-        }
-      }
     }
   }
 }

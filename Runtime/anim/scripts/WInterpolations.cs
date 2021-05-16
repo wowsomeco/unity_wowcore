@@ -27,19 +27,20 @@ namespace Wowsome.Anim {
 
     public Timing(float duration, Easing easing) : this(duration, 0f, easing, 0, false) { }
 
+    public Timing(float duration, float delay, Easing easing) : this(duration, delay, easing, 0, false) { }
+
     public Timing(float duration) : this(duration, Easing.Linear) { }
   }
 
   [Serializable]
   public class Interpolation {
+    public WObservable<int> Percent { get; private set; }
+    public WObservable<float> Time { get; private set; }
+
     Timing _timing = null;
     Timer _timer = null;
     Timer _delay = null;
     int _counter = 0;
-
-    public WObservable<int> Percent { get; private set; }
-
-    public WObservable<float> Time { get; private set; }
 
     public Interpolation(Timing timing) {
       Percent = new WObservable<int>(0);
@@ -95,6 +96,8 @@ namespace Wowsome.Anim {
 
   [Serializable]
   public class InterpolationFloat : Interpolation {
+    public Action<float> OnLerp { get; set; }
+
     public float from;
     public float to;
 
@@ -104,7 +107,9 @@ namespace Wowsome.Anim {
     }
 
     public float Lerp() {
-      return Mathf.Lerp(from, to, Time.Value);
+      float cur = Mathf.Lerp(from, to, Time.Value);
+      OnLerp?.Invoke(cur);
+      return cur;
     }
   }
 

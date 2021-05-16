@@ -2,12 +2,11 @@
 using UnityEngine;
 
 namespace Wowsome.UI {
-  using ITouchListener = WTouchSurface.ITouchListener;
   using Touch = WTouchSurface.Touch;
 
   [RequireComponent(typeof(RectTransform))]
   [DisallowMultipleComponent]
-  public class WRTTouchListenerBase : MonoBehaviour, ITouchListener {
+  public class WRTTouchListenerBase : MonoBehaviour {
     /// <summary>
     /// Gets called whenever the screen pos touch surface is inside this rect transform.
     /// </summary>    
@@ -23,41 +22,43 @@ namespace Wowsome.UI {
     protected RectTransform _parent;
     protected bool _isFocus = false;
 
-    public virtual void InitTouchListener(WTouchSurface surface) {
+    public virtual void InitTouchListener(WTouchSurface surface, Camera cam) {
       _touchSurface = surface;
+      _camera = cam;
 
       _rt = GetComponent<RectTransform>();
       _parent = _rt.parent as RectTransform;
 
-      surface.OnStartTouch += (Touch touch) => {
-        ExecOnActive(() => {
-          _isFocus = IsInside(touch.ScreenPos);
-          if (_isFocus) {
-            OnStartTouch?.Invoke(touch);
-          }
-        });
-      };
-
-      _touchSurface.OnEndTouch += (Touch touch) => {
-        ExecOnActive(() => {
-          if (_isFocus && IsInside(touch.ScreenPos)) {
-            OnEndTouch?.Invoke(touch);
-          }
-
-          _isFocus = false;
-        });
-      };
+      _touchSurface.OnStartTouch += ObserveStartTouch;
+      _touchSurface.OnEndTouch += ObserveEndTouch;
     }
 
     protected bool IsInside(Vector2 screenPos) {
       return RectTransformUtility.RectangleContainsScreenPoint(_rt, screenPos, _camera);
     }
 
-    /// <summary>
-    /// Only execute the callback when currently active in hierarchy
-    /// </summary>
-    protected void ExecOnActive(Action callback) {
-      if (gameObject.activeInHierarchy) callback();
+    protected virtual void OnDestroy() {
+      _touchSurface.OnStartTouch -= ObserveStartTouch;
+      _touchSurface.OnEndTouch -= ObserveEndTouch;
+    }
+
+    void ObserveStartTouch(Touch touch) {
+      gameObject.ExecOnActive(() => {
+        _isFocus = IsInside(touch.ScreenPos);
+        if (_isFocus) {
+          OnStartTouch?.Invoke(touch);
+        }
+      });
+    }
+
+    void ObserveEndTouch(Touch touch) {
+      gameObject.ExecOnActive(() => {
+        if (_isFocus && IsInside(touch.ScreenPos)) {
+          OnEndTouch?.Invoke(touch);
+        }
+
+        _isFocus = false;
+      });
     }
   }
 }

@@ -175,5 +175,15 @@ namespace Wowsome {
     public static List<T> ToList<T>(this T[] arr) {
       return new List<T>(arr);
     }
+
+    public static string Flatten(this IList<string> strs, char separator = ' ') {
+      string s = string.Empty;
+      strs.LoopWithPointer((str, idx, first, last) => {
+        s += str;
+        if (!last) s += separator;
+      });
+
+      return s;
+    }
   }
 }

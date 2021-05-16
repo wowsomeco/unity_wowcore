@@ -32,6 +32,14 @@ namespace Wowsome {
 #endif
     }
 
+    public static void Log(params object[] msg) {
+#if UNITY_EDITOR
+      string str = msg.Map(x => x.ToString()).Flatten(',');
+      Txt t = new Txt(str, "white");
+      Debug.Log(t.GetText);
+#endif
+    }
+
     public static void Log(params Txt[] texts) {
 #if UNITY_EDITOR
       string t = texts.Fold(string.Empty, (p, c) => p += (c.GetText + " "));
@@ -249,6 +257,10 @@ namespace Wowsome {
   }
 
   public static class GameObjectExt {
+    public static void ExecOnActive(this GameObject g, Action callback) {
+      if (g.activeInHierarchy) callback();
+    }
+
     public static bool Same(this GameObject g, GameObject other) {
       return g.GetInstanceID() == other.GetInstanceID();
     }

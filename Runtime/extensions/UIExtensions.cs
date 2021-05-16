@@ -111,6 +111,10 @@ namespace Wowsome {
       rt.localScale = scale;
     }
 
+    public static void SetScale(this RectTransform rt, float scale) {
+      rt.localScale = Vector2.one * scale;
+    }
+
     public static void SetScaleX(this RectTransform rt, float x) {
       rt.localScale = new Vector2(x, rt.localScale.y);
     }
@@ -465,6 +469,14 @@ namespace Wowsome {
 
     public static void SetParent(this Image img, RectTransform parent) {
       img.rectTransform.SetParent(parent);
+    }
+
+    public static void SetWidth(this Image img, float w) {
+      img.rectTransform.SetWidth(w);
+    }
+
+    public static void SetHeight(this Image img, float h) {
+      img.rectTransform.SetHeight(h);
     }
   }
   #endregion

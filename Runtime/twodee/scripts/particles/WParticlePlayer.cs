@@ -32,7 +32,6 @@ namespace Wowsome.TwoDee {
         Assert.Null<WParticlePool>(ParticlePool);
         // touchSurface is required
         Assert.Null<WTouchSurface>(touchSurface);
-        touchSurface.InitTouchSurface();
         // observe swipe
         touchSurface.OnMovingTouch += touch => {
           PlayParticle(swipeParticleId, touch.ScreenPos);

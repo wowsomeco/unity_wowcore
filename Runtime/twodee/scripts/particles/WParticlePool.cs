@@ -20,22 +20,13 @@ namespace Wowsome.TwoDee {
 
     WObjectPool _pool = new WObjectPool();
     HashSet<WParticleObject> _objects = new HashSet<WParticleObject>();
-    Dictionary<Vec2Int, WParticleObject> _activeObjects = new Dictionary<Vec2Int, WParticleObject>();
 
     public void Activate(string id, Vector3 pos) {
-      Vec2Int intPos = Vec2Int.Create(pos);
-      // optimization, dont render more than once on the same pos
-      if (_activeObjects.ContainsKey(intPos)) {
-        return;
-      }
-
       var obj = _pool.Get(id);
       if (null != obj) {
         var po = obj as WParticleObject;
         Vector3 curPos = new Vector3(pos.x, pos.y, po.Position.z);
         po.Position = curPos;
-        // add to cache active obj
-        _activeObjects[intPos] = po;
       }
     }
 
@@ -59,7 +50,6 @@ namespace Wowsome.TwoDee {
       _pool.OnReleased += obj => {
         // remove the obj from the cache of active objects
         WParticleObject pObj = obj as WParticleObject;
-        _activeObjects.Remove(Vec2Int.Create(pObj.Position));
       };
     }
 
