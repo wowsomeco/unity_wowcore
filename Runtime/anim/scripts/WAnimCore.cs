@@ -15,7 +15,7 @@ namespace Wowsome.Anim {
     public Vector2 To { get; private set; }
     public Timing Timing { get; private set; }
 
-    InterpolationVec _lerper;
+    InterpolationVec2 _lerper;
 
     public AnimFrameController(FrameType type, Timing timing, Vector2 from, Vector2 to) {
       Type = type;
@@ -25,7 +25,7 @@ namespace Wowsome.Anim {
     }
 
     public void Start() {
-      _lerper = new InterpolationVec(Timing, From, To);
+      _lerper = new InterpolationVec2(Timing, From, To);
       _lerper.Start();
     }
 

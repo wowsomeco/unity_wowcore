@@ -423,6 +423,10 @@ namespace Wowsome {
       return size;
     }
     #endregion
+
+    public static bool IsPointInRect(this RectTransform rt, Vector2 screenPos, Camera cam) {
+      return RectTransformUtility.RectangleContainsScreenPoint(rt, screenPos, cam);
+    }
   }
   #endregion
 
@@ -461,6 +465,10 @@ namespace Wowsome {
 
     public static void SetScale(this Image img, Vector2 scale) {
       img.rectTransform.SetScale(scale);
+    }
+
+    public static void SetScale(this Image img, float scale) {
+      img.rectTransform.SetScale(new Vector2(scale, scale));
     }
 
     public static void SetRotation(this Image img, float rot) {

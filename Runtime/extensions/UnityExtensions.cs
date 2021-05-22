@@ -118,9 +118,17 @@ namespace Wowsome {
     public static Vector2 ToVector2(this Vector3 v) {
       return new Vector2(v.x, v.y);
     }
+
+    public static Vector3 SetZ(this Vector3 v, float z) {
+      return new Vector3(v.x, v.y, z);
+    }
   }
 
   public static class Vector2Ext {
+    public static Vector2 LerpWithOffset(this Vector2 v, Vector2 other, float t, Vector2 offset) {
+      return Vector2.Lerp(v, other, t) + offset;
+    }
+
     public static bool IsZero(this Vector2 v) {
       return Mathf.FloorToInt(v.x) == 0 && Mathf.FloorToInt(v.y) == 0;
     }
@@ -320,6 +328,16 @@ namespace Wowsome {
           DoIterate(child.gameObject, shouldRecursive);
         }
       }
+    }
+  }
+
+  public static class ScreenExt {
+    public static float MinResolution() {
+      return Mathf.Min((float)Screen.width, (float)Screen.height);
+    }
+
+    public static float MaxResolution() {
+      return Mathf.Max((float)Screen.width, (float)Screen.height);
     }
   }
 }

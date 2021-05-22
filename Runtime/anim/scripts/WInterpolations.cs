@@ -32,7 +32,6 @@ namespace Wowsome.Anim {
     public Timing(float duration) : this(duration, Easing.Linear) { }
   }
 
-  [Serializable]
   public class Interpolation {
     public WObservable<int> Percent { get; private set; }
     public WObservable<float> Time { get; private set; }
@@ -94,52 +93,57 @@ namespace Wowsome.Anim {
     }
   }
 
-  [Serializable]
-  public class InterpolationFloat : Interpolation {
-    public Action<float> OnLerp { get; set; }
+  public abstract class InterpolationBase<T> : Interpolation {
+    /// <summary>
+    /// The current interpolation value to be observed
+    /// </summary>    
+    public Action<T> OnLerp { get; set; }
 
-    public float from;
-    public float to;
+    protected T _from;
+    protected T _to;
 
-    public InterpolationFloat(Timing timing, float f, float t) : base(timing) {
-      from = f;
-      to = t;
+    public InterpolationBase(Timing timing, T f, T t, bool autoPlay = false) : base(timing) {
+      _from = f;
+      _to = t;
+
+      if (autoPlay) Start();
     }
 
-    public float Lerp() {
-      float cur = Mathf.Lerp(from, to, Time.Value);
-      OnLerp?.Invoke(cur);
-      return cur;
-    }
-  }
+    public abstract T Lerp();
 
-  [Serializable]
-  public class InterpolationInt : Interpolation {
-    public int from;
-    public int to;
+    public bool UpdateAutoLerp(float dt) {
+      if (Update(dt)) {
+        T cur = Lerp();
+        OnLerp?.Invoke(cur);
+        return true;
+      }
 
-    public InterpolationInt(Timing timing, int f, int t) : base(timing) {
-      from = f;
-      to = t;
-    }
-
-    public int Lerp() {
-      return (int)Mathf.Lerp(from, to, Time.Value);
+      return false;
     }
   }
 
-  [Serializable]
-  public class InterpolationVec : Interpolation {
-    public Vector2 from;
-    public Vector2 to;
+  public class InterpolationFloat : InterpolationBase<float> {
 
-    public InterpolationVec(Timing timing, Vector2 f, Vector2 t) : base(timing) {
-      from = f;
-      to = t;
+    public InterpolationFloat(Timing timing, float f, float t, bool autoPlay = false) : base(timing, f, t, autoPlay) { }
+
+    public override float Lerp() {
+      return Mathf.Lerp(_from, _to, Time.Value);
     }
+  }
 
-    public Vector2 Lerp() {
-      return Vector2.Lerp(from, to, Time.Value);
+  public class InterpolationInt : InterpolationBase<int> {
+    public InterpolationInt(Timing timing, int f, int t, bool autoPlay = false) : base(timing, f, t, autoPlay) { }
+
+    public override int Lerp() {
+      return (int)Mathf.Lerp(_from, _to, Time.Value);
+    }
+  }
+
+  public class InterpolationVec2 : InterpolationBase<Vector2> {
+    public InterpolationVec2(Timing timing, Vector2 f, Vector2 t, bool autoPlay = false) : base(timing, f, t, autoPlay) { }
+
+    public override Vector2 Lerp() {
+      return Vector2.Lerp(_from, _to, Time.Value);
     }
   }
 }
