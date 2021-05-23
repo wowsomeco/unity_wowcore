@@ -43,7 +43,8 @@ namespace Wowsome.Anim {
     Queue<AnimFrameController> _lerpers = new Queue<AnimFrameController>();
     int _counter = 0;
     Vector2 _initialValue;
-    Timer _timerDelay;
+    Timer _timerStartDelay;
+    Timer _timerRepeatDelay;
     // TODO: add observable anim progress percentage
 
     public AnimStepController(IAnimatable target, AnimStep step) {
@@ -83,9 +84,14 @@ namespace Wowsome.Anim {
           curValue = curValue.Add(frame.to.ToVector2());
         }
       });
+      // TODO: might want to create another class that handles these delays
       // handle start delay
-      if (!isRepeat && _step.startDelay > 0f) {
-        _timerDelay = new Timer(_step.startDelay);
+      if (!isRepeat && _step.startDelay.max > 0f) {
+        _timerStartDelay = new Timer(_step.startDelay.GetRand());
+      }
+      // handle repeat delay
+      if (isRepeat && _step.repeatDelay.max > 0f) {
+        _timerRepeatDelay = new Timer(_step.repeatDelay.GetRand());
       }
     }
 
@@ -95,16 +101,8 @@ namespace Wowsome.Anim {
       AnimFrameController cur = _lerpers.Peek();
       Vector2 curValue;
 
-      // TODO: handle delay step here
-      // delay can be random between 2 values
-      if (null != _timerDelay) {
-        bool isDelaying = _timerDelay.UpdateTimer(dt);
-        if (isDelaying) {
-          return true;
-        } else {
-          _timerDelay = null;
-        }
-      }
+      if (HandleDelay(_timerStartDelay, dt)) return true;
+      if (HandleDelay(_timerRepeatDelay, dt)) return true;
 
       bool updating = cur.Animate(dt * _step.timeMultiplier, out curValue);
       if (updating) {
@@ -137,6 +135,19 @@ namespace Wowsome.Anim {
       }
 
       return !isDone;
+    }
+
+    bool HandleDelay(Timer timer, float dt) {
+      if (null != timer) {
+        bool isDelaying = timer.UpdateTimer(dt);
+        if (isDelaying) {
+          return true;
+        } else {
+          timer = null;
+        }
+      }
+
+      return false;
     }
   }
 }

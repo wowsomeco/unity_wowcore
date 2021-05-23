@@ -7,6 +7,14 @@ namespace Wowsome.UI {
   [RequireComponent(typeof(Image))]
   [DisallowMultipleComponent]
   public class WTappable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
+    public class Scaler {
+      public Scaler(WTappable tappable, RectTransform rt, float scaleTap, float scaleNormal = 1f) {
+        tappable.OnStartTap += ev => rt.SetScale(scaleTap);
+        tappable.OnEndCancel += ev => rt.SetScale(scaleNormal);
+        tappable.OnEndTap += ev => rt.SetScale(scaleNormal);
+      }
+    }
+
     public bool Disabled { get; set; } = true;
     /// <summary>
     /// Invoked the first time this object receives a touch

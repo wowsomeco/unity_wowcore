@@ -35,6 +35,7 @@ namespace Wowsome.Anim {
   public class Interpolation {
     public WObservable<int> Percent { get; private set; }
     public WObservable<float> Time { get; private set; }
+    public Action Done { get; set; }
 
     Timing _timing = null;
     Timer _timer = null;
@@ -68,10 +69,12 @@ namespace Wowsome.Anim {
           if (_counter <= _timing.repeat || _timing.repeat == -1) {
             _timer.Reset();
           } else {
-            _timer = null;
+            SetDone();
+            return true;
           }
         } else {
-          _timer = null;
+          SetDone();
+          return true;
         }
       }
 
@@ -84,12 +87,18 @@ namespace Wowsome.Anim {
         Time.Next(t);
 
         Percent.Next((int)(Time.Value * 100f));
-      } else {
-        Time.Next(1f);
-        Percent.Next(100);
       }
 
       return _timer != null;
+    }
+
+    void SetDone() {
+      _timer = null;
+
+      Time.Next(1f);
+      Percent.Next(100);
+
+      Done?.Invoke();
     }
   }
 

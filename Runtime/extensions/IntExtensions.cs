@@ -27,7 +27,10 @@ namespace Wowsome {
     }
 
     public static int PrevPowerOfTwo(this int v) {
-      if (v.IsPowerOfTwo()) return v;
+      bool isPOT = v.IsPowerOfTwo();
+      if (isPOT) {
+        return (v - 1).PrevPowerOfTwo();
+      }
 
       v |= v >> 1;
       v |= v >> 2;

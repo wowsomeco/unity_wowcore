@@ -55,17 +55,6 @@ namespace Wowsome.Audio {
 
     #endregion
 
-    public void PlaySound(string audioClipName, int loopCount = 1, float delay = 0f, bool isFade = false, Action onStopCallback = null) {
-      bool containsAudioClip = _audioClips.ContainsKey(audioClipName);
-      if (containsAudioClip) {
-        CSound soundFX = GetAvailableSound();
-        if (null != soundFX) {
-          soundFX.PlaySound(_audioClips[audioClipName], loopCount, isFade, delay, 0.5f, onStopCallback);
-          _currentPlaying.Add(soundFX);
-        }
-      }
-    }
-
     /// <summary>
     /// Stops a current playing sounds first if no available sounds to be found
     ///  before playing a new one.
@@ -85,6 +74,21 @@ namespace Wowsome.Audio {
         CSound curPlaying = GetPlayingSound(audioClipName) ?? _currentPlaying.First();
         curPlaying.StopSoundImmediate();
       }
+    }
+
+    public void PlaySound(string audioClipName, int loopCount = 1, float delay = 0f, bool isFade = false, Action onStopCallback = null) {
+      bool containsAudioClip = _audioClips.ContainsKey(audioClipName);
+      if (containsAudioClip) {
+        CSound soundFX = GetAvailableSound();
+        if (null != soundFX) {
+          soundFX.PlaySound(_audioClips[audioClipName], loopCount, isFade, delay, 0.5f, onStopCallback);
+          _currentPlaying.Add(soundFX);
+        }
+      }
+    }
+
+    public void PlaySound(string audioClipName, Action onStopCallback) {
+      PlaySound(audioClipName, 1, 0f, false, onStopCallback);
     }
 
     public void PlaySound(SfxData sfxData) {

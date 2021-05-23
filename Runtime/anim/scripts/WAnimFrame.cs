@@ -27,6 +27,9 @@ namespace Wowsome.Anim {
     [Tooltip("how many times the animation should repeat e.g 1 = 1 repeat, 0 = no repeats, -1 = repeat forever")]
     public int repeat;
     public TweenType tweenType;
-    public float startDelay;
+    [Tooltip("the random range delay for the first time the animation starts, only once")]
+    public RangeData startDelay;
+    [Tooltip("the random range delay between repeat")]
+    public RangeData repeatDelay;
   }
 }

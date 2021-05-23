@@ -12,9 +12,17 @@ namespace Wowsome.UI {
     /// </summary>    
     public Action<Touch> OnStartTouch { get; set; }
     /// <summary>
-    /// Gets called whenever touch surface ends the touch and the point is inside this rect transform
+    /// Gets called whenever touch surface ends the touch regardless it's inside or outside the rect transform
     /// </summary>    
     public Action<Touch> OnEndTouch { get; set; }
+    /// <summary>
+    /// Gets called whenever touch surface ends the touch and the point is inside this rect transform
+    /// </summary>    
+    public Action<Touch> OnEndTouchInside { get; set; }
+    /// <summary>
+    /// Gets called whenever touch surface ends the touch and the point is outside this rect transform
+    /// </summary>    
+    public Action<Touch> OnEndTouchOutside { get; set; }
 
     protected Camera _camera = null;
     protected WTouchSurface _touchSurface;
@@ -53,8 +61,14 @@ namespace Wowsome.UI {
 
     void ObserveEndTouch(Touch touch) {
       gameObject.ExecOnActive(() => {
-        if (_isFocus && IsInside(touch.ScreenPos)) {
+        if (_isFocus) {
           OnEndTouch?.Invoke(touch);
+          bool isInside = IsInside(touch.ScreenPos);
+          if (isInside) {
+            OnEndTouchInside?.Invoke(touch);
+          } else {
+            OnEndTouchOutside?.Invoke(touch);
+          }
         }
 
         _isFocus = false;
