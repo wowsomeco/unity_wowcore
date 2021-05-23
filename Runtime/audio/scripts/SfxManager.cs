@@ -60,6 +60,11 @@ namespace Wowsome.Audio {
     ///  before playing a new one.
     /// </summary>
     public void PlayRecycleSound(string audioClipName) {
+      ReleaseCurrentPlaying(audioClipName);
+      PlaySound(audioClipName);
+    }
+
+    public void PlayAfterStop(string audioClipName) {
       StopCurrentPlaying(audioClipName);
       PlaySound(audioClipName);
     }
@@ -69,11 +74,15 @@ namespace Wowsome.Audio {
     /// it will try to stop the one that has same audioClipName first.
     /// if it's not found then it will stop the first one from the _currentPlaying list instead 
     /// </summary>
-    public void StopCurrentPlaying(string audioClipName) {
+    public void ReleaseCurrentPlaying(string audioClipName) {
       if (GetAvailableSound() == null) {
-        CSound curPlaying = GetPlayingSound(audioClipName) ?? _currentPlaying.First();
-        curPlaying.StopSoundImmediate();
+        StopCurrentPlaying(audioClipName);
       }
+    }
+
+    public void StopCurrentPlaying(string audioClipName) {
+      CSound curPlaying = GetPlayingSound(audioClipName) ?? _currentPlaying.First();
+      curPlaying?.StopSoundImmediate();
     }
 
     public void PlaySound(string audioClipName, int loopCount = 1, float delay = 0f, bool isFade = false, Action onStopCallback = null) {

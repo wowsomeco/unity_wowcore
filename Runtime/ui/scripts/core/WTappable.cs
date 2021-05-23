@@ -10,7 +10,6 @@ namespace Wowsome.UI {
     public class Scaler {
       public Scaler(WTappable tappable, RectTransform rt, float scaleTap, float scaleNormal = 1f) {
         tappable.OnStartTap += ev => rt.SetScale(scaleTap);
-        tappable.OnEndCancel += ev => rt.SetScale(scaleNormal);
         tappable.OnEndTap += ev => rt.SetScale(scaleNormal);
       }
     }
@@ -23,9 +22,13 @@ namespace Wowsome.UI {
     /// <summary>
     /// Invoked when the touch ends outside of this rect transform
     /// </summary>   
-    public Action<PointerEventData> OnEndCancel { get; set; }
+    public Action<PointerEventData> OnEndOutside { get; set; }
     /// <summary>
-    /// Invoked when the touch ends inside the rect transform
+    /// Invoked when the touch ends inside of this rect transform
+    /// </summary>   
+    public Action<PointerEventData> OnEndInside { get; set; }
+    /// <summary>
+    /// Invoked when the touch ends regardless inside or outside of the rect transform
     /// </summary>
     public Action<PointerEventData> OnEndTap { get; set; }
 
@@ -51,10 +54,12 @@ namespace Wowsome.UI {
     public void OnPointerUp(PointerEventData eventData) {
       ExecOnEnabled(() => {
         if (_rt.IsPointInRect(eventData.position, _cam)) {
-          OnEndTap?.Invoke(eventData);
+          OnEndInside?.Invoke(eventData);
         } else {
-          OnEndCancel?.Invoke(eventData);
+          OnEndOutside?.Invoke(eventData);
         }
+
+        OnEndTap?.Invoke(eventData);
       });
     }
 
