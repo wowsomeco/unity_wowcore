@@ -56,6 +56,8 @@ namespace Wowsome.Anim {
             OnDone?.Invoke();
           }
         }
+
+        return true;
       }
 
       return false;
