@@ -64,17 +64,20 @@ namespace Wowsome.Anim {
       }
 
       if (null != _timer && !_timer.UpdateTimer(dt)) {
+        // if it needs to repeat...
         if (_timing.repeat > 0) {
           ++_counter;
-          if (_counter <= _timing.repeat || _timing.repeat == -1) {
+          if (_counter <= _timing.repeat) {
             _timer.Reset();
           } else {
-            SetDone();
-            return true;
+            return SetDone();
           }
+        } else if (_timing.repeat == -1) {
+          // restart if it needs to repeat forever
+          Start();
         } else {
-          SetDone();
-          return true;
+          // if it doesnt need to repeat, set done immediately
+          return SetDone();
         }
       }
 
@@ -92,13 +95,15 @@ namespace Wowsome.Anim {
       return _timer != null;
     }
 
-    void SetDone() {
+    bool SetDone() {
       _timer = null;
 
       Time.Next(1f);
       Percent.Next(100);
 
       Done?.Invoke();
+
+      return true;
     }
   }
 
@@ -153,6 +158,22 @@ namespace Wowsome.Anim {
 
     public override Vector2 Lerp() {
       return Vector2.Lerp(_from, _to, Time.Value);
+    }
+  }
+
+  public class InterpolationVec3 : InterpolationBase<Vector3> {
+    public InterpolationVec3(Timing timing, Vector3 f, Vector3 t, bool autoPlay = false) : base(timing, f, t, autoPlay) { }
+
+    public override Vector3 Lerp() {
+      return Vector3.Lerp(_from, _to, Time.Value);
+    }
+  }
+
+  public class InterpolationColor : InterpolationBase<Color> {
+    public InterpolationColor(Timing timing, Color f, Color t, bool autoPlay = false) : base(timing, f, t, autoPlay) { }
+
+    public override Color Lerp() {
+      return Color.Lerp(_from, _to, Time.Value);
     }
   }
 }

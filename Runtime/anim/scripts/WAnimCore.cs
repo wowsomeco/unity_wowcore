@@ -57,32 +57,36 @@ namespace Wowsome.Anim {
       _lerpers.Clear();
 
       Vector2 curValue = _initialValue;
-
+      // always force to initial value on start
+      _target.OnLerp(_step.clip.type, curValue);
+      // iterate over the anim clip(s)
       _step.clip.frames.LoopWithPointer((frame, idx, first, last) => {
+        // if tween type is to (fixed), 
+        // from = prevFrame.to and to = the current frame.to
+        // else if tween type is by (additive),
+        // from = curValue, to = curValue + current frame.to
+        Vector2 from = Vector2.zero;
+        Vector2 to = _step.tweenType == TweenType.To ? frame.to.ToVector2() : curValue.Add(frame.to.ToVector2());
+        // if first index, add a frame controller from the initial value to current frame
+        // otherwise, add a controller from prev frame to current frame
         if (first) {
-          // always force to initial value on start
-          _target.OnLerp(_step.clip.type, curValue);
+          from = curValue;
         } else {
           AnimFrame prevFrame = _step.clip.frames[idx - 1];
-          // if tween type is to (fixed), 
-          // from = prevFrame.to and to = the current frame.to
-          // else if tween type is by (additive),
-          // from = curValue, to = curValue + current frame.to
-          Vector2 from = _step.tweenType == TweenType.To ? prevFrame.to.ToVector2() : curValue;
-          Vector2 to = _step.tweenType == TweenType.To ? frame.to.ToVector2() : curValue.Add(frame.to.ToVector2());
-
-          AnimFrameController fc = new AnimFrameController(
-            _step.clip.type,
-            prevFrame.Timing,
-            from,
-            to
-          );
-          // do start and add to queue
-          fc.Start();
-          _lerpers.Enqueue(fc);
-          // add value with the cur frame, useful for tween type by
-          curValue = curValue.Add(frame.to.ToVector2());
+          from = _step.tweenType == TweenType.To ? prevFrame.to.ToVector2() : curValue;
         }
+        // instantiate a frame controller
+        AnimFrameController fc = new AnimFrameController(
+          _step.clip.type,
+          frame.Timing,
+          from,
+          to
+        );
+        // do start and add to queue
+        fc.Start();
+        _lerpers.Enqueue(fc);
+        // add value with the cur frame, useful for tween type by
+        curValue = curValue.Add(frame.to.ToVector2());
       });
       // TODO: might want to create another class that handles these delays
       // handle start delay
