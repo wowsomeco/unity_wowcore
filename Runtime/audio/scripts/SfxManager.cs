@@ -37,7 +37,7 @@ namespace Wowsome.Audio {
       for (int i = 0; i < sfxChannel; ++i) {
         CSound sound = prefabSound.Clone<CSound>(transform);
         sound.InitSound();
-        sound.OnDeactivated += () => _currentPlaying.Remove(sound);
+        sound.OnDeactivated += () => _currentPlaying.RemoveAll(x => x.GetInstanceID() == sound.GetInstanceID());
 
         _sources.Add(sound);
       }
@@ -91,12 +91,14 @@ namespace Wowsome.Audio {
         CSound soundFX = GetAvailableSound();
         if (null != soundFX) {
           soundFX.PlaySound(_audioClips[audioClipName], loopCount, isFade, delay, 0.5f, onStopCallback);
-          _currentPlaying.Add(soundFX);
+          AddToCurPlaying(soundFX);
         }
       }
     }
 
-    public void PlaySound(string audioClipName, Action onStopCallback) {
+    public void PlaySound(string audioClipName, bool shouldRecycle, Action onStopCallback) {
+      if (shouldRecycle) ReleaseCurrentPlaying(audioClipName);
+
       PlaySound(audioClipName, 1, 0f, false, onStopCallback);
     }
 
@@ -157,7 +159,7 @@ namespace Wowsome.Audio {
     public CSound GetPlayingSound(string audioClipName) {
       for (int i = 0; i < _currentPlaying.Count; ++i) {
         CSound sound = _currentPlaying[i];
-        if (sound.IsPlaying && sound.AudioName == audioClipName) {
+        if (sound.AudioName == audioClipName) {
           return sound;
         }
       }
@@ -168,11 +170,16 @@ namespace Wowsome.Audio {
     CSound GetAvailableSound() {
       foreach (var soundFX in _sources) {
         if (!soundFX.IsPlaying) {
-          soundFX.gameObject.SetActive(true);
           return soundFX;
         }
       }
       return null;
+    }
+
+    void AddToCurPlaying(CSound sound) {
+      if (_currentPlaying.Exists(x => x.GetInstanceID() == sound.GetInstanceID())) return;
+
+      _currentPlaying.Add(sound);
     }
   }
 }

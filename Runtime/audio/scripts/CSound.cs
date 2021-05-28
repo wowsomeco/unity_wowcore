@@ -9,7 +9,7 @@ namespace Wowsome.Audio {
     public Action OnDeactivated { get; set; }
 
     public bool IsPlaying {
-      get { return _audioSource.isPlaying; }
+      get { return gameObject.activeSelf; }
     }
 
     public float Volume {
@@ -42,6 +42,7 @@ namespace Wowsome.Audio {
     }
 
     public void PlaySound(AudioClip audioClip, int loopCount, bool isFadeInOnPlay, float delay = 0f, float fadeSpeed = 1f, Action onStopCallback = null) {
+      gameObject.SetActive(true);
       _audioSource.clip = audioClip;
       // instantiate the delay counter
       _delayTimer = new Timer(delay);

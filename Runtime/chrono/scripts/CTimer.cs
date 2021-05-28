@@ -1,4 +1,7 @@
-﻿namespace Wowsome {
+﻿using System;
+using Wowsome.Generic;
+
+namespace Wowsome {
   namespace Chrono {
     public class TimerData {
       public float Max { get; set; }
@@ -34,49 +37,85 @@
     /// to null i.e. timer = null.
     /// </description>
     public class Timer {
-      TimerData m_data;
+      TimerData _data;
 
       public Timer(TimerData timerData) {
-        m_data = new TimerData(timerData);
+        _data = new TimerData(timerData);
       }
 
       public Timer(int max) {
-        m_data = new TimerData((float)max);
+        _data = new TimerData((float)max);
       }
 
       public Timer(float max) {
-        m_data = new TimerData(max);
+        _data = new TimerData(max);
       }
 
       public void Reset() {
-        m_data.Cur = 0f;
+        _data.Cur = 0f;
       }
 
       public void AddTime(float time) {
         //subtract the cur when we add more time to it
-        m_data.Cur -= time;
+        _data.Cur -= time;
         //clamp so it doesnt go below 0 or exceed the max time 
-        m_data.Cur = m_data.Cur.Clamp(0, m_data.Max);
+        _data.Cur = _data.Cur.Clamp(0, _data.Max);
       }
 
       public float GetCurrentTime() {
-        return m_data.Cur;
+        return _data.Cur;
       }
 
       public float GetDeltaTime() {
-        return m_data.Max - m_data.Cur;
+        return _data.Max - _data.Cur;
       }
 
       public float GetPercentage() {
-        return m_data.Cur / m_data.Max;
+        return _data.Cur / _data.Max;
       }
 
       public bool UpdateTimer(float dT) {
-        m_data.Cur += dT * m_data.Multiplier;
-        if (m_data.Cur > m_data.Max) {
+        _data.Cur += dT * _data.Multiplier;
+        if (_data.Cur > _data.Max) {
           return false;
         }
         return true;
+      }
+    }
+
+    public class ObservableTimer {
+      public Action<float> Progress { get; set; }
+      public WObservable<bool> OnDone { get; set; } = new WObservable<bool>(false);
+
+      Timer _timer = null;
+      float _duration;
+
+      public ObservableTimer(float duration) {
+        Reset(duration);
+      }
+
+      public void Reset(float duration) {
+        _duration = duration;
+        Reset();
+      }
+
+      public void Reset() {
+        _timer = new Timer(_duration);
+        OnDone.Next(false);
+      }
+
+      public bool UpdateTimer(float dt) {
+        if (null == _timer) return false;
+
+        bool updating = _timer.UpdateTimer(dt);
+        if (updating) {
+          Progress?.Invoke(_timer.GetPercentage());
+        } else {
+          OnDone?.Next(true);
+          _timer = null;
+        }
+
+        return updating;
       }
     }
   }
