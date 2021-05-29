@@ -5,7 +5,7 @@ using Wowsome.Tween;
 
 namespace Wowsome.Anim {
   [Serializable]
-  public enum FrameType { Position, Scale, Rotation, Sprite }
+  public enum FrameType { Position, Scale, Rotation, Sprite, Alpha }
 
   [Serializable]
   public class AnimFrame {

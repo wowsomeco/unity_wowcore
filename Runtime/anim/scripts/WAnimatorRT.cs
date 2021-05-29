@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Wowsome.Anim {
-  [RequireComponent(typeof(RectTransform))]
   public class WAnimatorRT : WAnimatorBase {
     public sealed class RTInitValueHandler {
       RectTransform _rt;
@@ -30,13 +27,12 @@ namespace Wowsome.Anim {
 
     public RectTransform RectTransform { get; private set; }
 
-    protected Dictionary<FrameType, Action<Vector2>> _setters = new Dictionary<FrameType, Action<Vector2>>();
-    protected Dictionary<FrameType, GetCur> _getters = new Dictionary<FrameType, GetCur>();
-
     RTInitValueHandler _initValue;
 
     public override void InitAnimator() {
-      RectTransform = GetComponent<RectTransform>();
+      RectTransform = otherTarget?.GetComponent<RectTransform>() ?? GetComponent<RectTransform>();
+      Assert.Null<RectTransform, WAnimatorRT>(RectTransform, gameObject);
+
       _initValue = new RTInitValueHandler(RectTransform);
       // setters
       _setters[FrameType.Position] = v => RectTransform.SetPos(v);
@@ -51,24 +47,6 @@ namespace Wowsome.Anim {
     public override void SetInitialValue() {
       _initValue.Reset();
     }
-
-    #region IAnimatable
-
-    public override Vector2 GetCurrentValue(FrameType type) {
-      if (_getters.ContainsKey(type)) {
-        return _getters[type]();
-      }
-
-      return Vector2.zero;
-    }
-
-    public override void OnLerp(FrameType type, Vector2 cur) {
-      if (_setters.ContainsKey(type)) {
-        _setters[type](cur);
-      }
-    }
-
-    #endregion
   }
 }
 

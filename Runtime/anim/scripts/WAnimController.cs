@@ -17,34 +17,40 @@ namespace Wowsome.Anim {
   /// as well as the update phase e.g. dont update when game is paused, etc.
   /// </summary>
   public class WAnimController : MonoBehaviour {
+    /// <summary>
+    /// The anim event that gets triggered,
+    /// either for pre-start or post-complete playing anim.
+    /// </summary>
     [Serializable]
-    public sealed class Sequence {
-      [Tooltip("the on complete anim id(s) reference")]
+    public sealed class AnimTrigger {
+      [Tooltip("the anim id(s) reference")]
       public List<string> ids;
-      [Tooltip("the anim id that gets played after the id has completed")]
-      public string onCompleteId;
+      [Tooltip("the anim id that will get played")]
+      public string animId;
     }
 
     [Tooltip("the anim that gets played on init, leave it to null / blank if nothing")]
     public string defaultAnimId;
-    [Tooltip("the next animation that gets played once the current one has completed")]
-    public List<Sequence> sequences = new List<Sequence>();
+    [Tooltip("the next animation that gets played when a new anim id is about to start (pre-start)")]
+    public List<AnimTrigger> startTriggers = new List<AnimTrigger>();
+    [Tooltip("the next animation that gets played once the current one has completed (post-complete)")]
+    public List<AnimTrigger> endTriggers = new List<AnimTrigger>();
 
     Dictionary<string, List<WAnimatorBase>> _animators = new Dictionary<string, List<WAnimatorBase>>();
     List<WAnimatorBase> _playings = new List<WAnimatorBase>();
     string _curPlayingAnimId;
-    bool _hasPlayedSequence = false;
+    bool _hasPlayedEndTrigger = false;
 
     public void PlayAnim(string id) {
-      // TODO: need to somehow reset the prev id state to the initial value(s),
-      // otherwise if this function gets called, it might look broken
-      // e.g. say that prev anim sets rotation to -45, then when this gets called,
-      // the rotation wont reset.
       if (_animators.ContainsKey(id)) {
         _curPlayingAnimId = id;
-        _hasPlayedSequence = false;
-
+        _hasPlayedEndTrigger = false;
+        // stop current
+        // on stop, all animations will be reset to its init value
         _playings.ForEach(p => p.Stop());
+        // play start trigger
+        TriggerStartAnim();
+        // play the cur anim id
         _playings = _animators[_curPlayingAnimId];
         _playings.ForEach(p => p.Play());
       }
@@ -70,17 +76,30 @@ namespace Wowsome.Anim {
       if (_playings.Count == 0) return;
 
       bool isAnimating = false;
-      foreach (var anim in _playings) {
-        if (anim.Animate(dt)) {
+      for (int i = 0; i < _playings.Count; ++i) {
+        if (_playings[i].Animate(dt)) {
           isAnimating = true;
         }
       }
       // play next sequence when animating is done and the sequence has not been played yet
-      if (!isAnimating && !_hasPlayedSequence) {
-        _hasPlayedSequence = true;
-        Sequence seq = sequences.Find(x => x.ids.Contains(_curPlayingAnimId));
-        if (null != seq) {
-          PlayAnim(seq.onCompleteId.Trim());
+      if (!isAnimating) {
+        TriggerEndAnim();
+      }
+    }
+
+    void TriggerStartAnim() {
+      AnimTrigger startTrigger = startTriggers.Find(x => x.ids.Contains(_curPlayingAnimId));
+      if (null != startTrigger) {
+        PlayAnim(startTrigger.animId.Trim());
+      }
+    }
+
+    void TriggerEndAnim() {
+      if (!_hasPlayedEndTrigger) {
+        _hasPlayedEndTrigger = true;
+        AnimTrigger endTrigger = endTriggers.Find(x => x.ids.Contains(_curPlayingAnimId));
+        if (null != endTrigger) {
+          PlayAnim(endTrigger.animId.Trim());
         }
       }
     }

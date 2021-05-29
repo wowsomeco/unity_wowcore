@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Wowsome.Anim {
@@ -10,15 +11,31 @@ namespace Wowsome.Anim {
 
     public string id;
     public List<WAnimation> animations = new List<WAnimation>();
+    [Tooltip("leave it to null if the target is self. when it's defined, the target will be this gameobject instead of self")]
+    public GameObject otherTarget;
+
+    protected Dictionary<FrameType, Action<Vector2>> _setters = new Dictionary<FrameType, Action<Vector2>>();
+    protected Dictionary<FrameType, GetCur> _getters = new Dictionary<FrameType, GetCur>();
 
     List<AnimStepController> _controllers = new List<AnimStepController>();
 
     #region IAnimatable
 
-    public abstract Vector2 GetCurrentValue(FrameType type);
-    public abstract void OnLerp(FrameType type, Vector2 cur);
+    public virtual Vector2 GetCurrentValue(FrameType type) {
+      if (_getters.ContainsKey(type)) {
+        return _getters[type]();
+      }
 
-    #endregion
+      return Vector2.zero;
+    }
+
+    public virtual void OnLerp(FrameType type, Vector2 cur) {
+      if (_setters.ContainsKey(type)) {
+        _setters[type](cur);
+      }
+    }
+
+    #endregion    
 
     public abstract void InitAnimator();
 
