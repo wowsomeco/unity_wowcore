@@ -7,8 +7,7 @@ namespace Wowsome.Anim {
     float _initAlpha;
 
     public override void InitAnimator() {
-      CanvasGroup = otherTarget?.GetComponent<CanvasGroup>() ?? GetComponent<CanvasGroup>();
-      Assert.Null<CanvasGroup, WAnimatorCG>(CanvasGroup, gameObject);
+      CanvasGroup = GetTarget<CanvasGroup>();
 
       _initAlpha = CanvasGroup.alpha;
 

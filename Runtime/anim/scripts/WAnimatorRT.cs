@@ -30,8 +30,7 @@ namespace Wowsome.Anim {
     RTInitValueHandler _initValue;
 
     public override void InitAnimator() {
-      RectTransform = otherTarget?.GetComponent<RectTransform>() ?? GetComponent<RectTransform>();
-      Assert.Null<RectTransform, WAnimatorRT>(RectTransform, gameObject);
+      RectTransform = GetTarget<RectTransform>();
 
       _initValue = new RTInitValueHandler(RectTransform);
       // setters

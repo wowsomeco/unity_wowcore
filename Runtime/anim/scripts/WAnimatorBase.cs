@@ -10,9 +10,9 @@ namespace Wowsome.Anim {
     public delegate Vector2 GetCur();
 
     public string id;
-    public List<WAnimation> animations = new List<WAnimation>();
     [Tooltip("leave it to null if the target is self. when it's defined, the target will be this gameobject instead of self")]
     public GameObject otherTarget;
+    public List<WAnimation> animations = new List<WAnimation>();
 
     protected Dictionary<FrameType, Action<Vector2>> _setters = new Dictionary<FrameType, Action<Vector2>>();
     protected Dictionary<FrameType, GetCur> _getters = new Dictionary<FrameType, GetCur>();
@@ -68,6 +68,20 @@ namespace Wowsome.Anim {
       }
 
       return isAnimating;
+    }
+
+    protected T GetTarget<T>() where T : Component {
+      T component = null;
+
+      if (null != otherTarget) {
+        component = otherTarget.GetComponent<T>();
+      } else {
+        component = GetComponent<T>();
+      }
+
+      Assert.Null<T, WAnimatorBase>(component, gameObject);
+
+      return GetComponent<T>();
     }
   }
 }

@@ -28,8 +28,7 @@ namespace Wowsome.Anim {
     public override void InitAnimator() {
       base.InitAnimator();
 
-      _img = otherTarget?.GetComponent<Image>() ?? GetComponent<Image>();
-      Assert.Null<Image, WAnimatorImage>(_img, gameObject);
+      _img = GetTarget<Image>();
 
       _valueHandler = new ImgInitValueHandler(_img);
 
