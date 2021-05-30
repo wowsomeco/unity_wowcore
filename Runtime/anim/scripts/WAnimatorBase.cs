@@ -81,7 +81,7 @@ namespace Wowsome.Anim {
 
       Assert.Null<T, WAnimatorBase>(component, gameObject);
 
-      return GetComponent<T>();
+      return component;
     }
   }
 }
