@@ -17,12 +17,10 @@ namespace Wowsome {
     public struct ViewNavigatorData {
       public string m_viewId;
       public bool m_flag;
-      public SfxData m_sfx;
 
-      public ViewNavigatorData(string id, bool flag, SfxData sfx) {
+      public ViewNavigatorData(string id, bool flag) {
         m_viewId = id;
         m_flag = flag;
-        m_sfx = sfx;
       }
     }
 

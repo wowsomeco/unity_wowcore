@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using Wowsome.Core;
-using Wowsome.Audio;
 
 namespace Wowsome {
   namespace UI {
@@ -8,28 +7,22 @@ namespace Wowsome {
       public ViewNavigatorData m_data;
       public GameObject[] m_listeners;
 
-      IViewManager m_viewManager;
-      SfxManager m_sfxManager;
+      IViewManager _viewManager;
 
       #region IViewComponent
       public void Setup(ISceneStarter sceneStarter, IViewManager viewManager) {
-        // cache the sfx manager
-        AudioSystem audio = sceneStarter.Engine.GetSystem<AudioSystem>();
-        m_sfxManager = audio.GetManager<SfxManager>();
         // cache the view manager
-        m_viewManager = viewManager;
+        _viewManager = viewManager;
         // setup tap handler
         new CTapHandler(gameObject, pos => {
-          if (m_viewManager.SwitchView(m_data.m_viewId, m_data.m_flag)) {
-            if (null != m_sfxManager) m_sfxManager.PlaySound(m_data.m_sfx);
-          }
+          _viewManager.SwitchView(m_data.m_viewId, m_data.m_flag);
         });
         // add this as view listener if there's at least 1 obj in m_listeners
         if (m_listeners.Length > 0) {
-          m_viewManager.AddViewListener(this);
+          _viewManager.AddViewListener(this);
         }
       }
-      #endregion      
+      #endregion
 
       #region IViewListener implementation
       public void OnChangeVisibility(string viewId, ViewState state) {

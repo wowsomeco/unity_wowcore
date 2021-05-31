@@ -2,7 +2,7 @@
 using Wowsome.Core;
 
 namespace Wowsome.Audio {
-  public class AudioSystem : MonoBehaviour, ISystem {
+  public class WAudioSystem : MonoBehaviour, ISystem {
     IAudioManager[] _audioManagers;
 
     public T GetManager<T>() where T : class, IAudioManager {

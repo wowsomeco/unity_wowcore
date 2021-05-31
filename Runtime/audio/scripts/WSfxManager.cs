@@ -4,13 +4,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Wowsome.Audio {
-  public class SfxManager : MonoBehaviour, IAudioManager {
+  public class WSfxManager : MonoBehaviour, IAudioManager {
     public string path = "audio/sfx";
-    public CSound prefabSound;
+    public WSound prefabSound;
     public int sfxChannel = 16;
 
-    List<CSound> _sources = new List<CSound>();
-    List<CSound> _currentPlaying = new List<CSound>();
+    List<WSound> _sources = new List<WSound>();
+    List<WSound> _currentPlaying = new List<WSound>();
     Dictionary<string, AudioClip> _audioClips = new Dictionary<string, AudioClip>();
     float _volume;
 
@@ -20,7 +20,7 @@ namespace Wowsome.Audio {
       get { return _volume; }
       set {
         _volume = value;
-        foreach (CSound soundFX in _sources) {
+        foreach (WSound soundFX in _sources) {
           soundFX.Volume = _volume;
         }
       }
@@ -35,7 +35,7 @@ namespace Wowsome.Audio {
       }
 
       for (int i = 0; i < sfxChannel; ++i) {
-        CSound sound = prefabSound.Clone<CSound>(transform);
+        WSound sound = prefabSound.Clone<WSound>(transform);
         sound.InitSound();
         sound.OnDeactivated += () => _currentPlaying.RemoveAll(x => x.GetInstanceID() == sound.GetInstanceID());
 
@@ -81,16 +81,16 @@ namespace Wowsome.Audio {
     }
 
     public void StopCurrentPlaying(string audioClipName) {
-      CSound curPlaying = GetPlayingSound(audioClipName) ?? _currentPlaying.First();
-      curPlaying?.StopSoundImmediate();
+      WSound curPlaying = GetPlayingSound(audioClipName) ?? _currentPlaying.First();
+      curPlaying?.StopSound();
     }
 
-    public void PlaySound(string audioClipName, int loopCount = 1, float delay = 0f, bool isFade = false, Action onStopCallback = null) {
+    public void PlaySound(string audioClipName, WSound.PlayOptions options = null, Action onStopCallback = null) {
       bool containsAudioClip = _audioClips.ContainsKey(audioClipName);
       if (containsAudioClip) {
-        CSound soundFX = GetAvailableSound();
+        WSound soundFX = GetAvailableSound();
         if (null != soundFX) {
-          soundFX.PlaySound(_audioClips[audioClipName], loopCount, isFade, delay, 0.5f, onStopCallback);
+          soundFX.PlaySound(_audioClips[audioClipName], options, onStopCallback);
           AddToCurPlaying(soundFX);
         }
       }
@@ -99,55 +99,20 @@ namespace Wowsome.Audio {
     public void PlaySound(string audioClipName, bool shouldRecycle, Action onStopCallback) {
       if (shouldRecycle) ReleaseCurrentPlaying(audioClipName);
 
-      PlaySound(audioClipName, 1, 0f, false, onStopCallback);
-    }
-
-    public void PlaySound(SfxData sfxData) {
-      // bail if no sfx name defined
-      if (string.IsNullOrEmpty(sfxData.sfxName)) {
-        return;
-      }
-      // if it should stop, stop and bail
-      if (sfxData.shouldStop) {
-        StopAudioByName(sfxData.sfxName);
-        return;
-      }
-      // also bail if there's a sound for the name playing where it should be unique
-      if (sfxData.shouldUnique && IsSoundPlaying(sfxData.sfxName)) {
-        return;
-      }
-      // finally play the sound
-      PlaySound(
-        sfxData.sfxName
-        , sfxData.loopCount > -1 ? (sfxData.loopCount + 1) : -1
-        , sfxData.delay
-        , sfxData.isFadeOnPlay
-      );
-    }
-
-    public void PlaySound(SfxData[] sfxData) {
-      for (int i = 0; i < sfxData.Length; ++i) {
-        PlaySound(sfxData[i]);
-      }
+      PlaySound(audioClipName, null, onStopCallback);
     }
 
     public void StopAllAudio() {
       foreach (var sfx in _sources) {
-        sfx.StopSoundImmediate();
+        sfx.StopSound();
       }
     }
 
-    public void StopAudioByName(string audioClipName, bool isFade = false, float delay = 1f) {
-      List<CSound> bSounds = _sources.FindAll(x => x.AudioName == audioClipName);
+    public void StopAudioByName(string audioClipName) {
+      List<WSound> bSounds = _sources.FindAll(x => x.AudioName == audioClipName);
 
-      foreach (CSound bSound in bSounds) {
-        if (isFade) {
-          bSound.StopFadeSound(delay, () => {
-            bSound.StopSoundImmediate();
-          });
-        } else {
-          bSound.StopSoundImmediate();
-        }
+      foreach (WSound bSound in bSounds) {
+        bSound.StopSound();
       }
     }
 
@@ -156,9 +121,9 @@ namespace Wowsome.Audio {
       return source != null;
     }
 
-    public CSound GetPlayingSound(string audioClipName) {
+    public WSound GetPlayingSound(string audioClipName) {
       for (int i = 0; i < _currentPlaying.Count; ++i) {
-        CSound sound = _currentPlaying[i];
+        WSound sound = _currentPlaying[i];
         if (sound.AudioName == audioClipName) {
           return sound;
         }
@@ -167,7 +132,7 @@ namespace Wowsome.Audio {
       return null;
     }
 
-    CSound GetAvailableSound() {
+    WSound GetAvailableSound() {
       foreach (var soundFX in _sources) {
         if (!soundFX.IsPlaying) {
           return soundFX;
@@ -176,7 +141,7 @@ namespace Wowsome.Audio {
       return null;
     }
 
-    void AddToCurPlaying(CSound sound) {
+    void AddToCurPlaying(WSound sound) {
       if (_currentPlaying.Exists(x => x.GetInstanceID() == sound.GetInstanceID())) return;
 
       _currentPlaying.Add(sound);
