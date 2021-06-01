@@ -48,9 +48,6 @@ namespace Wowsome.Anim {
         // only play anim if the start trigger doesnt interfere
         if (!TriggerStartAnim(id)) {
           _curPlayingAnimId = id;
-          // stop current
-          // on stop, all animations will be reset to its init value
-          _playings.ForEach(p => p.Stop());
           // play the cur anim id
           _playings = _animators[_curPlayingAnimId];
           _playings.ForEach(p => p.Play());
@@ -123,13 +120,16 @@ namespace Wowsome.Anim {
       if (_playing) {
         // make sure only enter here once
         _playing = false;
-        // check if there is end trigger first, if so play it,
-        // otherwise the next anim id will get played since it's might be the debt from the startTrigger above
-        AnimTrigger endTrigger = endTriggers.Find(x => x.ids.Contains(_curPlayingAnimId));
-        if (null != endTrigger) {
-          PlayAnim(endTrigger.animId.Trim());
+        // check if there is a debt of next anim id,
+        // if so, play that one first
+        // otherwise check the end trigger and play that one if any
+        if (!_nextAnimId.IsEmpty()) {
+          PlayAnim(_nextAnimId.Trim());
         } else {
-          if (!_nextAnimId.IsEmpty()) PlayAnim(_nextAnimId);
+          AnimTrigger endTrigger = endTriggers.Find(x => x.ids.Contains(_curPlayingAnimId));
+          if (null != endTrigger) {
+            PlayAnim(endTrigger.animId.Trim());
+          }
         }
       }
     }

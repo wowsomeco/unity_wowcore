@@ -42,7 +42,8 @@ namespace Wowsome.Anim {
     public abstract void SetInitialValue();
 
     public void Play() {
-      Stop();
+      _controllers.Clear();
+
       animations.ForEach(a => {
         a.clips.ForEach(step => {
           var c = new AnimStepController(this, step);
