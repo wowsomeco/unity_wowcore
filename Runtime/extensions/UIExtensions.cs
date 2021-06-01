@@ -206,11 +206,11 @@ namespace Wowsome {
 
     #region Rotation
     public static float Rotation(this RectTransform rt) {
-      return Mathf.Round(rt.eulerAngles.z);
+      return rt.eulerAngles.z.WrapAngle();
     }
 
     public static RectTransform SetRotation(this RectTransform rt, float angle) {
-      rt.rotation = Quaternion.Euler(0f, 0f, angle);
+      rt.localRotation = Quaternion.Euler(0f, 0f, angle);
       return rt;
     }
 

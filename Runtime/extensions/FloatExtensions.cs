@@ -31,13 +31,14 @@ namespace Wowsome {
       return (float)Math.Round((double)f, digits);
     }
 
-    public static float ClampAngle(this float angle, float min, float max) {
-      if (angle < 0f)
-        angle += 360;
-      if (angle > 360)
-        angle -= 360;
+    /// <summary>
+    /// e.g. 270 will get converted to -90
+    /// </summary>
+    public static float WrapAngle(this float angle) {
+      angle %= 360f;
+      if (angle > 180f) return angle - 360f;
 
-      return angle.Clamp(min, max);
+      return angle;
     }
 
     public static float AngleBetween(float x, float y, float angleOffset = 0f) {

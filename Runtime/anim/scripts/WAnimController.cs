@@ -38,22 +38,9 @@ namespace Wowsome.Anim {
 
     Dictionary<string, List<WAnimatorBase>> _animators = new Dictionary<string, List<WAnimatorBase>>();
     List<WAnimatorBase> _playings = new List<WAnimatorBase>();
+    Queue<string> _nextAnimIds = new Queue<string>();
     string _curPlayingAnimId;
-    string _nextAnimId = null;
     bool _playing = false;
-
-    public void PlayAnim(string id) {
-      if (_animators.ContainsKey(id)) {
-        _playing = true;
-        // only play anim if the start trigger doesnt interfere
-        if (!TriggerStartAnim(id)) {
-          _curPlayingAnimId = id;
-          // play the cur anim id
-          _playings = _animators[_curPlayingAnimId];
-          _playings.ForEach(p => p.Play());
-        }
-      }
-    }
 
     public void InitAnim() {
       var animators = GetComponentsInChildren<WAnimatorBase>();
@@ -86,26 +73,31 @@ namespace Wowsome.Anim {
       }
     }
 
-    bool TriggerStartAnim(string nextAnimId) {
-      // make sure start anim only gets triggered once
-      if (!_nextAnimId.IsEmpty()) {
-        _curPlayingAnimId = string.Copy(_nextAnimId);
-        _nextAnimId = null;
-        return false;
+    public void PlayAnim(string id, bool checkStartTrigger = true) {
+      if (_animators.ContainsKey(id)) {
+        _playing = true;
+        // only play anim if the start trigger doesnt interfere        
+        if (checkStartTrigger && TriggerStartAnim(id)) return;
+        // play the anim id
+        SetCurPlaying(id);
       }
+    }
 
+    bool TriggerStartAnim(string nextAnimId) {
       AnimTrigger startTrigger = startTriggers.Find(x => x.ids.Contains(nextAnimId));
       // check if start trigger is valid,
       // if so, play it
       if (null != startTrigger && _animators.ContainsKey(startTrigger.animId)) {
-        // set cur playing as the startTrigger.animId                
-        _curPlayingAnimId = startTrigger.animId;
         // set the next anim id so that once the start trigger anim id is done,
         // we play this one by then
-        _nextAnimId = nextAnimId;
+        // right now, it will all the previous _nextAnimIds, if any
+        _nextAnimIds.Clear();
+        _nextAnimIds.Enqueue(nextAnimId);
         // play the startTrigger.animId
-        _playings = _animators[_curPlayingAnimId];
-        _playings.ForEach(p => p.Play());
+        // set cur playing as the startTrigger.animId only if they're different
+        if (_curPlayingAnimId != startTrigger.animId) {
+          SetCurPlaying(startTrigger.animId);
+        }
 
         return true;
       }
@@ -123,8 +115,9 @@ namespace Wowsome.Anim {
         // check if there is a debt of next anim id,
         // if so, play that one first
         // otherwise check the end trigger and play that one if any
-        if (!_nextAnimId.IsEmpty()) {
-          PlayAnim(_nextAnimId.Trim());
+        if (_nextAnimIds.Count > 0) {
+          string next = _nextAnimIds.Dequeue();
+          PlayAnim(next, false);
         } else {
           AnimTrigger endTrigger = endTriggers.Find(x => x.ids.Contains(_curPlayingAnimId));
           if (null != endTrigger) {
@@ -132,6 +125,12 @@ namespace Wowsome.Anim {
           }
         }
       }
+    }
+
+    void SetCurPlaying(string animId) {
+      _curPlayingAnimId = animId;
+      _playings = _animators[_curPlayingAnimId];
+      _playings.ForEach(p => p.Play());
     }
   }
 }
