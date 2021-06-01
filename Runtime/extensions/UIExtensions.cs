@@ -206,7 +206,7 @@ namespace Wowsome {
 
     #region Rotation
     public static float Rotation(this RectTransform rt) {
-      return rt.eulerAngles.z.WrapAngle();
+      return rt.localEulerAngles.z.WrapAngle();
     }
 
     public static RectTransform SetRotation(this RectTransform rt, float angle) {
