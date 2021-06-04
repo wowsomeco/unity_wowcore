@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Wowsome.Generic;
@@ -14,16 +15,20 @@ namespace Wowsome {
     /// such as AudioManager, LocalizationManager, etc.    
     /// </description>
     public class CavEngine : MonoBehaviour {
-      public delegate void EvStarted();
-
       internal static CavEngine Instance { get; private set; }
 
       public ChangeScene OnChangeScene { get; set; }
-      public EvStarted OnStarted { get; set; }
+      public Action OnStarted { get; set; }
+      /// <summary>
+      /// Callback that gets called whenever screen size changes.
+      /// Right now it's editor only for performance reason
+      /// </summary>            
+      public Action OnScreenSizeChanged { get; set; }
+
       public List<GameObject> m_systemPrefabs = new List<GameObject>();
 
-      List<ISystem> m_systems = new List<ISystem>();
-      CMessenger m_globalMessenger = new CMessenger();
+      List<ISystem> _systems = new List<ISystem>();
+      WConditional<int> _screenSizeChecker = null;
 
       void OnSceneLoaded(Scene scene, LoadSceneMode m) {
         if (null != OnChangeScene) OnChangeScene.Invoke(scene);
@@ -36,8 +41,16 @@ namespace Wowsome {
           // INIT SYSTEMS HERE
           InitSystems();
           StartSystem();
-
+          // observer scene changes
           SceneManager.sceneLoaded += OnSceneLoaded;
+          // observe screen size change
+          _screenSizeChecker = new WConditional<int>(
+            new List<WObservable<int>> {
+              new WObservable<int>(Screen.width),
+              new WObservable<int>(Screen.height),
+            }
+          );
+          _screenSizeChecker.OnChange += () => OnScreenSizeChanged?.Invoke();
         } else {
           Destroy(gameObject);
         }
@@ -45,16 +58,20 @@ namespace Wowsome {
       }
 
       void Update() {
-        for (int i = 0; i < m_systems.Count; ++i) {
-          m_systems[i].UpdateSystem(Time.deltaTime);
+        for (int i = 0; i < _systems.Count; ++i) {
+          _systems[i].UpdateSystem(Time.deltaTime);
         }
+
+#if UNITY_EDITOR
+        _screenSizeChecker.Check(new int[] { Screen.width, Screen.height });
+#endif
       }
 
       void InitSystem(GameObject go) {
         ISystem system = go.GetComponent<ISystem>();
         Debug.Assert(null != system, "gameobject doesnt have any ISystem, name =" + go.name);
         system.InitSystem();
-        m_systems.Add(system);
+        _systems.Add(system);
       }
 
       void InitSystems() {
@@ -67,15 +84,15 @@ namespace Wowsome {
       }
 
       void StartSystem() {
-        for (int i = 0; i < m_systems.Count; ++i) {
-          m_systems[i].StartSystem(this);
+        for (int i = 0; i < _systems.Count; ++i) {
+          _systems[i].StartSystem(this);
         }
 
-        if (null != OnStarted) OnStarted.Invoke();
+        OnStarted?.Invoke();
       }
 
       public T GetSystem<T>() where T : class, ISystem {
-        foreach (ISystem system in m_systems) {
+        foreach (ISystem system in _systems) {
           T t = system as T;
           if (null != t) {
             return t;
@@ -83,20 +100,6 @@ namespace Wowsome {
         }
         return null;
       }
-
-      #region GLOBAL MESSENGER
-      public void AddGlobalObserver(IObserver observer) {
-        m_globalMessenger.AddObserver(observer);
-      }
-
-      public void RemoveGlobalObserver(IObserver observer) {
-        m_globalMessenger.RemoveObserver(observer);
-      }
-
-      public void BroadcastGlobalEvent<T>(T ev) {
-        m_globalMessenger.BroadcastMessage(ev);
-      }
-      #endregion
     }
   }
 }

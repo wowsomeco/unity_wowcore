@@ -72,7 +72,11 @@ namespace Wowsome.Tasks {
     Queue<Task> _tasks = new Queue<Task>();
     TaskTimer _timer = null;
 
-    public abstract void Load(IEnumerable<Task> tasks, Timing lerpTime = null);
+    /// <summary>
+    /// Call this from the derived class to perform the task loading
+    /// e.g. in between scenes, etc 
+    /// </summary>
+    public abstract void Load(IEnumerable<Task> tasks);
 
     public void AddTasks(IEnumerable<Task> tasks) {
       // only can perform 1 bulk of tasks at a time
