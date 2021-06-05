@@ -21,6 +21,11 @@ namespace Wowsome.TwoDee {
       _particle = particle;
     }
 
+    public void Release() {
+      _playing = false;
+      _pool.Release(this);
+    }
+
     public void InitPoolObject(WObjectPool pool) {
       _pool = pool;
       OnReleased();
@@ -40,8 +45,7 @@ namespace Wowsome.TwoDee {
 
     public void UpdateObject(float dt) {
       if (_playing && _particle.isStopped) {
-        _playing = false;
-        _pool.Release(this);
+        Release();
       }
     }
   }

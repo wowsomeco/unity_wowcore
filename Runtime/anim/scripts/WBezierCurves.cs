@@ -28,6 +28,7 @@ namespace Wowsome.Anim {
     /// Useful if you want to do something when it's currently lerp ing
     /// </summary>
     public Action<float> Time { get; set; }
+    public Action OnDone { get; set; }
 
     Vector2 _control;
     Vector2 _from;
@@ -67,16 +68,17 @@ namespace Wowsome.Anim {
           // return true since it's still updating
           return true;
         } else {
-          OnDone();
+          Done();
         }
       }
 
       return false;
     }
 
-    void OnDone() {
+    void Done() {
       Time?.Invoke(1f);
       Cur?.Invoke(_to);
+      OnDone?.Invoke();
       _timer = null;
     }
   }
