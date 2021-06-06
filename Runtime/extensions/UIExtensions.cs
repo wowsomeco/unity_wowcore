@@ -9,9 +9,9 @@ using Wowsome.UI;
 namespace Wowsome {
   #region Rect Transform
   public static class RectTransformExtensions {
-    public static Vector3 ScreenToWorldPos(this RectTransform rectTransform, Vector2 screenPos) {
+    public static Vector3 ScreenToWorldPos(this RectTransform rectTransform, Vector2 screenPos, Camera cam = null) {
       Vector3 worldPos = Vector3.zero;
-      RectTransformUtility.ScreenPointToWorldPointInRectangle(rectTransform, screenPos, null, out worldPos);
+      RectTransformUtility.ScreenPointToWorldPointInRectangle(rectTransform, screenPos, cam, out worldPos);
       return worldPos;
     }
 

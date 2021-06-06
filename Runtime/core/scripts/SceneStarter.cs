@@ -30,6 +30,8 @@ namespace Wowsome {
           T t = controller as T;
           if (null != t) {
             return t;
+          } else {
+            Assert.Null<T>(t);
           }
         }
         return null;

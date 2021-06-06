@@ -85,7 +85,8 @@ namespace Wowsome {
 
     public class ObservableTimer {
       public Action<float> Progress { get; set; }
-      public WObservable<bool> OnDone { get; set; } = new WObservable<bool>(false);
+      public Action OnDone { get; set; }
+      public Action OnReset { get; set; }
 
       Timer _timer = null;
       float _duration;
@@ -101,7 +102,7 @@ namespace Wowsome {
 
       public void Reset() {
         _timer = new Timer(_duration);
-        OnDone.Next(false);
+        OnReset?.Invoke();
       }
 
       public bool UpdateTimer(float dt) {
@@ -111,8 +112,8 @@ namespace Wowsome {
         if (updating) {
           Progress?.Invoke(_timer.GetPercentage());
         } else {
-          OnDone?.Next(true);
           _timer = null;
+          OnDone?.Invoke();
         }
 
         return updating;

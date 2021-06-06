@@ -21,13 +21,13 @@ namespace Wowsome.TwoDee {
     WObjectPool _pool = new WObjectPool();
     HashSet<WParticleObject> _objects = new HashSet<WParticleObject>();
 
-    public WParticleObject Activate(string id, Vector3 pos) {
+    public WParticleObject Activate(string id, Vector3 worldPos) {
       WParticleObject po = null;
 
       var obj = _pool.Get(id);
       if (null != obj) {
         po = obj as WParticleObject;
-        Vector3 curPos = new Vector3(pos.x, pos.y, po.Position.z);
+        Vector3 curPos = new Vector3(worldPos.x, worldPos.y, po.Position.z);
         po.Position = curPos;
       }
 
