@@ -69,7 +69,7 @@ namespace Wowsome {
 
     public static void If(bool condition, string err) {
 #if UNITY_EDITOR
-      Debug.Assert(condition, err);
+      Debug.Assert(!condition, err);
 #endif
     }
   }
