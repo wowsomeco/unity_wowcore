@@ -4,76 +4,6 @@ using System.IO;
 using UnityEngine;
 
 namespace Wowsome {
-  public static class Print {
-    public class Txt {
-      public string Text { get; private set; }
-      public string Color { get; private set; }
-
-      public string GetText {
-        get { return string.Format("<color={0}>{1}</color>", Color, Text); }
-      }
-
-      public Txt(object t, string c) {
-        Text = t.ToString();
-        Color = c;
-      }
-
-      public Txt(object t) : this(t, "white") { }
-    }
-
-    public static Txt D(object t, string c = "white") {
-      return new Txt(t, c);
-    }
-
-    public static void Log(object msg, string color = "white") {
-#if UNITY_EDITOR
-      Txt t = new Txt(msg, color);
-      Debug.Log(t.GetText);
-#endif
-    }
-
-    public static void Log(params object[] msg) {
-#if UNITY_EDITOR
-      string str = msg.Map(x => x.ToString()).Flatten(',');
-      Txt t = new Txt(str, "white");
-      Debug.Log(t.GetText);
-#endif
-    }
-
-    public static void Log(params Txt[] texts) {
-#if UNITY_EDITOR
-      string t = texts.Fold(string.Empty, (p, c) => p += (c.GetText + " "));
-      Debug.Log(t);
-#endif
-    }
-  }
-
-  public static class Assert {
-    public static void Null<T>(object obj, string err = null) {
-#if UNITY_EDITOR
-      Debug.Assert(null != obj, err.IsEmpty() ? (typeof(T).Name + " is null") : err);
-#endif
-    }
-
-    public static void Null<TObject, TComponent>(object obj, GameObject go, string err = null) {
-#if UNITY_EDITOR
-      Debug.Assert(null != obj, $"{typeof(TObject).Name} is null, component = {typeof(TComponent).Name}, gameobject = {go.name}");
-#endif
-    }
-
-    public static void Null(object obj, string err = null) {
-#if UNITY_EDITOR
-      Debug.Assert(null != obj, err.IsEmpty() ? "obj is null" : err);
-#endif
-    }
-
-    public static void If(bool condition, string err) {
-#if UNITY_EDITOR
-      Debug.Assert(!condition, err);
-#endif
-    }
-  }
-
   public static class TextureExt {
     public static Sprite ToSprite(this Texture2D texture) {
       Sprite sprite = Sprite.Create(texture, new Rect(Vector2.zero, new Vector2(texture.width, texture.height)), Vector2.one * 0.5f);
@@ -131,6 +61,10 @@ namespace Wowsome {
   }
 
   public static class Vector2Ext {
+    public static Vector2 Create(float f) {
+      return new Vector2(f, f);
+    }
+
     public static Vector2 LerpWithOffset(this Vector2 v, Vector2 other, float t, Vector2 offset) {
       return Vector2.Lerp(v, other, t) + offset;
     }
@@ -334,16 +268,6 @@ namespace Wowsome {
           DoIterate(child.gameObject, shouldRecursive);
         }
       }
-    }
-  }
-
-  public static class ScreenExt {
-    public static float MinResolution() {
-      return Mathf.Min((float)Screen.width, (float)Screen.height);
-    }
-
-    public static float MaxResolution() {
-      return Mathf.Max((float)Screen.width, (float)Screen.height);
     }
   }
 }

@@ -167,4 +167,22 @@ namespace Wowsome {
       return new Vector2(X, Y);
     }
   }
+
+  [Serializable]
+  public class PlatformBasedString {
+    public string ios;
+    public string google;
+    public string amazon;
+
+    public PlatformBasedString(string ios, string google, string amazon) {
+      this.ios = ios;
+      this.google = google;
+      this.amazon = amazon;
+    }
+
+    public string Get() {
+      if (Application.platform == RuntimePlatform.IPhonePlayer) return ios;
+      return AppSettings.AndroidPlatform == AndroidPlatform.Google ? google : amazon;
+    }
+  }
 }

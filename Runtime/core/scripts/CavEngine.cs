@@ -15,9 +15,23 @@ namespace Wowsome {
     /// such as AudioManager, LocalizationManager, etc.    
     /// </description>
     public class CavEngine : MonoBehaviour {
+      public struct ChangeSceneEv {
+        public bool IsInitial { get; private set; }
+        public Scene Scene { get; private set; }
+
+        public ChangeSceneEv(bool isInit, Scene scene) {
+          IsInitial = isInit;
+          Scene = scene;
+        }
+      }
+
       internal static CavEngine Instance { get; private set; }
 
-      public ChangeScene OnChangeScene { get; set; }
+      /// <summary>
+      /// Callback that gets called whenever the scene changes.
+      /// This gets called initially too, Use IsInitial to differentiate it      
+      /// </summary>
+      public Action<ChangeSceneEv> OnChangeScene { get; set; }
       public Action OnStarted { get; set; }
       /// <summary>
       /// Callback that gets called whenever screen size changes.
@@ -29,15 +43,16 @@ namespace Wowsome {
 
       List<ISystem> _systems = new List<ISystem>();
       WConditional<int> _screenSizeChecker = null;
+      bool _isInitialScene = true;
 
       void OnSceneLoaded(Scene scene, LoadSceneMode m) {
-        if (null != OnChangeScene) OnChangeScene.Invoke(scene);
+        OnChangeScene?.Invoke(new ChangeSceneEv(_isInitialScene, scene));
+        if (_isInitialScene) _isInitialScene = false;
       }
 
       void Awake() {
         if (!Instance) {
           Instance = this;
-
           // INIT SYSTEMS HERE
           InitSystems();
           StartSystem();
@@ -91,13 +106,16 @@ namespace Wowsome {
         OnStarted?.Invoke();
       }
 
-      public T GetSystem<T>() where T : class, ISystem {
+      public T GetSystem<T>(bool assertIfNull = true) where T : class, ISystem {
         foreach (ISystem system in _systems) {
           T t = system as T;
           if (null != t) {
             return t;
           }
         }
+
+        if (assertIfNull) Assert.Null<T>(typeof(T));
+
         return null;
       }
     }

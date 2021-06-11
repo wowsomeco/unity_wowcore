@@ -5,6 +5,7 @@ using Wowsome.Core;
 using Wowsome.Tween;
 
 namespace Wowsome.UI {
+  [DisallowMultipleComponent]
   public class WScreen : MonoBehaviour {
     public Action OnWillShow { get; set; }
     public Action OnDidShow { get; set; }
@@ -28,24 +29,21 @@ namespace Wowsome.UI {
     public void InitScreen(ISceneStarter sceneStarter, WScreenManager controller) {
       // cache the listener
       _screenManager = controller;
-      _screenManager.OnChangeVisibility += (VisibilityEv vis) => {
-        if (vis.ScreenId.CompareStandard(id)) {
-          switch (vis.State) {
-            case ViewState.WillAppear:
-              OnWillShow?.Invoke();
-              break;
-            case ViewState.DidAppear:
-              OnDidShow?.Invoke();
-              break;
-            case ViewState.WillDisappear:
-              OnWillHide?.Invoke();
-              break;
-            case ViewState.DidDisappear:
-              OnDidHide?.Invoke();
-              break;
-            default:
-              break;
-          }
+      _screenManager.OnShow += ev => {
+        if (ev.ScreenId.CompareStandard(id)) {
+          if (ev.State == WScreenManager.ShowState.WillShow)
+            OnWillShow?.Invoke();
+          else
+            OnDidShow?.Invoke();
+        }
+      };
+      _screenManager.OnHide += ev => {
+        if (ev.ScreenId.CompareStandard(id)) {
+          if (ev.State == WScreenManager.HideState.WillHide)
+            OnWillHide?.Invoke();
+          else
+            OnDidHide?.Invoke();
+
         }
       };
       // get all ITween component(s) in this CScreen

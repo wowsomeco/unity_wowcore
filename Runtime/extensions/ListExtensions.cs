@@ -169,7 +169,7 @@ namespace Wowsome {
     }
 
     public static T First<T>(this IList<T> arr) {
-      return arr.Count > 0 ? arr[0] : default(T);
+      return null != arr && arr.Count > 0 ? arr[0] : default(T);
     }
 
     public static List<T> ToList<T>(this T[] arr) {
@@ -184,6 +184,15 @@ namespace Wowsome {
       });
 
       return s;
+    }
+
+    public static T PickRandom<T>(this IList<T> list) {
+      if (null == list || list.Count == 0) return default(T);
+
+      System.Random rand = MathExtensions.GetRandom();
+      int r = rand.Next(0, list.Count);
+
+      return list[r];
     }
   }
 }

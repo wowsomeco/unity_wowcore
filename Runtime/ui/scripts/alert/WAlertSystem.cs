@@ -21,14 +21,26 @@ namespace Wowsome.UI {
 
     protected ShowOptions _curShowOptions = null;
 
-    public void Show(ShowOptions options) {
+    public virtual void Show(ShowOptions options) {
       _curShowOptions = options;
       OnShow?.Invoke(_curShowOptions);
     }
 
+    protected virtual void Hide() {
+      OnHide?.Invoke();
+    }
+
     public virtual void InitSystem() { }
 
-    public virtual void StartSystem(CavEngine gameEngine) { }
+    public virtual void StartSystem(CavEngine gameEngine) {
+      gameEngine.OnChangeScene += ev => {
+        // clean up events on change scene
+        if (!ev.IsInitial) {
+          OnShow = null;
+          OnHide = null;
+        }
+      };
+    }
 
     public virtual void UpdateSystem(float dt) { }
   }

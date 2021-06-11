@@ -225,7 +225,7 @@ namespace Wowsome {
       return str.Split(separator).First();
     }
 
-    public static string Flatten(this List<String> strs, char separator = ' ') {
+    public static string Flatten(this List<String> strs, string separator = " ") {
       string s = string.Empty;
       strs.LoopWithPointer((str, idx, first, last) => {
         s += str;
