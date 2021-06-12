@@ -25,12 +25,14 @@ namespace Wowsome.Anim {
     public sealed class AnimTrigger {
       [Tooltip("the anim id(s) reference")]
       public List<string> ids;
-      [Tooltip("the anim id that will get played")]
-      public string animId;
+      [Tooltip("the anim id that will get played on start / end. When the item is more than 1, it will get randomized")]
+      public List<string> animId = new List<string>();
+
+      public string PickRandom() => animId.IsEmpty() ? null : animId.PickRandom().Trim();
     }
 
-    [Tooltip("the anim that gets played on init, leave it to null / blank if nothing")]
-    public string defaultAnimId;
+    [Tooltip("the anim that gets played on init. When the item is more than 1, it will get randomized")]
+    public List<string> defaultAnimId = new List<string>();
     [Tooltip("the next animation that gets played when a new anim id is about to start (pre-start)")]
     public List<AnimTrigger> startTriggers = new List<AnimTrigger>();
     [Tooltip("the next animation that gets played once the current one has completed (post-complete)")]
@@ -54,7 +56,7 @@ namespace Wowsome.Anim {
       }
 
       if (!defaultAnimId.IsEmpty()) {
-        PlayAnim(defaultAnimId);
+        PlayAnim(defaultAnimId.PickRandom());
       }
     }
 
@@ -74,7 +76,7 @@ namespace Wowsome.Anim {
     }
 
     public void PlayAnim(string id, bool checkStartTrigger = true) {
-      if (_animators.ContainsKey(id)) {
+      if (!id.IsEmpty() && _animators.ContainsKey(id)) {
         _playing = true;
         // only play anim if the start trigger doesnt interfere        
         if (checkStartTrigger && TriggerStartAnim(id)) return;
@@ -87,7 +89,8 @@ namespace Wowsome.Anim {
       AnimTrigger startTrigger = startTriggers.Find(x => x.ids.Contains(nextAnimId));
       // check if start trigger is valid,
       // if so, play it
-      if (null != startTrigger && _animators.ContainsKey(startTrigger.animId)) {
+      if (null != startTrigger) {
+        string animId = startTrigger.PickRandom();
         // set the next anim id so that once the start trigger anim id is done,
         // we play this one by then
         // right now, it will all the previous _nextAnimIds, if any
@@ -95,8 +98,8 @@ namespace Wowsome.Anim {
         _nextAnimIds.Enqueue(nextAnimId);
         // play the startTrigger.animId
         // set cur playing as the startTrigger.animId only if they're different
-        if (_curPlayingAnimId != startTrigger.animId) {
-          SetCurPlaying(startTrigger.animId);
+        if (_curPlayingAnimId != animId) {
+          SetCurPlaying(animId);
         }
 
         return true;
@@ -121,7 +124,7 @@ namespace Wowsome.Anim {
         } else {
           AnimTrigger endTrigger = endTriggers.Find(x => x.ids.Contains(_curPlayingAnimId));
           if (null != endTrigger) {
-            PlayAnim(endTrigger.animId.Trim());
+            PlayAnim(endTrigger.PickRandom());
           }
         }
       }

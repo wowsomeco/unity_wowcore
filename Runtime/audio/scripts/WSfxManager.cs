@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,6 +9,10 @@ namespace Wowsome.Audio {
     public string path = "audio/sfx";
     public WSound prefabSound;
     public int sfxChannel = 16;
+    /// <summary>
+    /// When it's true, it wont load the sounds in the given [[path]] on init
+    /// </summary>
+    public bool isLazyLoad = false;
 
     List<WSound> _sources = new List<WSound>();
     List<WSound> _currentPlaying = new List<WSound>();
@@ -27,17 +32,17 @@ namespace Wowsome.Audio {
     }
 
     public void InitAudioManager() {
-      AudioClip[] audioClipsFromResources = Resources.LoadAll<AudioClip>(path);
-      for (int i = 0; i < audioClipsFromResources.Length; ++i) {
-        if (!_audioClips.ContainsKey(audioClipsFromResources[i].name)) {
-          _audioClips.Add(audioClipsFromResources[i].name, audioClipsFromResources[i]);
+      if (!isLazyLoad) {
+        AudioClip[] audioClips = Resources.LoadAll<AudioClip>(path);
+        for (int i = 0; i < audioClips.Length; ++i) {
+          _audioClips.Add(audioClips[i].name, audioClips[i]);
         }
       }
 
       for (int i = 0; i < sfxChannel; ++i) {
         WSound sound = prefabSound.Clone<WSound>(transform);
         sound.InitSound();
-        sound.OnDeactivated += () => _currentPlaying.RemoveAll(x => x.GetInstanceID() == sound.GetInstanceID());
+        sound.OnDeactivated += () => _currentPlaying.RemoveAll(x => x.Same(sound));
 
         _sources.Add(sound);
       }
@@ -64,6 +69,10 @@ namespace Wowsome.Audio {
       PlaySound(audioClipName);
     }
 
+    /// <summary>
+    /// Stops the current play by the audioClipName provided, if any 
+    /// Then play the sound afterward
+    /// </summary>
     public void PlayAfterStop(string audioClipName) {
       StopCurrentPlaying(audioClipName);
       PlaySound(audioClipName);
@@ -86,8 +95,8 @@ namespace Wowsome.Audio {
     }
 
     public void PlaySound(string audioClipName, WSound.PlayOptions options = null, Action onStopCallback = null) {
-      bool containsAudioClip = _audioClips.ContainsKey(audioClipName);
-      if (containsAudioClip) {
+      AudioClip clip = GetAudioClip(audioClipName);
+      if (null != clip) {
         WSound soundFX = GetAvailableSound();
         if (null != soundFX) {
           soundFX.PlaySound(_audioClips[audioClipName], options, onStopCallback);
@@ -142,9 +151,20 @@ namespace Wowsome.Audio {
     }
 
     void AddToCurPlaying(WSound sound) {
-      if (_currentPlaying.Exists(x => x.GetInstanceID() == sound.GetInstanceID())) return;
+      if (_currentPlaying.Exists(x => x.Same(sound))) return;
 
       _currentPlaying.Add(sound);
+    }
+
+    AudioClip GetAudioClip(string name) {
+      AudioClip clip = null;
+
+      if (!_audioClips.TryGetValue(name, out clip)) {
+        clip = Resources.Load<AudioClip>(Path.Combine(path, name));
+        _audioClips[name] = clip;
+      }
+
+      return clip;
     }
   }
 }
