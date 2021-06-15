@@ -114,7 +114,7 @@ namespace Wowsome {
           }
         }
 
-        if (assertIfNull) Assert.Null<T>(typeof(T));
+        if (assertIfNull) Assert.Null<T>(null);
 
         return null;
       }

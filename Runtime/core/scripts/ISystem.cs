@@ -11,7 +11,7 @@
     public interface ISceneStarter {
       CavEngine Engine { get; }
       StartSceneController OnStartSceneController { get; set; }
-      T GetController<T>() where T : class, ISceneController;
+      T GetController<T>(bool assertIfNull = true) where T : class, ISceneController;
     }
 
     public interface ISceneController {

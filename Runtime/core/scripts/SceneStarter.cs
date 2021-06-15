@@ -25,13 +25,16 @@ namespace Wowsome {
 
       public StartSceneController OnStartSceneController { get; set; }
 
-      public T GetController<T>() where T : class, ISceneController {
+      public T GetController<T>(bool assertIfNull = true) where T : class, ISceneController {
         foreach (ISceneController controller in m_controllers) {
           T t = controller as T;
           if (null != t) {
             return t;
           }
         }
+
+        if (assertIfNull) Assert.Null<T>(null);
+
         return null;
       }
       #endregion
