@@ -15,7 +15,7 @@ namespace Wowsome {
       Data = d;
       Error = uwr.error;
       ResponseCode = uwr.responseCode;
-      IsError = uwr.isNetworkError || uwr.isHttpError;
+      IsError = uwr.HasErrors();
     }
   }
 
@@ -32,7 +32,7 @@ namespace Wowsome {
         string fullUrl = string.Format("{0}/{1}", url, filename.LastSplit());
         using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(fullUrl)) {
           yield return uwr.SendWebRequest();
-          if (uwr.isNetworkError || uwr.isHttpError) {
+          if (uwr.HasErrors()) {
             result?.Invoke(new DownloadResponse<Texture2D>(null, uwr));
           } else {
             // save the texture            
@@ -57,7 +57,7 @@ namespace Wowsome {
 
       using (UnityWebRequest uwr = UnityWebRequest.Get(url)) {
         yield return uwr.SendWebRequest();
-        if (uwr.isNetworkError || uwr.isHttpError) {
+        if (uwr.HasErrors()) {
           result(new DownloadResponse<T>(default(T), uwr));
         } else {
           // save
