@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Wowsome {
   public static class ScreenUtils {
@@ -14,6 +15,27 @@ namespace Wowsome {
   public static class Utils {
     public static float AspectRatioScaler(Vector2 referenceResolution) {
       return (referenceResolution.x / referenceResolution.y) / ((float)Screen.width / Screen.height);
+    }
+
+    public delegate U NotNullCallback<T, U>(T t);
+
+    /// <summary>
+    /// Useful when you need to check whether T is null first
+    /// returns null if T is null
+    /// otherwise returns U
+    /// </summary>    
+    public static U CheckNull<T, U>(this T obj, NotNullCallback<T, U> ifNotNull) where T : class where U : class {
+      if (obj == null) return null;
+      return ifNotNull(obj);
+    }
+
+    /// <summary>
+    /// This makes sure that a function only gets called on Unity Editor only
+    /// </summary>
+    public static void EditorOnly(Action callback) {
+#if UNITY_EDITOR
+      callback();
+#endif
     }
   }
 
