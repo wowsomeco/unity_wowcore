@@ -90,9 +90,11 @@ namespace Wowsome {
       }
 
       void InitSystems() {
-        //instantiate the prefabs
+        // instantiate the prefabs
         for (int i = 0; i < m_systemPrefabs.Count; ++i) {
-          GameObject systemGO = Instantiate(m_systemPrefabs[i]) as GameObject;
+          GameObject prefab = m_systemPrefabs[i];
+          GameObject systemGO = Instantiate(prefab) as GameObject;
+          systemGO.name = prefab.name;
           systemGO.transform.SetParent(transform, false);
           InitSystem(systemGO);
         }
