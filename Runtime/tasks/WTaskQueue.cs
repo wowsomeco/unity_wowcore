@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Wowsome.Anim;
 using Wowsome.Chrono;
 using Wowsome.Core;
 using Wowsome.Generic;

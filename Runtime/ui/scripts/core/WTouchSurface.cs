@@ -7,11 +7,7 @@ namespace Wowsome.UI {
   public class WTouchSurface : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IBeginDragHandler, IDragHandler, IEndDragHandler {
     public class Touch {
       public PointerEventData PointerData { get; private set; }
-      public Vector2 ScreenPos {
-        get {
-          return PointerData.position;
-        }
-      }
+      public Vector2 ScreenPos => PointerData.position;
 
       public Touch(PointerEventData eventData) {
         PointerData = eventData;
@@ -22,7 +18,6 @@ namespace Wowsome.UI {
     public Action<Touch> OnMovingTouch { get; set; }
     public Action<Touch> OnEndTouch { get; set; }
 
-    [SerializeField] List<GameObject> _listeners = new List<GameObject>();
     Dictionary<int, Touch> _touches = new Dictionary<int, Touch>();
 
     public void OnPointerDown(PointerEventData eventData) {

@@ -8,7 +8,8 @@ namespace Wowsome {
   public class CapacityData {
     public int Max { get; private set; }
     public int Cur { get; private set; }
-    public float Percentage => ((float)Cur / Max) * 100f;
+    public float DecimalPercentage => (float)Cur / Max;
+    public float Percentage => DecimalPercentage * 100f;
     public bool IsAny => Cur > 0;
     public bool IsFull => Cur == Max;
 

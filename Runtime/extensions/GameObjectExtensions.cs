@@ -71,6 +71,16 @@ namespace Wowsome {
   }
 
   public static class ComponentExt {
+    public static T ReplaceWith<T>(this Component component) where T : Component {
+      GameObject g = component.gameObject;
+#if UNITY_EDITOR
+      GameObject.DestroyImmediate(component);
+#else
+      GameObject.Destroy(component);
+#endif
+      return g.AddComponent<T>();
+    }
+
     public static bool Same(this Component c, Component other) {
       return c.gameObject.Same(other.gameObject);
     }
