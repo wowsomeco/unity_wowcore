@@ -188,6 +188,10 @@ namespace Wowsome {
       SetSize(trans, new Vector2(newSize, trans.Size().y));
     }
 
+    public static void AddWidth(this RectTransform rt, float w) {
+      SetSize(rt, new Vector2(rt.Size().x + w, rt.Size().y));
+    }
+
     public static void SetHeight(this RectTransform trans, float newSize) {
       SetSize(trans, new Vector2(trans.Size().x, newSize));
     }
