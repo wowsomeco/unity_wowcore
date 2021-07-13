@@ -255,5 +255,15 @@ namespace Wowsome {
       int idx = MathExtensions.GetRandom().Next(0, chars.Length);
       return chars[idx];
     }
+
+    public static string ReplaceAll(this string str, string charToReplace, string replaceWith) {
+      string s = str;
+
+      foreach (char c in charToReplace) {
+        s = s.Replace(c.ToString(), replaceWith);
+      }
+
+      return s;
+    }
   }
 }
