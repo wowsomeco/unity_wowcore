@@ -1,5 +1,7 @@
 ﻿using System;
 using UnityEngine;
+using Wowsome.Tween;
+using Wowsome.UI;
 
 namespace Wowsome {
   public static class ScreenUtils {
@@ -62,6 +64,26 @@ namespace Wowsome {
 #if UNITY_EDITOR
       Debug.Assert(!condition, err);
 #endif
+    }
+  }
+
+  public class CommonButton {
+    /// <summary>
+    /// On Tap Tween
+    /// </summary>
+    Tweener _tw;
+
+    public CommonButton(GameObject gameObject, System.Action onTap, ITween tween = null) {
+      _tw = new Tweener(tween == null ? Tweener.Pulse(gameObject) : tween);
+      // init tap handler
+      new CTapHandler(gameObject, pos => {
+        _tw.Play();
+        onTap();
+      });
+    }
+
+    public void Update(float dt) {
+      _tw.Update(dt);
     }
   }
 }

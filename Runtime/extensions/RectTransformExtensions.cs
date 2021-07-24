@@ -1,13 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Wowsome.Tween;
-using Wowsome.UI;
 
 namespace Wowsome {
-  #region Rect Transform
   public static class RectTransformExtensions {
     public static Vector3 ScreenToWorldPos(this RectTransform rectTransform, Vector2 screenPos, Camera cam = null) {
       Vector3 worldPos = Vector3.zero;
@@ -247,67 +242,28 @@ namespace Wowsome {
     #endregion
 
     #region Intersections
+
     public static Rect RectWorldPos(this RectTransform rt) {
-      return new Rect(rt.position.x, rt.position.y, rt.Width(), rt.Height());
-    }
+      Vector3[] corners = new Vector3[4];
+      rt.GetWorldCorners(corners);
+      // Get the bottom left corner.
+      Vector3 position = corners[0];
 
-    public static Rect RectAgainstOther(this RectTransform rt, RectTransform other) {
-      RectTransform parent = rt.parent.GetComponent<RectTransform>();
-      //cache the cur pos
-      Vector2 pos = rt.Pos();
-      //iterate over until root
-      while (parent.gameObject.GetInstanceID() != other.gameObject.GetInstanceID()) {
-        //increment the pos with the parent's pos
-        pos += parent.Pos();
-        parent = parent.parent.GetComponent<RectTransform>();
-      }
-      //return
-      return new Rect(pos.x, pos.y, rt.Width(), rt.Height());
-    }
+      Vector2 size = new Vector2(
+          rt.lossyScale.x * rt.rect.size.x,
+          rt.lossyScale.y * rt.rect.size.y);
 
-    public static Rect RectAgainstRoot(this RectTransform rt) {
-      //cache the root and parent rt
-      RectTransform root = rt.root.GetComponent<RectTransform>();
-      RectTransform parent = rt.parent.GetComponent<RectTransform>();
-      //cache the cur pos
-      Vector2 pos = rt.Pos();
-      //iterate over until root
-      while (parent != root) {
-        //increment the pos with the parent's pos
-        pos += parent.Pos();
-        parent = parent.parent.GetComponent<RectTransform>();
-      }
-      //return
-      return new Rect(pos.x, pos.y, rt.Width(), rt.Height());
-    }
-
-    public static Rect RectWithOffset(this RectTransform rt, RectTransform offset) {
-      if (rt == offset) {
-        return rt.Rect();
-      }
-      Rect offsetRect = offset.Rect();
-      Rect theRect = rt.Rect();
-      return new Rect(offsetRect.x + theRect.x, offsetRect.y + theRect.y, theRect.width, theRect.height);
-    }
-
-    public static Rect Rect(this RectTransform rt1) {
-      return new Rect(rt1.X(), rt1.Y(), rt1.Width(), rt1.Height());
+      return new Rect(position, size);
     }
 
     public static bool Intersects(this RectTransform rt1, RectTransform rt2) {
-      return rt1.Rect().Intersects(rt2.Rect());
+      return rt1.RectWorldPos().Intersects(rt2.RectWorldPos());
     }
 
-    public static bool Intersects(this RectTransform rt1, RectTransform rt2, Vector2 offset) {
-      Rect r1 = rt1.Rect();
-      Rect r2 = rt2.Rect();
-      r1.x = offset.x;
-      r1.y = offset.y;
-      return r1.Intersects(r2);
-    }
     #endregion
 
     #region Manipulation
+
     public static Vector2 ScreenToAnchoredPos(RectTransform canvasRt, Vector2 screenPos) {
       Vector2 viewportPos = Camera.main.ScreenToViewportPoint(screenPos);
       Vector2 anchoredPos = new Vector2((viewportPos.x * canvasRt.sizeDelta.x) - (canvasRt.sizeDelta.x * 0.5f),
@@ -430,118 +386,14 @@ namespace Wowsome {
       size.y *= anchor.y;
       return size;
     }
+
     #endregion
 
     public static bool IsPointInRect(this RectTransform rt, Vector2 screenPos, Camera cam) {
       return RectTransformUtility.RectangleContainsScreenPoint(rt, screenPos, cam);
     }
   }
-  #endregion
 
-  #region Image
-  public static class ImageExtensions {
-    public static void SetMaxSize(this Image img, float maxSize) {
-      img.SetNativeSize();
-      img.rectTransform.SetMaxSize(maxSize);
-    }
-
-    public static void SetColor(this Image img, float[] rgba) {
-      Color color = img.color;
-      for (int i = 0; i < rgba.Length; ++i) {
-        color[i] = rgba[i];
-      }
-      img.color = color;
-    }
-
-    public static void SetColor(this Image img, Color color) {
-      img.color = color;
-    }
-
-    public static void SetAlpha(this Image img, float alpha) {
-      Color color = img.color;
-      color.a = alpha;
-      img.color = color;
-    }
-
-    public static float Alpha(this Image img) {
-      return img.color.a;
-    }
-
-    public static void SetPos(this Image img, Vector2 pos) {
-      img.rectTransform.SetPos(pos);
-    }
-
-    public static void SetScale(this Image img, Vector2 scale) {
-      img.rectTransform.SetScale(scale);
-    }
-
-    public static void SetScale(this Image img, float scale) {
-      img.rectTransform.SetScale(new Vector2(scale, scale));
-    }
-
-    public static void SetRotation(this Image img, float rot) {
-      img.rectTransform.SetRotation(rot);
-    }
-
-    public static void SetParent(this Image img, RectTransform parent) {
-      img.rectTransform.SetParent(parent);
-    }
-
-    public static void SetWidth(this Image img, float w) {
-      img.rectTransform.SetWidth(w);
-    }
-
-    public static void SetHeight(this Image img, float h) {
-      img.rectTransform.SetHeight(h);
-    }
-  }
-  #endregion
-
-  #region Text
-  public static class TextExt {
-    public static void SetColor(this Text text, float[] rgba) {
-      Color color = text.color;
-      for (int i = 0; i < rgba.Length; ++i) {
-        color[i] = rgba[i];
-      }
-      text.color = color;
-    }
-
-    public static void SetAlpha(this Text txt, float alpha) {
-      Color color = txt.color;
-      color.a = alpha;
-      txt.color = color;
-    }
-
-    public static float Alpha(this Text txt) {
-      return txt.color.a;
-    }
-  }
-  #endregion
-
-  #region Event Trigger
-  public static class EventTriggerExt {
-    public static void AddEventTriggerListener(this EventTrigger trigger, EventTriggerType eventType, UnityAction<BaseEventData> callback) {
-      //check whether entry exists in trigger already
-      EventTrigger.Entry entry = trigger.triggers.Find(x => x.eventID == eventType);
-      //create new if not exist yet and add to the trigger
-      if (null == entry) {
-        entry = new EventTrigger.Entry();
-        entry.eventID = eventType;
-        entry.callback = new EventTrigger.TriggerEvent();
-        entry.callback.AddListener(callback);
-        trigger.triggers.Add(entry);
-      }
-      //if exist remove the listener first and add it back to avoid duplicate
-      else {
-        entry.callback.RemoveListener(callback);
-        entry.callback.AddListener(callback);
-      }
-    }
-  }
-  #endregion
-
-  #region Rect
   public static class RectExt {
     public static bool Intersects(this Rect r1, Rect r2) {
       float rightEdge1 = r1.x + r1.width * 0.5f;
@@ -564,29 +416,4 @@ namespace Wowsome {
       return false;
     }
   }
-  #endregion
-
-  #region Utils
-
-  public class CommonButton {
-    /// <summary>
-    /// On Tap Tween
-    /// </summary>
-    Tweener _tw;
-
-    public CommonButton(GameObject gameObject, System.Action onTap, ITween tween = null) {
-      _tw = new Tweener(tween == null ? Tweener.Pulse(gameObject) : tween);
-      // init tap handler
-      new CTapHandler(gameObject, pos => {
-        _tw.Play();
-        onTap();
-      });
-    }
-
-    public void Update(float dt) {
-      _tw.Update(dt);
-    }
-  }
-
-  #endregion
 }

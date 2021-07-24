@@ -86,8 +86,10 @@ namespace Wowsome.UI {
     }
 
     void SetDragPos(PointerEventData ed) {
-      Vector2 pos = ed.position.ScreenToLocalPos(_parent, _camera);
-      _rt.SetPos(pos + offset);
+      Vector3 worldPos;
+      RectTransformUtility.ScreenPointToWorldPointInRectangle(_parent, ed.position, _camera, out worldPos);
+      _rt.transform.position = worldPos;
+      _rt.SetPos(_rt.Pos() + offset);
     }
   }
 }

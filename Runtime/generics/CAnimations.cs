@@ -11,7 +11,8 @@ namespace Wowsome.Generic {
 
     public string id;
     public List<Sprite> sprites = new List<Sprite>();
-    public float duration;
+    public RangeData duration;
+    public RangeData delay;
     [Tooltip("The number of time the anim needs to loop e.g. 0 will play 1 time, -1 = infinitely")]
     public int loop;
     [Tooltip("true = play backwards once reached the last idx, false = start over from the first idx again")]
@@ -28,6 +29,7 @@ namespace Wowsome.Generic {
     AnimData _curAnim = null;
     int _curIdx = 0;
     int _counter = 0;
+    ObservableTimer _timerDelay;
     Timer _timer;
     Action _onDone;
     bool _isBackwards = false;
@@ -42,7 +44,9 @@ namespace Wowsome.Generic {
 
     public void Play(string id, Action onDone = null) {
       if (_anims.TryGetValue(id, out _curAnim)) {
-        _timer = new Timer(_curAnim.duration);
+        TryInitDelay();
+
+        _timer = new Timer(_curAnim.duration.GetRand());
         _counter = _curIdx = 0;
         _onDone = onDone;
       } else {
@@ -50,8 +54,20 @@ namespace Wowsome.Generic {
       }
     }
 
+    void TryInitDelay() {
+      if (_curAnim.delay.max > 0f) {
+        _timerDelay = new ObservableTimer(_curAnim.delay.GetRand());
+        _timerDelay.OnDone += () => _timerDelay = null;
+      }
+    }
+
     public void Update(float dt) {
       if (null != _curAnim) {
+        // update delay
+        if (null != _timerDelay) {
+          _timerDelay.UpdateTimer(dt);
+          return;
+        }
         // update timer here
         if (!_timer.UpdateTimer(dt)) {
           _timer.Reset();
@@ -75,6 +91,8 @@ namespace Wowsome.Generic {
               }
 
               ++_counter;
+
+              TryInitDelay();
             }
           }
           // otherwise, check whether it has reached max

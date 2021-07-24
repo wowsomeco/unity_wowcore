@@ -8,9 +8,9 @@ namespace Wowsome.UI {
   [DisallowMultipleComponent]
   public class WTappable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
     public class Scaler {
-      public Scaler(WTappable tappable, RectTransform rt, float scaleTap, float scaleNormal = 1f) {
-        tappable.OnStartTap += ev => rt.SetScale(scaleTap);
-        tappable.OnEndTap += ev => rt.SetScale(scaleNormal);
+      public Scaler(WTappable tappable, float scaleTap, float scaleNormal = 1f) {
+        tappable.OnStartTap += ev => tappable.Rt.SetScale(scaleTap);
+        tappable.OnEndTap += ev => tappable.Rt.SetScale(scaleNormal);
       }
     }
 
@@ -31,6 +31,7 @@ namespace Wowsome.UI {
     /// Invoked when the touch ends regardless inside or outside of the rect transform
     /// </summary>
     public Action<PointerEventData> OnEndTap { get; set; }
+    public RectTransform Rt => _rt;
 
     protected RectTransform _rt;
 
