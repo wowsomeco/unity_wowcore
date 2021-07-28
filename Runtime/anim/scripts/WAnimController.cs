@@ -31,6 +31,8 @@ namespace Wowsome.Anim {
       public string PickRandom() => animId.IsEmpty() ? null : animId.PickRandom().Trim();
     }
 
+    public string CurPlayingAnimId { get; private set; }
+
     [Tooltip("the anim that gets played on init. When the item is more than 1, it will get randomized")]
     public List<string> defaultAnimId = new List<string>();
     [Tooltip("the next animation that gets played when a new anim id is about to start (pre-start)")]
@@ -41,7 +43,6 @@ namespace Wowsome.Anim {
     Dictionary<string, List<WAnimatorBase>> _animators = new Dictionary<string, List<WAnimatorBase>>();
     List<WAnimatorBase> _playings = new List<WAnimatorBase>();
     Queue<string> _nextAnimIds = new Queue<string>();
-    string _curPlayingAnimId;
     bool _playing = false;
 
     public void InitAnim() {
@@ -98,7 +99,7 @@ namespace Wowsome.Anim {
         _nextAnimIds.Enqueue(nextAnimId);
         // play the startTrigger.animId
         // set cur playing as the startTrigger.animId only if they're different
-        if (_curPlayingAnimId != animId) {
+        if (CurPlayingAnimId != animId) {
           SetCurPlaying(animId);
         }
 
@@ -122,7 +123,7 @@ namespace Wowsome.Anim {
           string next = _nextAnimIds.Dequeue();
           PlayAnim(next, false);
         } else {
-          AnimTrigger endTrigger = endTriggers.Find(x => x.ids.Contains(_curPlayingAnimId));
+          AnimTrigger endTrigger = endTriggers.Find(x => x.ids.Contains(CurPlayingAnimId));
           if (null != endTrigger) {
             PlayAnim(endTrigger.PickRandom());
           }
@@ -131,8 +132,8 @@ namespace Wowsome.Anim {
     }
 
     void SetCurPlaying(string animId) {
-      _curPlayingAnimId = animId;
-      _playings = _animators[_curPlayingAnimId];
+      CurPlayingAnimId = animId;
+      _playings = _animators[CurPlayingAnimId];
       _playings.ForEach(p => p.Play());
     }
   }
