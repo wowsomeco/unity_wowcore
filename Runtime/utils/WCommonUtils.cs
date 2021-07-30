@@ -39,6 +39,11 @@ namespace Wowsome {
       callback();
 #endif
     }
+
+    public static void TryCastTo<TIn, TOut>(this TIn t, Action<TOut> success)
+    where TIn : class where TOut : class {
+      if (t is TOut o) success(o);
+    }
   }
 
   public static class Assert {

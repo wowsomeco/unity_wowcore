@@ -11,31 +11,34 @@ namespace Wowsome.Anim {
     public float dly;
     public Easing easing;
     public int repeat;
-    public bool yoyo;
 
-    public bool PingPong {
-      get { return yoyo && repeat > 0 && (repeat % 2 != 0); }
-    }
-
-    public Timing(float duration, float delay, Easing eas, int rep, bool yo) {
+    public Timing(float duration, float delay, Easing eas, int rep) {
       dur = duration;
       dly = delay;
       easing = eas;
       repeat = rep;
-      yoyo = yo;
     }
 
-    public Timing(float duration, Easing easing) : this(duration, 0f, easing, 0, false) { }
+    public Timing(float duration, Easing easing) : this(duration, 0f, easing, 0) { }
 
-    public Timing(float duration, float delay, Easing easing) : this(duration, delay, easing, 0, false) { }
+    public Timing(float duration, float delay, Easing easing) : this(duration, delay, easing, 0) { }
 
     public Timing(float duration) : this(duration, Easing.Linear) { }
+
+    public Timing(float duration, float delay) : this(duration, delay, Easing.Linear, 0) { }
+
+    public Timing(Timing other) {
+      dur = other.dur;
+      dly = other.dly;
+      easing = other.easing;
+      repeat = other.repeat;
+    }
   }
 
   public class Interpolation {
     public WObservable<int> Percent { get; private set; }
     public WObservable<float> Time { get; private set; }
-    public Action Done { get; set; }
+    public Action OnDone { get; set; }
 
     Timing _timing = null;
     Timer _timer = null;
@@ -84,11 +87,9 @@ namespace Wowsome.Anim {
       // update observables
       if (null != _timer) {
         float t = CEasings.GetEasing(_timer.GetPercentage(), _timing.easing);
-        // reverse t if it's yoyo and counter is odd
-        // e.g when counter is 0 it goes forward, 1 goes backwards, etc.
-        if (_timing.yoyo && _counter % 2 != 0) t = 1f - t;
-        Time.Next(t);
 
+        Time.Next(t);
+        // FIXME: still wrong when it's repeat
         Percent.Next((int)(Time.Value * 100f));
       }
 
@@ -101,7 +102,7 @@ namespace Wowsome.Anim {
       Time.Next(1f);
       Percent.Next(100);
 
-      Done?.Invoke();
+      OnDone?.Invoke();
 
       return true;
     }

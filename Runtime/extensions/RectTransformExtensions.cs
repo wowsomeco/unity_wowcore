@@ -162,6 +162,12 @@ namespace Wowsome {
       return trans;
     }
 
+    public static RectTransform SetSize(this RectTransform trans, RectTransform other) {
+      SetSize(trans, other.Size());
+      
+      return trans;
+    }
+
     public static void SetSize(this RectTransform rt, Rect rect, bool ignorePos = false) {
       if (!ignorePos) {
         rt.SetPos(new Vector2(rect.x, rect.y));

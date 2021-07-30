@@ -9,7 +9,7 @@ namespace Wowsome.Anim {
 
   [Serializable]
   public class AnimFrame {
-    public Timing Timing => new Timing(duration, delay, easing, 0, false);
+    public Timing Timing => new Timing(duration, delay, easing, 0);
 
     public List<float> to;
     public float duration;

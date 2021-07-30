@@ -11,20 +11,21 @@ namespace Wowsome.UI {
     public Action<PointerEventData> OnFocusDrag { get; set; }
     public Action<PointerEventData> OnDragging { get; set; }
     public Action<PointerEventData> OnDragEnd { get; set; }
+    public RectTransform RectTransform => _rt;
 
     [Tooltip("the drag offset pos")]
     public Vector2 offset;
 
     protected Camera _camera = null;
     protected RectTransform _rt;
-    protected RectTransform _parent;
+    protected RectTransform _root;
     protected bool _isFocus = false;
 
     public void InitDraggable() {
       _rt = GetComponent<RectTransform>();
       var root = _rt.root;
-      _parent = root?.GetComponent<RectTransform>();
-      Assert.Null(_parent, "WDraggable must have a parent");
+      _root = root?.GetComponent<RectTransform>();
+      Assert.Null(_root, "WDraggable must have a root");
       _camera = root?.GetComponent<Canvas>()?.worldCamera;
     }
 
@@ -87,7 +88,7 @@ namespace Wowsome.UI {
 
     void SetDragPos(PointerEventData ed) {
       Vector3 worldPos;
-      RectTransformUtility.ScreenPointToWorldPointInRectangle(_parent, ed.position, _camera, out worldPos);
+      RectTransformUtility.ScreenPointToWorldPointInRectangle(_root, ed.position, _camera, out worldPos);
       _rt.transform.position = worldPos;
       _rt.SetPos(_rt.Pos() + offset);
     }

@@ -29,6 +29,11 @@ namespace Wowsome.Anim {
       if (autoStart) Start();
     }
 
+    public InterpolationSequence(params TInterpolation[] steps) {
+      _steps = steps;
+      Start();
+    }
+
     public void Start() {
       _lerpers.Clear();
 
@@ -45,7 +50,12 @@ namespace Wowsome.Anim {
         TInterpolation peek = _lerpers.Peek();
         bool updating = peek.Update(dt);
         if (updating) {
-          OnLerp?.Invoke(peek.Lerp());
+          TType cur = peek.Lerp();
+          // trigger each interpolation event,
+          // in case they want to listen to the individual interpolation
+          peek.OnLerp?.Invoke(cur);
+          // trigger the global lerp event
+          OnLerp?.Invoke(cur);
         } else {
           _lerpers.Dequeue();
           // update progress 

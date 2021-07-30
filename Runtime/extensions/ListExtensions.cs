@@ -194,5 +194,27 @@ namespace Wowsome {
 
       return list[r];
     }
+
+    public static List<T> PickRandoms<T>(this IList<T> list, int count) {
+      if (null == list || list.Count == 0) return new List<T>();
+
+      List<T> l = new List<T>();
+      List<T> origin = new List<T>(list);
+
+      int randCount = count.Clamp(0, list.Count);
+
+      System.Random rand = MathExtensions.GetRandom();
+
+      for (int i = 0; i < randCount; ++i) {
+        if (origin.Count == 0) break;
+
+        int randIdx = rand.Next(0, origin.Count);
+
+        l.Add(origin[randIdx]);
+        origin.RemoveAt(randIdx);
+      }
+
+      return l;
+    }
   }
 }
