@@ -102,6 +102,8 @@ namespace Wowsome.Audio {
           soundFX.PlaySound(_audioClips[audioClipName], options, onStopCallback);
           AddToCurPlaying(soundFX);
         }
+      } else {
+        Print.Log(() => "yellow", $"sfx: {audioClipName} not found");
       }
     }
 

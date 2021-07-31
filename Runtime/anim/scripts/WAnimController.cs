@@ -31,6 +31,7 @@ namespace Wowsome.Anim {
       public string PickRandom() => animId.IsEmpty() ? null : animId.PickRandom().Trim();
     }
 
+    public Action<string> OnAnimEnd { get; set; }
     public string CurPlayingAnimId { get; private set; }
 
     [Tooltip("the anim that gets played on init. When the item is more than 1, it will get randomized")]
@@ -116,6 +117,8 @@ namespace Wowsome.Anim {
       if (_playing) {
         // make sure only enter here once
         _playing = false;
+        // broadcast on end
+        OnAnimEnd?.Invoke(CurPlayingAnimId);
         // check if there is a debt of next anim id,
         // if so, play that one first
         // otherwise check the end trigger and play that one if any
