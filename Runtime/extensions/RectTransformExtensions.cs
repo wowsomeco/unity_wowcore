@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Wowsome {
   public static class RectTransformExtensions {
@@ -47,6 +46,7 @@ namespace Wowsome {
     }
 
     #region Position
+
     public static void SetPos(this RectTransform rt, Vector2 pos) {
       rt.anchoredPosition = pos;
     }
@@ -99,9 +99,11 @@ namespace Wowsome {
       pos.y = y;
       rt.SetPos(pos);
     }
+
     #endregion
 
     #region Scale
+
     public static void SetScale(this RectTransform rt, Vector2 scale) {
       rt.localScale = scale;
     }
@@ -133,9 +135,11 @@ namespace Wowsome {
     public static Vector2 Scale(this RectTransform rt) {
       return rt.localScale;
     }
+
     #endregion
 
     #region Size
+
     public static Vector2 Size(this RectTransform trans, bool shouldRound = false) {
       return shouldRound ? new Vector2(trans.rect.size.x.Round(), trans.rect.size.y.Round()) : trans.rect.size;
     }
@@ -164,7 +168,7 @@ namespace Wowsome {
 
     public static RectTransform SetSize(this RectTransform trans, RectTransform other) {
       SetSize(trans, other.Size());
-      
+
       return trans;
     }
 
@@ -214,6 +218,7 @@ namespace Wowsome {
     #endregion
 
     #region Rotation
+
     public static float Rotation(this RectTransform rt) {
       return rt.localEulerAngles.z.WrapAngle();
     }
@@ -230,21 +235,12 @@ namespace Wowsome {
     public static void SetRotation(this RectTransform rt, float[] vals) {
       rt.SetRotation(vals[0]);
     }
-    #endregion
 
-    #region Canvas Scaler
-    public static CanvasScaler GetRootCanvasScaler(this RectTransform rt, bool shouldFindInChildren = false) {
-      CanvasScaler canvasScaler = rt.root.GetComponent<CanvasScaler>();
-      if (shouldFindInChildren && null == canvasScaler) {
-        canvasScaler = rt.root.GetComponentInChildren<CanvasScaler>();
-      }
-      return canvasScaler;
+    public static void RandomizeRotation(this RectTransform rt, float min, float max) {
+      float r = UnityEngine.Random.Range(min, max);
+      rt.SetRotation(r);
     }
 
-    public static RectTransform GetRootCanvasScalerRectTransform(this RectTransform rt, bool shouldFindInChildren = false) {
-      CanvasScaler canvasScaler = rt.GetRootCanvasScaler(shouldFindInChildren);
-      return canvasScaler.GetComponent<RectTransform>();
-    }
     #endregion
 
     #region Intersections
@@ -268,135 +264,12 @@ namespace Wowsome {
 
     #endregion
 
-    #region Manipulation
-
-    public static Vector2 ScreenToAnchoredPos(RectTransform canvasRt, Vector2 screenPos) {
-      Vector2 viewportPos = Camera.main.ScreenToViewportPoint(screenPos);
-      Vector2 anchoredPos = new Vector2((viewportPos.x * canvasRt.sizeDelta.x) - (canvasRt.sizeDelta.x * 0.5f),
-        (viewportPos.y * canvasRt.sizeDelta.y) - (canvasRt.sizeDelta.y * 0.5f));
-      return anchoredPos;
-    }
-
-    public static void Clamp(this RectTransform rt, Vector2 min, Vector2 max) {
-      Vector2 pos = rt.anchoredPosition;
-      pos.x = Mathf.Clamp(pos.x, min.x, max.x);
-      pos.y = Mathf.Clamp(pos.y, min.y, max.y);
-      rt.SetPos(pos);
-    }
-
-    public static void SetFromScreenPos(this RectTransform rt, RectTransform canvasRt, Vector2 screenPos) {
-      rt.SetPos(ScreenToAnchoredPos(canvasRt, screenPos));
-    }
-
-    public static void SetScaledPos(this RectTransform rt, Vector2 screenPos) {
-      RectTransform rootRt = rt.root.GetComponent<RectTransform>();
-      Debug.Assert(null != rootRt);
-      Vector2 scale = rootRt.Scale();
-      rt.AddPos(new Vector2(screenPos.x / scale.x, screenPos.y / scale.y));
-    }
-
-    public static Vector2 GetScaledPos(this RectTransform rt, Vector2 screenPos) {
-      RectTransform rootRt = rt.root.GetComponent<RectTransform>();
-      Debug.Assert(null != rootRt);
-      Vector2 scale = rootRt.Scale();
-      return new Vector2(screenPos.x / scale.x, screenPos.y / scale.y);
-    }
-
-    public static Vector2 CenterRootPoint(this RectTransform rt) {
-      RectTransform rootRt = rt.root.GetComponent<RectTransform>();
-      Debug.Assert(null != rootRt);
-      Vector2 pos = rootRt.Pos();
-      Vector2 scale = rootRt.Scale();
-      return new Vector2(pos.x / scale.x, pos.y / scale.y);
-    }
-
-    public static bool IsOutOfHeight(this RectTransform rt, Vector2 offsetPos) {
-      //TO DO : refactor and call CenterRootPoint instead
-      RectTransform rootRt = rt.root.GetComponent<RectTransform>();
-      Debug.Assert(null != rootRt);
-
-      Vector2 rootPos = rootRt.Pos();
-      Vector2 rootScale = rootRt.Scale();
-      Vector2 rootScaledPos = new Vector2(rootPos.x / rootScale.x, rootPos.y / rootScale.y);
-
-      Vector2 bounds = new Vector2(rootScaledPos.x + rt.Width() / 2f, rootScaledPos.y + rt.Height() / 2f);
-      Vector2 rtPos = rt.Pos() + offsetPos;
-      //rtPos.x = Mathf.Abs(rtPos.x) + rt.Width();
-      rtPos.y = Mathf.Abs(rtPos.y) + rt.Height();
-      //check y only for now
-      if (rtPos.y > bounds.y) {
-        return true;
-      }
-      //not out of screen
-      return false;
-    }
-
-    public static Vector2 OffsetToRoot(this RectTransform rt) {
-      RectTransform rootRt = rt.root.GetComponent<RectTransform>();
-      Debug.Assert(null != rootRt);
-      RectTransform rtParent = rt.parent.GetComponent<RectTransform>();
-      Vector2 offset = Vector2.zero;
-      //iterate over until root
-      while (rtParent != rootRt) {
-        offset += rtParent.Pos();
-        rtParent = rtParent.parent.GetComponent<RectTransform>();
-      }
-      //return
-      return offset;
-    }
-
-    public static bool IsOutOfWidth(this RectTransform rt) {
-      //TO DO : combine with IsOutOfHeight later
-      RectTransform rootRt = rt.root.GetComponent<RectTransform>();
-      Debug.Assert(null != rootRt);
-
-      RectTransform rtParent = rt.parent.GetComponent<RectTransform>();
-      float offsetX = 0f;
-      //iterate over until root
-      while (rtParent != rootRt) {
-        offsetX += rtParent.Pos().x;
-        rtParent = rtParent.parent.GetComponent<RectTransform>();
-      }
-
-      Vector2 rootPos = rootRt.Pos();
-      Vector2 rootScale = rootRt.Scale();
-      Vector2 rootScaledPos = new Vector2(rootPos.x / rootScale.x, rootPos.y / rootScale.y);
-
-      Vector2 bounds = new Vector2(rootScaledPos.x + rt.Width() / 2f, rootScaledPos.y + rt.Height() / 2f);
-      Vector2 rtPos = rt.Pos();
-      float absX = Mathf.Abs(rtPos.x + offsetX) + rt.Width();
-      if (absX > bounds.x) {
-        return true;
-      }
-      //not out of screen's width
-      return false;
-    }
-
-    public static Vector2 PivotAgainstOther(this RectTransform rt, RectTransform other) {
-      Vector2 rtPos = rt.Pos();
-      Vector2 otherPos = other.Pos();
-      return new Vector2(rtPos.x > otherPos.x ? 1f : -1f, rtPos.y > otherPos.y ? 1f : -1f);
-    }
-
-    public static Vector2 AnchoredPosFromRoot(this RectTransform rt, Vector2 anchorMultiplier, Vector2 offset) {
-      //anchored multiplier x = -1 and y = -1 means bottom left, x = 1 and y = 1 means top right, etc.
-      Vector2 centerPoint = rt.CenterRootPoint();
-      float w = -(rt.Width() / 2f * anchorMultiplier.x);
-      float h = -(rt.Height() / 2f * anchorMultiplier.y);
-      return (new Vector2(centerPoint.x * anchorMultiplier.x + w, centerPoint.y * anchorMultiplier.y + h) + offset);
-    }
-
-    public static Vector2 AnchorFromSize(this RectTransform rt, Vector2 anchor) {
-      Vector2 size = rt.Size();
-      size.x *= anchor.x;
-      size.y *= anchor.y;
-      return size;
-    }
-
-    #endregion
-
     public static bool IsPointInRect(this RectTransform rt, Vector2 screenPos, Camera cam) {
       return RectTransformUtility.RectangleContainsScreenPoint(rt, screenPos, cam);
+    }
+
+    public static float Distance(this RectTransform rt, RectTransform other) {
+      return Vector2.Distance(rt.transform.position, other.transform.position);
     }
   }
 

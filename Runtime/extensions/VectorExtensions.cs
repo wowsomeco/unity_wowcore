@@ -65,6 +65,10 @@ namespace Wowsome {
       return new Vector2(v.x * other.x, v.y * other.y);
     }
 
+    public static Vector2 Mul(this Vector2 v, float value) {
+      return new Vector2(v.x * value, v.y * value);
+    }
+
     public static Vector2 Add(this Vector2 v, Vector2 other) {
       return new Vector2(v.x + other.x, v.y + other.y);
     }

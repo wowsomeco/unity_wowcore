@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using Wowsome.Tween;
 
 namespace Wowsome.Anim {
@@ -12,6 +13,21 @@ namespace Wowsome.Anim {
         new InterpolationVec2(new Timing(.06f * timeMultiplier, easing), new Vector2(1.05f, .95f), new Vector2(.95f, 1.05f)),
         new InterpolationVec2(new Timing(.05f * timeMultiplier, easing), new Vector2(.95f, 1.05f), new Vector2(1f, 1f))
       );
+
+      return tweener;
+    }
+
+    public static InterpolationSequence<InterpolationFloat, float> Shake(float duration = .1f, float rotation = 5f, float count = 1, Easing easing = Easing.Linear) {
+      Timing timing = new Timing(duration, easing);
+      List<InterpolationFloat> tws = new List<InterpolationFloat>();
+
+      for (int i = 0; i < count; ++i) {
+        tws.Add(new InterpolationFloat(timing, 0f, rotation));
+        tws.Add(new InterpolationFloat(timing, -rotation, rotation));
+        tws.Add(new InterpolationFloat(timing, rotation, 0f));
+      }
+
+      InterpolationSequence<InterpolationFloat, float> tweener = new InterpolationSequence<InterpolationFloat, float>(tws);
 
       return tweener;
     }

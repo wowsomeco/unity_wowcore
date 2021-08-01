@@ -236,7 +236,7 @@ namespace Wowsome {
     }
 
     public static string Standardize(this string str) {
-      return str.Trim().ToLower();
+      return str.IsEmpty() ? str : str.Trim().ToLower();
     }
 
     public static bool CompareStandard(this string str, string other) {

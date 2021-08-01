@@ -35,6 +35,10 @@ namespace Wowsome {
       return img.color.a;
     }
 
+    public static Vector2 Pos(this Image img) {
+      return img.rectTransform.Pos();
+    }
+
     public static void SetPos(this Image img, Vector2 pos) {
       img.rectTransform.SetPos(pos);
     }
