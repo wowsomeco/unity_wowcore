@@ -29,17 +29,17 @@ namespace Wowsome {
       } else {
         Downloading = true;
 
-        string fullUrl = string.Format("{0}/{1}", url, filename.LastSplit());
-        using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(fullUrl)) {
+        using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(url)) {
           yield return uwr.SendWebRequest();
           if (uwr.HasErrors()) {
+            Print.Log(() => "yellow", $"download error: {uwr.error}, url {url}");
+
             result?.Invoke(new DownloadResponse<Texture2D>(null, uwr));
           } else {
             // save the texture            
             Texture2D texture = DownloadHandlerTexture.GetContent(uwr);
-            string ext = filename.LastSplit().ToLower();
 
-            File.WriteAllBytes(localPath, ext.Contains("png") ? texture.EncodeToPNG() : texture.EncodeToJPG());
+            File.WriteAllBytes(localPath, filename.Contains("png") ? texture.EncodeToPNG() : texture.EncodeToJPG());
             result?.Invoke(new DownloadResponse<Texture2D>(texture, uwr));
           }
 
