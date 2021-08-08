@@ -51,6 +51,10 @@ namespace Wowsome {
       img.rectTransform.SetScale(new Vector2(scale, scale));
     }
 
+    public static float Rotation(this Image img) {
+      return img.rectTransform.Rotation();
+    }
+
     public static void SetRotation(this Image img, float rot) {
       img.rectTransform.SetRotation(rot);
     }
@@ -59,8 +63,16 @@ namespace Wowsome {
       img.rectTransform.SetParent(parent);
     }
 
+    public static float Width(this Image img) {
+      return img.rectTransform.Width();
+    }
+
     public static void SetWidth(this Image img, float w) {
       img.rectTransform.SetWidth(w);
+    }
+
+    public static float Height(this Image img) {
+      return img.rectTransform.Height();
     }
 
     public static void SetHeight(this Image img, float h) {

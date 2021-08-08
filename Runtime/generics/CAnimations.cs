@@ -8,6 +8,7 @@ namespace Wowsome.Generic {
   [Serializable]
   public class AnimData {
     public bool LoopForever => loop < 0;
+    public bool ShouldLoop => loop > 0;
 
     public string id;
     public List<Sprite> sprites = new List<Sprite>();
@@ -33,6 +34,14 @@ namespace Wowsome.Generic {
     Timer _timer;
     Action _onDone;
     bool _isBackwards = false;
+
+    public CAnimations(Image image, params AnimData[] anims) {
+      foreach (AnimData anim in anims) {
+        _anims.Add(anim.id, anim);
+      }
+      //cache the img
+      _image = image;
+    }
 
     public CAnimations(IList<AnimData> anims, Image image) {
       for (int i = 0; i < anims.Count; ++i) {
@@ -76,7 +85,7 @@ namespace Wowsome.Generic {
           int spriteCount = _curAnim.sprites.Count;
 
           // if it should loop...
-          if (_curAnim.LoopForever) {
+          if (_curAnim.LoopForever || _curAnim.ShouldLoop) {
             // check whether has reached bottom / upper limit
             bool hasReachedLimit = _curAnim.pingPong ?
             (_isBackwards ? _curIdx < 0 : _curIdx >= spriteCount) : _curIdx >= spriteCount;
@@ -94,11 +103,6 @@ namespace Wowsome.Generic {
 
               TryInitDelay();
             }
-          }
-          // otherwise, check whether it has reached max
-          // if so, increment the counter 
-          else if (_curIdx >= spriteCount) {
-            ++_counter;
           }
           // make sure the index wont be out of bound
           _curIdx = _curIdx.Clamp(0, spriteCount - 1);
