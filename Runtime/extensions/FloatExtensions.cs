@@ -56,5 +56,9 @@ namespace Wowsome {
     public static float Half(this float v) {
       return v.Multiply(.5f);
     }
+
+    public static float Random(float min, float max) {
+      return UnityEngine.Random.Range(min, max);
+    }
   }
 }
