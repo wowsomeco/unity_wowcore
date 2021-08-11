@@ -104,6 +104,10 @@ namespace Wowsome.UI {
       foreach (IScreenObject so in _screenObjects) {
         so.UpdateScreenObject(dt);
       }
+
+      foreach (KeyValuePair<string, WScreen> kvp in _screens) {
+        kvp.Value.UpdateScreen(dt);
+      }
     }
 
     bool TryShow(WScreen view, bool flag) {
