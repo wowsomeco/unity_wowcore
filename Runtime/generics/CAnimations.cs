@@ -39,7 +39,7 @@ namespace Wowsome.Generic {
       foreach (AnimData anim in anims) {
         _anims.Add(anim.id, anim);
       }
-      //cache the img
+      // cache the img
       _image = image;
     }
 
@@ -47,7 +47,7 @@ namespace Wowsome.Generic {
       for (int i = 0; i < anims.Count; ++i) {
         _anims.Add(anims[i].id, anims[i]);
       }
-      //cache the img
+      // cache the img
       _image = image;
     }
 
@@ -72,6 +72,8 @@ namespace Wowsome.Generic {
 
     public void Update(float dt) {
       if (null != _curAnim) {
+        int spriteCount = _curAnim.sprites.Count;
+
         // update delay
         if (null != _timerDelay) {
           _timerDelay.UpdateTimer(dt);
@@ -82,7 +84,6 @@ namespace Wowsome.Generic {
           _timer.Reset();
 
           _curIdx = _curIdx + (_isBackwards ? -1 : 1);
-          int spriteCount = _curAnim.sprites.Count;
 
           // if it should loop...
           if (_curAnim.LoopForever || _curAnim.ShouldLoop) {
@@ -107,16 +108,25 @@ namespace Wowsome.Generic {
           // make sure the index wont be out of bound
           _curIdx = _curIdx.Clamp(0, spriteCount - 1);
         }
-        // check loop count here
-        if (_curAnim.loop >= 0 && _counter > _curAnim.loop) {
-          _onDone?.Invoke();
-          _curAnim = null;
+        // check loop count here  
+        bool isDone = false;
+        if ((_curAnim.ShouldLoop && _counter > _curAnim.loop)) {
+          isDone = true;
         } else {
           _image.sprite = _curAnim.sprites[_curIdx];
           float maxSize = _curAnim.maxSize;
           if (maxSize > 0f) {
             _image.SetMaxSize(maxSize);
           }
+
+          if (!_curAnim.ShouldLoop && _curIdx == spriteCount - 1) {
+            isDone = true;
+          }
+        }
+
+        if (isDone) {
+          _onDone?.Invoke();
+          _curAnim = null;
         }
       }
     }

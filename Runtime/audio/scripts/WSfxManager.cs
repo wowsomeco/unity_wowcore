@@ -103,7 +103,8 @@ namespace Wowsome.Audio {
           AddToCurPlaying(soundFX);
         }
       } else {
-        Print.Log(() => "yellow", $"sfx: {audioClipName} not found");
+        if (!audioClipName.IsEmpty())
+          Print.Log(() => "yellow", $"sfx: {audioClipName} not found");
       }
     }
 

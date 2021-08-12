@@ -3,6 +3,7 @@ using Wowsome.Generic;
 
 namespace Wowsome.TwoDee {
   public class WParticleObject : IPoolObject {
+    public bool IsPlaying => _particle.isPlaying;
     public string ObjId => _id;
     public Vector3 Position {
       get => _particle.transform.position;

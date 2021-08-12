@@ -21,14 +21,13 @@ namespace Wowsome.UI {
     public Action OnWillHide { get; set; }
     public Action OnDidHide { get; set; }
     public Action<HideState> OnHide { get; set; }
-
+    public ISceneStarter SceneStarter { get; private set; }
     public bool Visible {
       get { return gameObject.activeSelf; }
       set {
         gameObject.SetActive(value);
       }
     }
-
     public ICollection<ITween> Tweens { get; private set; }
 
     public string id;
@@ -39,6 +38,7 @@ namespace Wowsome.UI {
     List<IScreenComponent> _components = new List<IScreenComponent>();
 
     public void InitScreen(ISceneStarter sceneStarter, WScreenManager controller) {
+      SceneStarter = sceneStarter;
       // cache the listener
       _screenManager = controller;
       _screenManager.OnShow += ev => {
