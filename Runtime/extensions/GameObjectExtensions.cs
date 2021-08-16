@@ -9,6 +9,7 @@ namespace Wowsome {
     }
 
     public static bool Same(this GameObject g, GameObject other) {
+      if (null == g || null == other) return false;
       return g.GetInstanceID() == other.GetInstanceID();
     }
 
@@ -82,6 +83,8 @@ namespace Wowsome {
     }
 
     public static bool Same(this Component c, Component other) {
+      if (null == c || null == other) return false;
+
       return c.gameObject.Same(other.gameObject);
     }
 
