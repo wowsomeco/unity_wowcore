@@ -62,6 +62,10 @@ namespace Wowsome.Anim {
       }
     }
 
+    public void StopAll() {
+      _playings.Clear();
+    }
+
     public void UpdateAnim(float dt) {
       if (_playings.Count == 0) return;
 

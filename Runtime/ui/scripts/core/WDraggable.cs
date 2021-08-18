@@ -31,7 +31,7 @@ namespace Wowsome.UI {
 
     #region Event Systems
 
-    public void OnBeginDrag(PointerEventData eventData) {
+    public virtual void OnBeginDrag(PointerEventData eventData) {
       ExecOnEnabled(() => {
         SetFocus(eventData);
         SetDragPos(eventData);
