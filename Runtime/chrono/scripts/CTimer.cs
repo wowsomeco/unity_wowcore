@@ -118,5 +118,25 @@ namespace Wowsome {
         return updating;
       }
     }
+
+    public class PeriodicTimer {
+      Action _callback;
+      ObservableTimer _timer;
+
+      public PeriodicTimer(float duration, Action callback) {
+        _callback = callback;
+
+        _timer = new ObservableTimer(duration);
+        _timer.OnDone += () => {
+          callback();
+
+          _timer.Reset();
+        };
+      }
+
+      public void Update(float dt) {
+        _timer.UpdateTimer(dt);
+      }
+    }
   }
 }

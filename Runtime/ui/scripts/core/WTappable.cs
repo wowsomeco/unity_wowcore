@@ -1,10 +1,8 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 namespace Wowsome.UI {
-  [RequireComponent(typeof(Image))]
   [DisallowMultipleComponent]
   public class WTappable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
     public class Scaler {
