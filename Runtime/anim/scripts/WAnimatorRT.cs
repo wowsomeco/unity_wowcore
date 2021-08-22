@@ -29,7 +29,7 @@ namespace Wowsome.Anim {
 
     RTInitValueHandler _initValue;
 
-    public override void InitAnimator() {
+    public override void InitAnimator(WAnimController controller) {
       RectTransform = GetTarget<RectTransform>();
 
       _initValue = new RTInitValueHandler(RectTransform);

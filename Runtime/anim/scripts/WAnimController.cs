@@ -31,6 +31,7 @@ namespace Wowsome.Anim {
       public string PickRandom() => animId.IsEmpty() ? null : animId.PickRandom().Trim();
     }
 
+    public Action<string> OnAnimStart { get; set; }
     public Action<string> OnAnimEnd { get; set; }
     public string CurPlayingAnimId { get; private set; }
 
@@ -41,18 +42,23 @@ namespace Wowsome.Anim {
     [Tooltip("the next animation that gets played once the current one has completed (post-complete)")]
     public List<AnimTrigger> endTriggers = new List<AnimTrigger>();
 
-    Dictionary<string, List<WAnimatorBase>> _animators = new Dictionary<string, List<WAnimatorBase>>();
-    List<WAnimatorBase> _playings = new List<WAnimatorBase>();
+    Dictionary<string, List<IAnimatable>> _animators = new Dictionary<string, List<IAnimatable>>();
+    List<IAnimatable> _playings = new List<IAnimatable>();
     Queue<string> _nextAnimIds = new Queue<string>();
     bool _playing = false;
 
     public void InitAnim() {
-      var animators = GetComponentsInChildren<WAnimatorBase>();
-      foreach (var anim in animators) {
-        anim.InitAnimator();
-        string animId = anim.id;
+      var animComponents = GetComponentsInChildren<IAnimComponent>(true);
+      foreach (var animComponent in animComponents) {
+        animComponent.InitAnimator(this);
+
+        IAnimatable anim = animComponent as IAnimatable;
+
+        if (null == anim) continue;
+
+        string animId = anim.Id;
         if (!_animators.ContainsKey(animId)) {
-          _animators[animId] = new List<WAnimatorBase>();
+          _animators[animId] = new List<IAnimatable>();
         }
         _animators[animId].Add(anim);
       }
@@ -142,6 +148,8 @@ namespace Wowsome.Anim {
       CurPlayingAnimId = animId;
       _playings = _animators[CurPlayingAnimId];
       _playings.ForEach(p => p.Play());
+
+      OnAnimStart?.Invoke(CurPlayingAnimId);
     }
   }
 }

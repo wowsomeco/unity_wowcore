@@ -4,10 +4,12 @@ using UnityEngine;
 
 namespace Wowsome.Anim {
   /// <summary>
-  /// Base class for animatable object.
+  /// Base class for animatable that has [[FrameType]].
   /// </summary>  
   public abstract class WAnimatorBase : MonoBehaviour, IAnimatable {
     public delegate Vector2 GetCur();
+
+    public string Id => id;
 
     public string id;
     [Tooltip("leave it to null if the target is self. when it's defined, the target will be this gameobject instead of self")]
@@ -37,7 +39,7 @@ namespace Wowsome.Anim {
 
     #endregion    
 
-    public abstract void InitAnimator();
+    public abstract void InitAnimator(WAnimController controller);
 
     public abstract void SetInitialValue();
 

@@ -6,7 +6,7 @@ namespace Wowsome.Anim {
 
     float _initAlpha;
 
-    public override void InitAnimator() {
+    public override void InitAnimator(WAnimController controller) {
       CanvasGroup = GetTarget<CanvasGroup>();
 
       _initAlpha = CanvasGroup.alpha;

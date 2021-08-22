@@ -4,9 +4,14 @@ using Wowsome.Chrono;
 using Wowsome.Tween;
 
 namespace Wowsome.Anim {
-  public interface IAnimatable {
-    Vector2 GetCurrentValue(FrameType type);
-    void OnLerp(FrameType type, Vector2 value);
+  public interface IAnimComponent {
+    void InitAnimator(WAnimController controller);
+  }
+
+  public interface IAnimatable : IAnimComponent {
+    string Id { get; }
+    void Play();
+    bool Animate(float dt);
   }
 
   public class AnimFrameController {
@@ -38,7 +43,7 @@ namespace Wowsome.Anim {
   }
 
   public class AnimStepController {
-    IAnimatable _target;
+    WAnimatorBase _target;
     AnimStep _step;
     Queue<AnimFrameController> _lerpers = new Queue<AnimFrameController>();
     int _counter = 0;
@@ -47,7 +52,7 @@ namespace Wowsome.Anim {
     Timer _timerRepeatDelay;
     // TODO: add observable anim progress percentage
 
-    public AnimStepController(IAnimatable target, AnimStep step) {
+    public AnimStepController(WAnimatorBase target, AnimStep step) {
       _target = target;
       _step = step;
       _initialValue = target.GetCurrentValue(_step.clip.type);

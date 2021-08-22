@@ -25,8 +25,8 @@ namespace Wowsome.Anim {
     Image _img;
     ImgInitValueHandler _valueHandler;
 
-    public override void InitAnimator() {
-      base.InitAnimator();
+    public override void InitAnimator(WAnimController controller) {
+      base.InitAnimator(controller);
 
       _img = GetTarget<Image>();
 
