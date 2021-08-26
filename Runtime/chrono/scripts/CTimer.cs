@@ -121,21 +121,30 @@ namespace Wowsome {
 
     public class PeriodicTimer {
       Action _callback;
-      ObservableTimer _timer;
+      ObservableTimer _timer = null;
+      int _repeat = -1;
+      int _counter = 0;
 
-      public PeriodicTimer(float duration, Action callback) {
+      public PeriodicTimer(float duration, int repeat, Action callback) {
+        _repeat = repeat;
         _callback = callback;
 
         _timer = new ObservableTimer(duration);
         _timer.OnDone += () => {
-          callback();
+          if (_repeat < 0 || _counter < _repeat) {
+            callback();
 
-          _timer.Reset();
+            _timer.Reset();
+          }
+
+          ++_counter;
         };
       }
 
+      public PeriodicTimer(float duration, Action callback) : this(duration, -1, callback) { }
+
       public void Update(float dt) {
-        _timer.UpdateTimer(dt);
+        _timer?.UpdateTimer(dt);
       }
     }
   }
