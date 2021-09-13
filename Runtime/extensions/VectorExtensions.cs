@@ -73,6 +73,14 @@ namespace Wowsome {
       return new Vector2(v.x + other.x, v.y + other.y);
     }
 
+    public static Vector2 SetX(this Vector2 v, float x) {
+      return new Vector2(x, v.y);
+    }
+
+    public static Vector2 SetY(this Vector2 v, float y) {
+      return new Vector2(v.x, y);
+    }
+
     public static Vector2 ScreenToLocalPos(this Vector2 screenPos, RectTransform parent, Camera camera = null) {
       Vector2 pos;
       RectTransformUtility.ScreenPointToLocalPointInRectangle(parent, screenPos, camera, out pos);

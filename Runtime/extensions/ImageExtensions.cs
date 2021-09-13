@@ -78,5 +78,13 @@ namespace Wowsome {
     public static void SetHeight(this Image img, float h) {
       img.rectTransform.SetHeight(h);
     }
+
+    public static Image Normalize(this Image img) {
+      img.SetAlpha(1f);
+      img.SetRotation(0f);
+      img.SetScale(1f);
+
+      return img;
+    }
   }
 }

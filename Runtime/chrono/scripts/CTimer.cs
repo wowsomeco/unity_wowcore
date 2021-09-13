@@ -112,6 +112,8 @@ namespace Wowsome {
           Progress?.Invoke(_timer.GetPercentage());
         } else {
           _timer = null;
+
+          Progress?.Invoke(1f);
           OnDone?.Invoke();
         }
 

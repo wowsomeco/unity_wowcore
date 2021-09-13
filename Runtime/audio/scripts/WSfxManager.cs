@@ -129,7 +129,7 @@ namespace Wowsome.Audio {
     }
 
     public bool IsSoundPlaying(string audioClipName) {
-      var source = _sources.Find(x => x.IsPlaying && x.AudioName == audioClipName);
+      var source = _currentPlaying.Find(x => x.AudioName == audioClipName);
       return source != null;
     }
 

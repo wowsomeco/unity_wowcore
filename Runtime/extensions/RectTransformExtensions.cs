@@ -274,21 +274,13 @@ namespace Wowsome {
   }
 
   public static class RectExt {
+    /// <summary>
+    /// Checks the whether these 2 rects are currently intersecting
+    /// based on https://stackoverflow.com/questions/306316/determine-if-two-rectangles-overlap-each-other
+    /// </summary>
     public static bool Intersects(this Rect r1, Rect r2) {
-      float rightEdge1 = r1.x + r1.width * 0.5f;
-      float leftEdge1 = r1.x - r1.width * 0.5f;
-      float topEdge1 = r1.y + r1.height * 0.5f;
-      float bottomEdge1 = r1.y - r1.height * 0.5f;
-
-      float rightEdge2 = r2.x + r2.width * 0.5f;
-      float leftEdge2 = r2.x - r2.width * 0.5f;
-      float topEdge2 = r2.y + r2.height * 0.5f;
-      float bottomEdge2 = r2.y - r2.height * 0.5f;
-
-      if (rightEdge1 >= leftEdge2 &&     // r1 right edge past r2 left
-        leftEdge1 <= rightEdge2 &&       // r1 left edge past r2 right
-        topEdge1 >= bottomEdge2 &&       // r1 top edge past r2 bottom
-        bottomEdge1 <= topEdge2) {       // r1 bottom edge past r2 top
+      if (r1.xMin < r2.xMax && r1.xMax > r2.xMin &&
+        r1.yMax > r2.yMin && r1.yMin < r2.yMax) {
         return true;
       }
 
