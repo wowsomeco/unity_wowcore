@@ -38,6 +38,14 @@ namespace Wowsome {
       return false;
     }
 
+    public static bool EqualsMulti(this string str, params string[] other) {
+      foreach (string s in other) {
+        if (str.CompareStandard(s)) return true;
+      }
+
+      return false;
+    }
+
     public static string ToUnderscore(this string str) {
       return str.Replace(" ", "_");
     }
