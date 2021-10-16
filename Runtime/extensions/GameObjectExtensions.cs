@@ -98,7 +98,7 @@ namespace Wowsome {
       // might be slow though ...
       foreach (T c in comps) {
         // dont include self
-        if (c.GetInstanceID() != obj.GetInstanceID()) {
+        if (!c.Same(obj)) {
           components.Add(c);
         }
       }

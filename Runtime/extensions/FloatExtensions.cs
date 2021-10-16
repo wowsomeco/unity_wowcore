@@ -60,5 +60,9 @@ namespace Wowsome {
     public static float Random(float min, float max) {
       return UnityEngine.Random.Range(min, max);
     }
+
+    public static float Random(float v) {
+      return Random(-v, v);
+    }
   }
 }
