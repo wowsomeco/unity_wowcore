@@ -187,7 +187,7 @@ namespace Wowsome {
     }
 
     public static T PickRandom<T>(this IList<T> list) {
-      if (null == list || list.Count == 0) return default(T);
+      if (list.IsEmpty()) return default(T);
 
       System.Random rand = MathExtensions.GetRandom();
       int r = rand.Next(0, list.Count);
@@ -196,7 +196,7 @@ namespace Wowsome {
     }
 
     public static List<T> PickRandoms<T>(this IList<T> list, int count) {
-      if (null == list || list.Count == 0) return new List<T>();
+      if (list.IsEmpty()) return new List<T>();
 
       List<T> l = new List<T>();
       List<T> origin = new List<T>(list);
@@ -215,6 +215,12 @@ namespace Wowsome {
       }
 
       return l;
+    }
+
+    public static bool IsLastIdx<T>(this IList<T> list, int idx) {
+      if (list.IsEmpty()) return false;
+
+      return idx == (list.Count - 1);
     }
   }
 }

@@ -8,7 +8,7 @@ namespace Wowsome.Generic {
   [Serializable]
   public class AnimData {
     public bool LoopForever => loop < 0;
-    public bool ShouldLoop => loop > 0;
+    public bool ShouldLoop => loop != 0;
 
     public string id;
     public List<Sprite> sprites = new List<Sprite>();
@@ -86,7 +86,7 @@ namespace Wowsome.Generic {
           _curIdx = _curIdx + (_isBackwards ? -1 : 1);
 
           // if it should loop...
-          if (_curAnim.LoopForever || _curAnim.ShouldLoop) {
+          if (_curAnim.ShouldLoop) {
             // check whether has reached bottom / upper limit
             bool hasReachedLimit = _curAnim.pingPong ?
             (_isBackwards ? _curIdx < 0 : _curIdx >= spriteCount) : _curIdx >= spriteCount;
@@ -110,17 +110,27 @@ namespace Wowsome.Generic {
         }
         // check loop count here  
         bool isDone = false;
-        if ((_curAnim.ShouldLoop && _counter > _curAnim.loop)) {
-          isDone = true;
+        bool shouldChangeSprite = false;
+
+        if (_curAnim.LoopForever) {
+          shouldChangeSprite = true;
         } else {
+          if ((_curAnim.ShouldLoop && _counter > _curAnim.loop)) {
+            isDone = true;
+          } else {
+            shouldChangeSprite = true;
+
+            if (!_curAnim.ShouldLoop && _curIdx == spriteCount - 1) {
+              isDone = true;
+            }
+          }
+        }
+
+        if (shouldChangeSprite) {
           _image.sprite = _curAnim.sprites[_curIdx];
           float maxSize = _curAnim.maxSize;
           if (maxSize > 0f) {
             _image.SetMaxSize(maxSize);
-          }
-
-          if (!_curAnim.ShouldLoop && _curIdx == spriteCount - 1) {
-            isDone = true;
           }
         }
 

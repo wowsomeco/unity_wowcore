@@ -2,7 +2,6 @@
 using UnityEngine;
 
 namespace Wowsome {
-  public delegate T Delegate<T>(T t);
   public delegate T Delegate<T, U>(U t);
 
   public class CapacityData {

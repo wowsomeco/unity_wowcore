@@ -92,6 +92,11 @@ namespace Wowsome {
       c.gameObject.SetActive(flag);
     }
 
+    public static T SetVisible<T>(this T c, bool flag) where T : Component {
+      c.gameObject.SetActive(flag);
+      return c;
+    }
+
     public static List<T> GetComponentsWithoutSelf<T>(this Component obj, bool includeInactive) where T : Component {
       List<T> components = new List<T>();
       var comps = obj.GetComponentsInChildren<T>(includeInactive);

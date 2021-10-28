@@ -3,6 +3,11 @@ using UnityEngine.UI;
 
 namespace Wowsome {
   public static class ImageExtensions {
+    public static void SetNativeSizeWithMul(this Image img, float multiplier) {
+      img.SetNativeSize();
+      img.rectTransform.MultiplySize(multiplier);
+    }
+
     public static void SetMaxSize(this Image img, float maxSize) {
       img.SetNativeSize();
       img.rectTransform.SetMaxSize(maxSize);
@@ -20,10 +25,12 @@ namespace Wowsome {
       img.color = color;
     }
 
-    public static void SetAlpha(this Image img, float alpha) {
+    public static Image SetAlpha(this Image img, float alpha) {
       Color color = img.color;
       color.a = Mathf.Clamp(alpha, 0f, 1f);
       img.color = color;
+
+      return img;
     }
 
     public static void AddAlpha(this Image img, float delta) {

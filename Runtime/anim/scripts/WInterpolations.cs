@@ -27,6 +27,8 @@ namespace Wowsome.Anim {
 
     public Timing(float duration, float delay) : this(duration, delay, Easing.Linear, 0) { }
 
+    public Timing(float duration, int repeat) : this(duration, 0f, Easing.Linear, repeat) { }
+
     public Timing(Timing other) {
       dur = other.dur;
       dly = other.dly;
@@ -58,7 +60,7 @@ namespace Wowsome.Anim {
       if (_timing.dly > 0f) _delay = new Timer((float)_timing.dly);
     }
 
-    public bool Update(float dt) {
+    internal bool Update(float dt) {
       if (null != _delay) {
         if (!_delay.UpdateTimer(dt)) {
           _delay = null;
@@ -75,7 +77,7 @@ namespace Wowsome.Anim {
           } else {
             return SetDone();
           }
-        } else if (_timing.repeat == -1) {
+        } else if (_timing.repeat < 0) {
           // restart if it needs to repeat forever
           Start();
         } else {
