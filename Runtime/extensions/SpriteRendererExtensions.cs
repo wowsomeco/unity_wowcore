@@ -24,5 +24,21 @@ namespace Wowsome {
 
       return renderer;
     }
+
+    public static Color Color(this SpriteRenderer renderer) {
+      return renderer.color;
+    }
+
+    public static SpriteRenderer SetColor(this SpriteRenderer renderer, Color c) {
+      renderer.color = c;
+
+      return renderer;
+    }
+
+    public static SpriteRenderer SetRotation(this SpriteRenderer renderer, float r) {
+      renderer.transform.localRotation = Quaternion.Euler(0f, 0f, r);
+
+      return renderer;
+    }
   }
 }

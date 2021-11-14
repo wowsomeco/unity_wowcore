@@ -2,16 +2,32 @@
 
 namespace Wowsome {
   public static class TransformExt {
-    public static void SetPos(this Transform t, Vector2 pos) {
+    public static Transform SetPos(this Transform t, Vector2 pos) {
       t.position = new Vector3(pos.x, pos.y, t.position.z);
+
+      return t;
     }
 
-    public static void SetX(this Transform t, float x) {
+    public static Transform SetX(this Transform t, float x) {
       t.position = new Vector3(x, t.position.y, t.position.z);
+
+      return t;
     }
 
-    public static void SetY(this Transform t, float y) {
+    public static Transform SetY(this Transform t, float y) {
       t.position = new Vector3(t.position.x, y, t.position.z);
+
+      return t;
+    }
+
+    public static Transform Scale(this Transform t, Vector2 scale) {
+      t.localScale = new Vector3(scale.x, scale.y, t.localScale.z);
+
+      return t;
+    }
+
+    public static Transform Scale(this Transform t, float scale) {
+      return t.Scale(new Vector2(scale, scale));
     }
   }
 }
