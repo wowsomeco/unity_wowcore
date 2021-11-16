@@ -12,5 +12,9 @@ namespace Wowsome {
 
       taskLoader.Load(tasks);
     }
+
+    public static void RestartScene(this WTaskQueue taskLoader, Action act = null) {
+      taskLoader.LoadScene(SceneManager.GetActiveScene().name, act);
+    }
   }
 }

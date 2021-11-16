@@ -17,6 +17,10 @@ namespace Wowsome {
       return GeometryUtility.TestPlanesAABB(planes, renderer.bounds);
     }
 
+    public static bool Intersects(this SpriteRenderer lhs, SpriteRenderer rhs) {
+      return lhs.bounds.Intersects(rhs.bounds);
+    }
+
     public static SpriteRenderer SetAlpha(this SpriteRenderer renderer, float a) {
       Color curColor = renderer.color;
       curColor.a = a;

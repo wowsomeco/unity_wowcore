@@ -8,8 +8,19 @@ namespace Wowsome {
       return t;
     }
 
+    public static Transform SetPos(this Transform t, float x, float y) {
+      return t.SetPos(new Vector2(x, y));
+    }
+
     public static Transform SetX(this Transform t, float x) {
       t.position = new Vector3(x, t.position.y, t.position.z);
+
+      return t;
+    }
+
+    public static Transform AddX(this Transform t, float x) {
+      Vector3 curPos = t.position;
+      t.position = new Vector3(curPos.x + x, curPos.y, curPos.z);
 
       return t;
     }
