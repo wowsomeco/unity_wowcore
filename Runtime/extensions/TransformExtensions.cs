@@ -40,5 +40,11 @@ namespace Wowsome {
     public static Transform Scale(this Transform t, float scale) {
       return t.Scale(new Vector2(scale, scale));
     }
+
+    public static Transform SetRotation(this Transform t, float r) {
+      t.localRotation = Quaternion.Euler(0f, 0f, r);
+
+      return t;
+    }
   }
 }

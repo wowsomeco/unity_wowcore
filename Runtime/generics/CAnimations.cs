@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using Wowsome.Chrono;
 
 namespace Wowsome.Generic {
@@ -18,15 +17,15 @@ namespace Wowsome.Generic {
     public int loop;
     [Tooltip("true = play backwards once reached the last idx, false = start over from the first idx again")]
     public bool pingPong;
-    public float maxSize;
   }
 
   /// <summary>
   /// Acts as a container for multiple animations in a Gameobject.
   /// </summary>
   public class CAnimations {
+    public Action<Sprite> CurSprite { get; set; }
+
     Dictionary<string, AnimData> _anims = new Dictionary<string, AnimData>();
-    Image _image;
     AnimData _curAnim = null;
     int _curIdx = 0;
     int _counter = 0;
@@ -35,20 +34,16 @@ namespace Wowsome.Generic {
     Action _onDone;
     bool _isBackwards = false;
 
-    public CAnimations(Image image, params AnimData[] anims) {
+    public CAnimations(params AnimData[] anims) {
       foreach (AnimData anim in anims) {
         _anims.Add(anim.id, anim);
       }
-      // cache the img
-      _image = image;
     }
 
-    public CAnimations(IList<AnimData> anims, Image image) {
+    public CAnimations(IList<AnimData> anims) {
       for (int i = 0; i < anims.Count; ++i) {
         _anims.Add(anims[i].id, anims[i]);
       }
-      // cache the img
-      _image = image;
     }
 
     public void Play(string id, Action onDone = null) {
@@ -60,13 +55,6 @@ namespace Wowsome.Generic {
         _onDone = onDone;
       } else {
         Debug.LogError("Can't find anim with id=" + id);
-      }
-    }
-
-    void TryInitDelay() {
-      if (_curAnim.delay.max > 0f) {
-        _timerDelay = new ObservableTimer(_curAnim.delay.GetRand());
-        _timerDelay.OnDone += () => _timerDelay = null;
       }
     }
 
@@ -127,17 +115,21 @@ namespace Wowsome.Generic {
         }
 
         if (shouldChangeSprite) {
-          _image.sprite = _curAnim.sprites[_curIdx];
-          float maxSize = _curAnim.maxSize;
-          if (maxSize > 0f) {
-            _image.SetMaxSize(maxSize);
-          }
+          var curSprite = _curAnim.sprites[_curIdx];
+          CurSprite?.Invoke(curSprite);
         }
 
         if (isDone) {
           _onDone?.Invoke();
           _curAnim = null;
         }
+      }
+    }
+
+    void TryInitDelay() {
+      if (_curAnim.delay.max > 0f) {
+        _timerDelay = new ObservableTimer(_curAnim.delay.GetRand());
+        _timerDelay.OnDone += () => _timerDelay = null;
       }
     }
   }
