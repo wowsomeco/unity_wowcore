@@ -1,7 +1,17 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Wowsome {
   public static class SpriteRendererExtensions {
+    public static Bounds MaxBounds(this IList<SpriteRenderer> renderers) {
+      Bounds b = new Bounds();
+      foreach (SpriteRenderer renderer in renderers) {
+        b.Encapsulate(renderer.bounds);
+      }
+
+      return b;
+    }
+
     public static Vector2 WorldSize(this SpriteRenderer s, bool roundDown = true) {
       Vector2 spriteSize = s.sprite.rect.size;
       float ppu = roundDown ? Mathf.Ceil(s.sprite.pixelsPerUnit) : Mathf.Floor(s.sprite.pixelsPerUnit);

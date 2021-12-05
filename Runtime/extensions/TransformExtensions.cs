@@ -55,10 +55,19 @@ namespace Wowsome {
       return t.Scale(new Vector2(scale, scale));
     }
 
+    public static float Rotation(this Transform t) {
+      return t.localEulerAngles.z.WrapAngle();
+    }
+
     public static Transform SetRotation(this Transform t, float r) {
       t.localRotation = Quaternion.Euler(0f, 0f, r);
 
       return t;
+    }
+
+    public static Transform AddRotation(this Transform t, float delta) {
+      float curRotation = t.Rotation() + delta;
+      return t.SetRotation(curRotation);
     }
   }
 }
