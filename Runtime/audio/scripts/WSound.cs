@@ -53,7 +53,6 @@ namespace Wowsome.Audio {
       } else {
         PlaySound();
       }
-      // check if fade in on play      
       // set the callback on stop, if any
       _onStopCallback = onStopCallback;
     }
@@ -108,4 +107,3 @@ namespace Wowsome.Audio {
     }
   }
 }
-
