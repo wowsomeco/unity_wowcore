@@ -22,6 +22,16 @@ namespace Wowsome {
       return t.SetPos(other.position);
     }
 
+    public static Transform SetLocalPos(this Transform t, Vector2 pos) {
+      t.localPosition = new Vector3(pos.x, pos.y, t.localPosition.z);
+
+      return t;
+    }
+
+    public static Transform SetLocalPos(this Transform t, float x, float y) {
+      return t.SetLocalPos(new Vector2(x, y));
+    }
+
     public static Transform SetX(this Transform t, float x) {
       t.position = new Vector3(x, t.position.y, t.position.z);
 
