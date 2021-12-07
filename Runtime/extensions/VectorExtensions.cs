@@ -33,6 +33,10 @@ namespace Wowsome {
   }
 
   public static class Vector2Ext {
+    public static Vector2Int ToVector2Int(this Vector2 v) {
+      return new Vector2Int((int)v.x, (int)v.y);
+    }
+
     public static Vector3 ToVector3(this Vector2 v) {
       return new Vector3(v.x, v.y, 0f);
     }
@@ -118,6 +122,28 @@ namespace Wowsome {
     public static Vector2 WorldToLocalPos(this Vector3 worldPos, RectTransform parent, Camera camera = null) {
       Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(camera, worldPos);
       return screenPos.ScreenToLocalPos(parent, camera);
+    }
+  }
+
+  public static class Vector2IntExt {
+    public static Vector2 ToVector2(this Vector2Int v) {
+      return new Vector2(v.x, v.y);
+    }
+
+    public static Vector2Int SetX(this Vector2Int v, int x) {
+      return new Vector2Int(x, v.y);
+    }
+
+    public static Vector2Int AddX(this Vector2Int v, int x) {
+      return v.SetX(v.x + x);
+    }
+
+    public static Vector2Int SetY(this Vector2Int v, int y) {
+      return new Vector2Int(v.x, y);
+    }
+
+    public static Vector2Int AddY(this Vector2Int v, int y) {
+      return v.SetY(v.y + y);
     }
   }
 }
