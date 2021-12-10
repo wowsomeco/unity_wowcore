@@ -145,5 +145,9 @@ namespace Wowsome {
     public static Vector2Int AddY(this Vector2Int v, int y) {
       return v.SetY(v.y + y);
     }
+
+    public static Vector2Int Flip(this Vector2Int v) {
+      return new Vector2Int(v.y, v.x);
+    }
   }
 }
