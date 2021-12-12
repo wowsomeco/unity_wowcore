@@ -10,8 +10,8 @@ namespace Wowsome {
   /// </description>
   /// <typeparam name="T">Generic type parameter</typeparam>
   public class CSequence<T> {
-    Queue<T> m_sequences = new Queue<T>();
-    List<T> m_initialSequences = new List<T>();
+    Queue<T> _sequences = new Queue<T>();
+    List<T> _initialSequences = new List<T>();
 
     public CSequence() { }
 
@@ -20,48 +20,47 @@ namespace Wowsome {
     }
 
     public void ClearAll() {
-      m_sequences.Clear();
-      m_initialSequences.Clear();
+      _sequences.Clear();
+      _initialSequences.Clear();
     }
 
     public List<T> GetInitialSequences() {
-      return m_initialSequences;
+      return _initialSequences;
     }
 
     public void AddSequence(T sequence) {
-      m_initialSequences.Add(sequence);
-      m_sequences.Enqueue(sequence);
+      _initialSequences.Add(sequence);
+      _sequences.Enqueue(sequence);
     }
 
     public void AddSequences(IEnumerable<T> sequences) {
-      m_initialSequences = new List<T>(sequences);
+      _initialSequences = new List<T>(sequences);
       ResetSequences();
     }
 
     public IList<T> ResetSequences() {
-      m_sequences.Clear();
-      for (int i = 0; i < m_initialSequences.Count; ++i) {
-        m_sequences.Enqueue(m_initialSequences[i]);
+      _sequences.Clear();
+      for (int i = 0; i < _initialSequences.Count; ++i) {
+        _sequences.Enqueue(_initialSequences[i]);
       }
-      return m_initialSequences;
+      return _initialSequences;
     }
 
     public int Count() {
-      return m_sequences.Count;
+      return _sequences.Count;
     }
 
     public bool Compare(T x, T y) {
       return EqualityComparer<T>.Default.Equals(x, y);
     }
 
-    public bool IsMatchPeek(T seq) {
-      if (m_sequences.Count == 0) {
+    public bool MatchesPeek(T seq) {
+      if (_sequences.Count == 0) {
         return false;
       }
 
-      if (Compare(m_sequences.Peek(), seq)) {
-        //Debug.Log("match peek");
-        m_sequences.Dequeue();
+      if (Compare(_sequences.Peek(), seq)) {
+        _sequences.Dequeue();
         return true;
       } else {
         ResetSequences();
@@ -70,10 +69,10 @@ namespace Wowsome {
     }
 
     public T DequeueSequence() {
-      if (m_sequences.Count == 0) {
+      if (_sequences.Count == 0) {
         return default(T);
       }
-      return m_sequences.Dequeue();
+      return _sequences.Dequeue();
     }
   }
 }
