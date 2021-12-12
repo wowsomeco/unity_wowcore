@@ -37,7 +37,12 @@ namespace Wowsome.Anim {
     }
   }
 
-  public class Interpolation {
+  /// <summary>
+  /// The base class of any different Interpolation with various data types below.
+  /// You can use this class for your on Lerp needs OR 
+  /// sub-class it accordingly to create your own custom logic instead.
+  /// </summary>
+  public abstract class Interpolation {
     public WObservable<int> Percent { get; private set; }
     public WObservable<float> Time { get; private set; }
     public Action OnDone { get; set; }
@@ -60,7 +65,7 @@ namespace Wowsome.Anim {
       if (_timing.dly > 0f) _delay = new Timer((float)_timing.dly);
     }
 
-    internal bool Update(float dt) {
+    public bool Update(float dt) {
       if (null != _delay) {
         if (!_delay.UpdateTimer(dt)) {
           _delay = null;
@@ -128,7 +133,10 @@ namespace Wowsome.Anim {
 
     public abstract T Lerp();
 
-    public bool UpdateAutoLerp(float dt) {
+    /// <summary>
+    /// Updates and performs OnLerp automagically.    
+    /// </summary>
+    public bool Run(float dt) {
       if (Update(dt)) {
         T cur = Lerp();
         OnLerp?.Invoke(cur);

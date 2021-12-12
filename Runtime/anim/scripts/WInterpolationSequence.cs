@@ -48,12 +48,9 @@ namespace Wowsome.Anim {
     public bool Update(float dt) {
       if (_lerpers.Count > 0) {
         TInterpolation peek = _lerpers.Peek();
-        bool updating = peek.Update(dt);
+        bool updating = peek.Run(dt);
         if (updating) {
           TType cur = peek.Lerp();
-          // trigger each interpolation event,
-          // in case they want to listen to the individual interpolation
-          peek.OnLerp?.Invoke(cur);
           // trigger the global lerp event
           OnLerp?.Invoke(cur);
         } else {
