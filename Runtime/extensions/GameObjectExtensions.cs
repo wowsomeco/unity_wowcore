@@ -114,6 +114,14 @@ namespace Wowsome {
       return c.gameObject.Clone<T>(parent, name);
     }
 
+    public static Vector3 WorldPos(this Component c) {
+      return c.transform.position;
+    }
+
+    public static Vector3 LocalPos(this Component c) {
+      return c.transform.localPosition;
+    }
+
     /// <summary>
     /// Given a list that consists of 1 component in it, then clone to the same parent of that component,
     /// then add the cloned to the list afterwards
