@@ -23,8 +23,7 @@ namespace Wowsome {
     /// Checks whether the sprite is still visible within the camera viewport
     /// </summary>
     public static bool IsVisibleFrom(this SpriteRenderer renderer, Camera camera) {
-      Plane[] planes = GeometryUtility.CalculateFrustumPlanes(camera);
-      return GeometryUtility.TestPlanesAABB(planes, renderer.bounds);
+      return renderer.bounds.IsVisibleFrom(camera);
     }
 
     public static bool Intersects(this SpriteRenderer lhs, SpriteRenderer rhs) {
@@ -54,5 +53,11 @@ namespace Wowsome {
 
       return renderer;
     }
+
+    public static Vector3 Size(this SpriteRenderer renderer) => renderer.bounds.size;
+
+    public static float Width(this SpriteRenderer renderer) => renderer.Size().x;
+
+    public static float Height(this SpriteRenderer renderer) => renderer.Size().y;
   }
 }

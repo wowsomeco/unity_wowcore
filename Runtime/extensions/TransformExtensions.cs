@@ -38,9 +38,7 @@ namespace Wowsome {
       return t;
     }
 
-    public static float X(this Transform t) {
-      return t.position.x;
-    }
+    public static float X(this Transform t) => t.position.x;
 
     public static Transform AddX(this Transform t, float x) {
       Vector3 curPos = t.position;
@@ -54,6 +52,8 @@ namespace Wowsome {
 
       return t;
     }
+
+    public static float Y(this Transform t) => t.position.y;
 
     public static Transform Scale(this Transform t, Vector2 scale) {
       t.localScale = new Vector3(scale.x, scale.y, t.localScale.z);
