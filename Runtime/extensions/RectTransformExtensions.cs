@@ -9,6 +9,11 @@ namespace Wowsome {
       return worldPos;
     }
 
+    public static Vector3 ScreenToLocalPos(this RectTransform rectTransform, Vector2 screenPos, Camera cam = null) {
+      RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, screenPos, cam, out Vector2 localPos);
+      return localPos;
+    }
+
     public static RectTransform SetLeft(this RectTransform rt, float left) {
       rt.offsetMin = new Vector2(left, rt.offsetMin.y);
       return rt;
