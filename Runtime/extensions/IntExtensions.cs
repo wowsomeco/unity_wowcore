@@ -3,6 +3,18 @@ using System.Collections.Generic;
 
 namespace Wowsome {
   public static class IntExt {
+    public static void Loop(this int val, Action<int> each) {
+      for (int i = 0; i < val; ++i) {
+        each?.Invoke(i);
+      }
+    }
+
+    public static void LoopReverse(this int val, Action<int> each) {
+      for (int i = (val - 1); i >= val; --i) {
+        each?.Invoke(i);
+      }
+    }
+
     public static int GetNearestPointi(this int candidate, IList<int> list) {
       int nearest = list[0];
       for (int i = 0; i < list.Count; ++i) {

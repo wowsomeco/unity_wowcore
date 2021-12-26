@@ -55,6 +55,13 @@ namespace Wowsome {
 
     public static float Y(this Transform t) => t.position.y;
 
+    public static Transform AddY(this Transform t, float y) {
+      Vector3 curPos = t.position;
+      t.position = new Vector3(curPos.x, curPos.y + y, curPos.z);
+
+      return t;
+    }
+
     public static Transform Scale(this Transform t, Vector2 scale) {
       t.localScale = new Vector3(scale.x, scale.y, t.localScale.z);
 
