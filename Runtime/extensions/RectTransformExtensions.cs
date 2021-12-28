@@ -220,6 +220,16 @@ namespace Wowsome {
       rectTransform.SetScale(other.Scale());
       rectTransform.SetPos(other.Pos());
     }
+
+    public static void SetOneOfSize(this RectTransform rt, int idx, float value) {
+      Assert.If(idx < 0 || idx > 1, "idx needs to be either 0 or 1");
+
+      Vector2 size = rt.Size();
+      size[idx] = value;
+
+      rt.SetSize(size);
+    }
+
     #endregion
 
     #region Rotation
