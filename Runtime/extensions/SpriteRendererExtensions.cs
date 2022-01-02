@@ -48,8 +48,18 @@ namespace Wowsome {
       return renderer;
     }
 
+    public static float Rotation(this SpriteRenderer renderer) {
+      return renderer.transform.Rotation();
+    }
+
     public static SpriteRenderer SetRotation(this SpriteRenderer renderer, float r) {
       renderer.transform.SetRotation(r);
+
+      return renderer;
+    }
+
+    public static SpriteRenderer SetPos(this SpriteRenderer renderer, Vector2 worldPos) {
+      renderer.transform.SetPos(worldPos);
 
       return renderer;
     }

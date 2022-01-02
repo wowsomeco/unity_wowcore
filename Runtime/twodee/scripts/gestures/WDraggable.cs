@@ -1,32 +1,42 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
-namespace Wowsome.UI {
-  [RequireComponent(typeof(Image))]
+namespace Wowsome.TwoDee {
+  /// <summary>
+  /// Acts as a drag listener for the gameobject where this component gets attached to.
+  /// 
+  /// You need to call InitDraggable(Camera c) from the other component to make it work.
+  /// </summary>
   [DisallowMultipleComponent]
   public class WDraggable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler, IBeginDragHandler, IEndDragHandler {
+    /// <summary>
+    /// when true, will not trigger any of the dragging events
+    /// </summary>    
     public bool Disabled { get; set; } = false;
+    /// <summary>
+    /// Gets called when the first time the object begins dragging
+    /// </summary>    
     public Action<PointerEventData> OnFocusDrag { get; set; }
-    public Action<PointerEventData> OnDragging { get; set; }
+    /// <summary>
+    /// The world pos of the current drag, gets called when dragging
+    /// </summary>    
+    public Action<Vector2> OnDragging { get; set; }
+    /// <summary>
+    /// Gets called when the first time the object ends dragging
+    /// </summary>    
     public Action<PointerEventData> OnDragEnd { get; set; }
-    public RectTransform RectTransform => _rt;
 
     [Tooltip("the drag offset pos")]
     public Vector2 offset;
 
     protected Camera _camera = null;
-    protected RectTransform _rt;
-    protected RectTransform _root;
     protected bool _isFocus = false;
 
-    public void InitDraggable() {
-      _rt = GetComponent<RectTransform>();
-      var root = _rt.root;
-      _root = root?.GetComponent<RectTransform>();
-      Assert.Null(_root, "WDraggable must have a root");
-      _camera = root?.GetComponent<Canvas>()?.worldCamera;
+    public WDraggable InitDraggable(Camera camera) {
+      _camera = camera;
+
+      return this;
     }
 
     #region Event Systems
@@ -41,7 +51,6 @@ namespace Wowsome.UI {
     public void OnDrag(PointerEventData eventData) {
       ExecOnEnabled(() => {
         SetDragPos(eventData);
-        OnDragging?.Invoke(eventData);
       });
     }
 
@@ -87,10 +96,9 @@ namespace Wowsome.UI {
     }
 
     void SetDragPos(PointerEventData ed) {
-      Vector3 worldPos;
-      RectTransformUtility.ScreenPointToWorldPointInRectangle(_root, ed.position, _camera, out worldPos);
-      _rt.transform.position = worldPos;
-      _rt.SetPos(_rt.Pos() + offset);
+      Vector2 worldPos = _camera.ScreenToWorldPoint(ed.position);
+
+      OnDragging?.Invoke(worldPos + offset);
     }
   }
 }
