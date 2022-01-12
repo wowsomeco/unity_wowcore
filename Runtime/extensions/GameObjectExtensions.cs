@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Wowsome {
@@ -18,7 +19,7 @@ namespace Wowsome {
 
     public static void DestroyChildren(this GameObject gameObject) {
       Transform goTransform = gameObject.transform;
-      for (int i = goTransform.childCount - 1; i >= 0; i--) {
+      for (int i = goTransform.childCount - 1; i >= 0; --i) {
         GameObject.DestroyImmediate(goTransform.GetChild(i).gameObject);
       }
     }
@@ -58,6 +59,19 @@ namespace Wowsome {
 #else
       GameObject.Destroy(c);
 #endif
+    }
+
+    public static List<TComponent> GetComponentsInChildrenWithCallback<TComponent>(this GameObject go, Action<TComponent> eachComponent = null) {
+      List<TComponent> components = new List<TComponent>();
+
+      var comps = go.GetComponentsInChildren<TComponent>();
+      foreach (TComponent c in comps) {
+        eachComponent?.Invoke(c);
+
+        components.Add(c);
+      }
+
+      return components;
     }
 
     private static void DoIterate(GameObject gameObject, Delegate<bool, GameObject> shouldRecursive) {

@@ -23,7 +23,7 @@ namespace Wowsome.Audio {
       }
     }
 
-    public void StartSystem(CavEngine gameEngine) {
+    public void StartSystem(WEngine gameEngine) {
       gameEngine.OnChangeScene += ev => {
         for (int i = 0; i < _audioManagers.Length; ++i) {
           _audioManagers[i].OnChangeScene(ev.Scene);

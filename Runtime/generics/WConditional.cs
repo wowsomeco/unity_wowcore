@@ -15,8 +15,11 @@ namespace Wowsome.Generic {
     /// </summary>    
     public List<WObservable<T>> Values { get; private set; }
 
-    public WConditional(IEnumerable<WObservable<T>> values) {
-      Values = new List<WObservable<T>>(values);
+    public WConditional(params WObservable<T>[] values) {
+      Values = new List<WObservable<T>>();
+      foreach (var v in values) {
+        Values.Add(v);
+      }
     }
 
     /// <summary>
@@ -25,7 +28,7 @@ namespace Wowsome.Generic {
     /// then the OnChange will get triggered,
     /// as well as the Value(s) so that the observer(s) can react to the changes
     /// </summary>
-    public void Check(T[] values) {
+    public void Check(params T[] values) {
       if (values.Length != Values.Count) return;
 
       for (int i = 0; i < Values.Count; ++i) {
@@ -33,6 +36,8 @@ namespace Wowsome.Generic {
         if (!v.Value.Equals(values[i])) {
           v.Next(values[i]);
           OnChange?.Invoke();
+
+          break;
         }
       }
     }

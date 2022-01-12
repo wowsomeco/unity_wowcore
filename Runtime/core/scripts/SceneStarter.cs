@@ -21,7 +21,7 @@ namespace Wowsome {
       HashSet<ISceneController> m_controllers = new HashSet<ISceneController>();
 
       #region ISceneStarter
-      public CavEngine Engine { get; private set; }
+      public WEngine Engine { get; private set; }
 
       public StartSceneController OnStartSceneController { get; set; }
 
@@ -40,7 +40,7 @@ namespace Wowsome {
       #endregion
 
       void Start() {
-        Engine = CavEngine.Instance;
+        Engine = WEngine.Instance;
 
         for (int i = 0; i < m_sceneControllerObjs.Length; ++i) {
           ISceneController sceneController = m_sceneControllerObjs[i].GetComponent<ISceneController>();

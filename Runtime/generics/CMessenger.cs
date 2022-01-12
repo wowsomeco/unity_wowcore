@@ -9,24 +9,24 @@ namespace Wowsome {
     }
 
     public class CMessenger {
-      HashSet<IObserver> m_observers = new HashSet<IObserver>();
+      HashSet<IObserver> _observers = new HashSet<IObserver>();
 
       public void AddObserver(IObserver observer) {
-        if (!m_observers.Contains(observer)) {
-          m_observers.Add(observer);
+        if (!_observers.Contains(observer)) {
+          _observers.Add(observer);
         }
       }
 
       public bool RemoveObserver(IObserver observer) {
-        return m_observers.Remove(observer);
+        return _observers.Remove(observer);
       }
 
       public void Clear() {
-        m_observers.Clear();
+        _observers.Clear();
       }
 
       public void BroadcastMessage<Ev>(Ev msg) {
-        foreach (IObserver observer in m_observers) {
+        foreach (IObserver observer in _observers) {
           IObserver<Ev> genericObserver = observer as IObserver<Ev>;
           if (null != genericObserver) {
             genericObserver.ReceiveMessage(msg);

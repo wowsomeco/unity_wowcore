@@ -93,7 +93,7 @@ namespace Wowsome.Tasks {
 
     public virtual void InitSystem() { }
 
-    public virtual void StartSystem(CavEngine gameEngine) { }
+    public virtual void StartSystem(WEngine gameEngine) { }
 
     public virtual void UpdateSystem(float dt) {
       int taskCount = _tasks.Count;

@@ -32,7 +32,7 @@ namespace Wowsome.UI {
 
     public virtual void InitSystem() { }
 
-    public virtual void StartSystem(CavEngine gameEngine) {
+    public virtual void StartSystem(WEngine gameEngine) {
       gameEngine.OnChangeScene += ev => {
         // clean up events on change scene
         if (!ev.IsInitial) {

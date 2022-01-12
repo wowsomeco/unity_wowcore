@@ -22,7 +22,7 @@ namespace Wowsome {
         }
       }
 
-      public void StartSystem(CavEngine gameEngine) { }
+      public void StartSystem(WEngine gameEngine) { }
 
       public void UpdateSystem(float dt) { }
 
