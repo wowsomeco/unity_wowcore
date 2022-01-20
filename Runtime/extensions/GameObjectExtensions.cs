@@ -61,10 +61,10 @@ namespace Wowsome {
 #endif
     }
 
-    public static List<TComponent> GetComponentsInChildrenWithCallback<TComponent>(this GameObject go, Action<TComponent> eachComponent = null) {
+    public static List<TComponent> GetComponentsInChildrenWithCallback<TComponent>(this GameObject go, bool includeInactive, Action<TComponent> eachComponent = null) {
       List<TComponent> components = new List<TComponent>();
 
-      var comps = go.GetComponentsInChildren<TComponent>();
+      var comps = go.GetComponentsInChildren<TComponent>(includeInactive);
       foreach (TComponent c in comps) {
         eachComponent?.Invoke(c);
 
