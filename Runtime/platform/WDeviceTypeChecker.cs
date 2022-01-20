@@ -6,29 +6,29 @@ using UnityEngine.iOS;
 
 namespace Wowsome {
   [Serializable]
-  public enum DeviceType {
+  public enum WDeviceType {
     Tablet,
     Phone
   }
 
   public static class WDeviceTypeChecker {
-    public static DeviceType GetDeviceType() {
+    public static WDeviceType GetDeviceType() {
 #if UNITY_IOS
       bool deviceIsIpad = UnityEngine.iOS.Device.generation.ToString().Contains("iPad");
       if (deviceIsIpad) {
-        return DeviceType.Tablet;
+        return WDeviceType.Tablet;
       }
 
       bool deviceIsIphone = UnityEngine.iOS.Device.generation.ToString().Contains("iPhone");
       if (deviceIsIphone) {
-        return DeviceType.Phone;
+        return WDeviceType.Phone;
       }
 #endif
 
       float aspectRatio = Mathf.Max(Screen.width, Screen.height) / Mathf.Min(Screen.width, Screen.height);
       bool isTablet = (DeviceDiagonalSizeInInches() > 6.5f && aspectRatio < 2f);
 
-      return isTablet ? DeviceType.Tablet : DeviceType.Phone;
+      return isTablet ? WDeviceType.Tablet : WDeviceType.Phone;
     }
 
     private static float DeviceDiagonalSizeInInches() {

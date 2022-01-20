@@ -22,10 +22,11 @@ namespace Wowsome {
   public class ImageDownloader {
     public bool Downloading { get; private set; }
 
-    public IEnumerator Download(string url, string filename, Action<DownloadResponse<Texture2D>> result = null, Action exist = null) {
+    public IEnumerator Download(string url, string filename, Action<DownloadResponse<Texture2D>> result = null, Action<Texture2D> ifExists = null) {
       string localPath = Path.Combine(Application.persistentDataPath, filename.LastSplit());
+
       if (File.Exists(localPath)) {
-        exist?.Invoke();
+        ifExists?.Invoke(localPath.ToTexture2D());
       } else {
         Downloading = true;
 
