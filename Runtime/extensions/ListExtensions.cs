@@ -222,5 +222,15 @@ namespace Wowsome {
 
       return idx == (list.Count - 1);
     }
+
+    public static bool AddIfNotExist<T>(this List<T> list, T item, Predicate<T> predicate) {
+      if (!list.Exists(predicate)) {
+        list.Add(item);
+
+        return true;
+      }
+
+      return false;
+    }
   }
 }
