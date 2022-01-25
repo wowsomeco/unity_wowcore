@@ -1,36 +1,34 @@
 ﻿using System.Collections.Generic;
 
-namespace Wowsome {
-  namespace Generic {
-    public interface IObserver { }
+namespace Wowsome.Generic {
+  public interface IObserver { }
 
-    public interface IObserver<T> : IObserver {
-      void ReceiveMessage(T ev);
+  public interface IObserver<T> : IObserver {
+    void ReceiveMessage(T ev);
+  }
+
+  public class CMessenger {
+    HashSet<IObserver> _observers = new HashSet<IObserver>();
+
+    public void AddObserver(IObserver observer) {
+      if (!_observers.Contains(observer)) {
+        _observers.Add(observer);
+      }
     }
 
-    public class CMessenger {
-      HashSet<IObserver> _observers = new HashSet<IObserver>();
+    public bool RemoveObserver(IObserver observer) {
+      return _observers.Remove(observer);
+    }
 
-      public void AddObserver(IObserver observer) {
-        if (!_observers.Contains(observer)) {
-          _observers.Add(observer);
-        }
-      }
+    public void Clear() {
+      _observers.Clear();
+    }
 
-      public bool RemoveObserver(IObserver observer) {
-        return _observers.Remove(observer);
-      }
-
-      public void Clear() {
-        _observers.Clear();
-      }
-
-      public void BroadcastMessage<Ev>(Ev msg) {
-        foreach (IObserver observer in _observers) {
-          IObserver<Ev> genericObserver = observer as IObserver<Ev>;
-          if (null != genericObserver) {
-            genericObserver.ReceiveMessage(msg);
-          }
+    public void BroadcastMessage<Ev>(Ev msg) {
+      foreach (IObserver observer in _observers) {
+        IObserver<Ev> genericObserver = observer as IObserver<Ev>;
+        if (null != genericObserver) {
+          genericObserver.ReceiveMessage(msg);
         }
       }
     }
