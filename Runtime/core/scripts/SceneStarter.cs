@@ -10,7 +10,7 @@ namespace Wowsome {
     /// Attach this script to any empty Gameobject.
     /// It listens to Unity methods e.g. Start() as well as Update() whenever the Scene loaded.
     /// Those methods only get called here and all the methods related to them (InitSceneController, StartSceneController, and UpdateSceneController respectively) in ISceneController will get called accordingly.
-    /// In Start() method, it caches the CavEngine, followed by
+    /// In Start() method, it caches the WEngine, followed by
     /// retrieving all the ISceneController from m_sceneControllerObjs, then they might want to Init, Start, or Update their associated Components accordingly.        
     /// This ensures that you have the flexibility to call which class that needs to be updated first before the others
     /// so you won't need to touch the Unity Execution Order Script at all that might get very messy easily.       

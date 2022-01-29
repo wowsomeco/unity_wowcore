@@ -30,6 +30,10 @@ namespace Wowsome {
       return lhs.bounds.Intersects(rhs.bounds);
     }
 
+    public static bool Contains(this SpriteRenderer lhs, Vector2 point) {
+      return lhs.bounds.Contains(point.ToVector3().SetZ(lhs.transform.position.z));
+    }
+
     public static SpriteRenderer SetAlpha(this SpriteRenderer renderer, float a) {
       Color curColor = renderer.color;
       curColor.a = a;

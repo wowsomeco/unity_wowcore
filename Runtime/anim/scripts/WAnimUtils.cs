@@ -5,6 +5,7 @@ namespace Wowsome.Anim {
   public class WAnimPingPong {
     public Action<float> Current { get; set; }
     public Action OnDone { get; set; }
+    public Action OnSwitch { get; set; }
 
     float _from;
     float _to;
@@ -31,6 +32,8 @@ namespace Wowsome.Anim {
       Current?.Invoke(_isBackwards ? 0f : 1f);
       _isBackwards = !_isBackwards;
       Start();
+
+      OnSwitch?.Invoke();
     }
 
     void Start() {

@@ -31,7 +31,7 @@ public void UpdateSceneController(float dt) {
 
 ## Contents
 
-- CavEngine
+- WEngine
   This is the core engine that exists as a singleton accross scene. Just simply create a prefab and add it in the Hierarchy for every Unity scene you have in the game. It consists of array of ISystem. Basically ISystem is like a script that only needs to be instantiated once e.g. Audio System, Cache Manager, etc.
 
 - SceneStarter

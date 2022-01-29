@@ -12,7 +12,7 @@ namespace Wowsome.Tasks {
   /// How to use:
   /// 
   /// 1. Attach this script to a prefab and 
-  /// 2. Add the prefab as one of the System Prefabs in [[CavEngine]] via Editor
+  /// 2. Add the prefab as one of the System Prefabs in [[WEngine]] via Editor
   /// 
   /// You might want to subclass according to your needs
   /// Can be used for fake loading OR
