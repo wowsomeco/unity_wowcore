@@ -151,6 +151,8 @@ namespace Wowsome.Anim {
 
     public InterpolationFloat(Timing timing, float f, float t, bool autoPlay = false) : base(timing, f, t, autoPlay) { }
 
+    public InterpolationFloat(float f, float t, float duration) : this(new Timing(duration), f, t, true) { }
+
     public override float Lerp() {
       return Mathf.Lerp(_from, _to, Time.Value);
     }
@@ -166,6 +168,7 @@ namespace Wowsome.Anim {
 
   public class InterpolationVec2 : InterpolationBase<Vector2> {
     public InterpolationVec2(Timing timing, Vector2 f, Vector2 t, bool autoPlay = false) : base(timing, f, t, autoPlay) { }
+    public InterpolationVec2(Vector2 f, Vector2 t, float duration) : this(new Timing(duration), f, t, true) { }
 
     public override Vector2 Lerp() {
       return Vector2.Lerp(_from, _to, Time.Value);

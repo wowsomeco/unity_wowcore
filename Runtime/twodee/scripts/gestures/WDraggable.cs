@@ -17,7 +17,7 @@ namespace Wowsome.TwoDee {
     /// <summary>
     /// Gets called when the first time the object begins dragging
     /// </summary>    
-    public Action<PointerEventData> OnFocusDrag { get; set; }
+    public Action<PointerEventData> OnDragStart { get; set; }
     /// <summary>
     /// The world pos of the current drag, gets called when dragging
     /// </summary>    
@@ -84,7 +84,7 @@ namespace Wowsome.TwoDee {
     void SetFocus(PointerEventData eventData) {
       if (!_isFocus) {
         _isFocus = true;
-        OnFocusDrag?.Invoke(eventData);
+        OnDragStart?.Invoke(eventData);
       }
     }
 

@@ -5,23 +5,27 @@ using Wowsome.Tween;
 namespace Wowsome.Anim {
   public static class WAnimFactory {
     public class PulseOptions {
-      public float ScaleX { get; set; } = 1.1f;
-      public float ScaleY { get; set; } = .9f;
+      public Vector2 InitScale { get; set; } = Vector2.one;
+      public float ScaleDelta { get; set; } = .1f;
       public float TimeMultiplier { get; set; } = 1f;
       public int Count { get; set; } = 1;
       public Easing Easing { get; set; } = Easing.Linear;
     }
 
-    public static InterpolationSequence<InterpolationVec2, Vector2> Pulse(PulseOptions options) {
+    public static InterpolationSequence<InterpolationVec2, Vector2> Pulse(PulseOptions options = null) {
+      if (null == options) {
+        options = new PulseOptions();
+      }
+
       List<InterpolationVec2> tws = new List<InterpolationVec2>();
 
       float timeMultiplier = options.TimeMultiplier;
       Easing easing = options.Easing;
-      Vector2 toScale = new Vector2(options.ScaleX, options.ScaleY);
+      Vector2 toScale = new Vector2(options.InitScale.x + options.ScaleDelta, options.InitScale.y + options.ScaleDelta);
 
       for (int i = 0; i < options.Count; ++i) {
-        tws.Add(new InterpolationVec2(new Timing(.09f * timeMultiplier, easing), Vector2.one, toScale));
-        tws.Add(new InterpolationVec2(new Timing(.05f * timeMultiplier, easing), toScale, Vector2.one));
+        tws.Add(new InterpolationVec2(new Timing(.09f * timeMultiplier, easing), options.InitScale, toScale));
+        tws.Add(new InterpolationVec2(new Timing(.05f * timeMultiplier, easing), toScale, options.InitScale));
       }
 
       InterpolationSequence<InterpolationVec2, Vector2> tweener = new InterpolationSequence<InterpolationVec2, Vector2>(tws);
