@@ -43,9 +43,22 @@ namespace Wowsome.Anim {
   /// sub-class it accordingly to create your own custom logic instead.
   /// </summary>
   public abstract class Interpolation {
+    /// <summary>
+    /// The percentage from 0 to 100
+    /// </summary>    
     public WObservable<int> Percent { get; private set; }
+    /// <summary>
+    /// The current time from 0.0 to 1.0
+    /// </summary>    
     public WObservable<float> Time { get; private set; }
+    /// <summary>
+    /// Gets called whenever the interpolation has complete
+    /// </summary>    
     public Action OnDone { get; set; }
+    /// <summary>
+    /// Gets called as soon as the delay has finished and is about to start lerping 
+    /// </summary>    
+    public Action OnStart { get; set; }
 
     Timing _timing = null;
     Timer _timer = null;
@@ -69,8 +82,11 @@ namespace Wowsome.Anim {
       if (null != _delay) {
         if (!_delay.UpdateTimer(dt)) {
           _delay = null;
+
+          OnStart?.Invoke();
         }
-        return true;
+        // return false when delaying so that OnLerp in InterpolationBase below wont get called on Run()
+        return false;
       }
 
       if (null != _timer && !_timer.UpdateTimer(dt)) {
@@ -96,7 +112,7 @@ namespace Wowsome.Anim {
         float t = CEasings.GetEasing(_timer.GetPercentage(), _timing.easing);
 
         Time.Next(t);
-        // FIXME: still wrong when it's repeat
+
         Percent.Next((int)(Time.Value * 100f));
       }
 

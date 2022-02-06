@@ -64,13 +64,11 @@ namespace Wowsome.TwoDee {
     public void OnPointerDown(PointerEventData eventData) {
       ExecOnEnabled(() => {
         SetFocus(eventData);
-        SetDragPos(eventData);
       });
     }
 
     public void OnPointerUp(PointerEventData eventData) {
       ExecOnEnabled(() => {
-        SetDragPos(eventData);
         SetUnfocus(eventData);
       });
     }

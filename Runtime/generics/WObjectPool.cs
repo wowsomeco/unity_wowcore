@@ -41,6 +41,16 @@ namespace Wowsome.Generic {
       _poolObjects[obj.ObjId].Enqueue(obj);
     }
 
+    public bool TryRelease(string id) {
+      if (ActiveObjects.Find(x => x.ObjId.CompareStandard(id)) is IPoolObject obj) {
+        Release(obj);
+
+        return true;
+      }
+
+      return false;
+    }
+
     public void Release(IPoolObject obj) {
       obj.OnReleased();
       OnReleased?.Invoke(obj);

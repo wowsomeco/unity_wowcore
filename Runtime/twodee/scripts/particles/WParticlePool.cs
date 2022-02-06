@@ -34,6 +34,10 @@ namespace Wowsome.TwoDee {
       return po;
     }
 
+    public bool Stop(string id) {
+      return _pool.TryRelease(id);
+    }
+
     #region ISceneController
 
     public void InitSceneController(ISceneStarter sceneStarter) {
