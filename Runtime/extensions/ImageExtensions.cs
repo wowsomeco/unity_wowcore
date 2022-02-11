@@ -21,8 +21,9 @@ namespace Wowsome {
       img.color = color;
     }
 
-    public static void SetColor(this Image img, Color color) {
+    public static Image SetColor(this Image img, Color color) {
       img.color = color;
+      return img;
     }
 
     public static Image SetAlpha(this Image img, float alpha) {
@@ -46,24 +47,28 @@ namespace Wowsome {
       return img.rectTransform.Pos();
     }
 
-    public static void SetPos(this Image img, Vector2 pos) {
+    public static Image SetPos(this Image img, Vector2 pos) {
       img.rectTransform.SetPos(pos);
+      return img;
     }
 
-    public static void SetScale(this Image img, Vector2 scale) {
+    public static Image SetScale(this Image img, Vector2 scale) {
       img.rectTransform.SetScale(scale);
+      return img;
     }
 
-    public static void SetScale(this Image img, float scale) {
+    public static Image SetScale(this Image img, float scale) {
       img.rectTransform.SetScale(new Vector2(scale, scale));
+      return img;
     }
 
     public static float Rotation(this Image img) {
       return img.rectTransform.Rotation();
     }
 
-    public static void SetRotation(this Image img, float rot) {
+    public static Image SetRotation(this Image img, float rot) {
       img.rectTransform.SetRotation(rot);
+      return img;
     }
 
     public static void SetParent(this Image img, RectTransform parent) {

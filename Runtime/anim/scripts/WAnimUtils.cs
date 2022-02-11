@@ -7,7 +7,8 @@ namespace Wowsome.Anim {
     public float From { get; set; }
     public float To { get; set; }
     public float Duration { get; set; }
-    public int Count { get; set; }
+    public float Delay { get; set; } = 0f;
+    public int Count { get; set; } = -1;
 
     public float GetCurrent(float t) => Mathf.Lerp(From, To, t);
   }
@@ -41,13 +42,26 @@ namespace Wowsome.Anim {
     }
 
     void Start() {
+      if (_options.Delay > 0f) {
+        _timer = new ObservableTimer(_options.Delay);
+        _timer.OnDone += () => {
+          Play();
+        };
+      } else {
+        Play();
+      }
+    }
+
+    void Play() {
       _timer = new ObservableTimer(_options.Duration);
+
       _timer.Progress += percentage => {
         float t = _isBackwards ? (1f - percentage) : percentage;
         float cur = _options.GetCurrent(t);
 
         Current?.Invoke(cur);
       };
+
       _timer.OnDone += () => {
         if (_options.Count == -1) {
           Switch();
@@ -72,7 +86,7 @@ namespace Wowsome.Anim {
       Current?.Invoke(cur);
 
       _isBackwards = !_isBackwards;
-      Start();
+      Play();
 
       OnSwitch?.Invoke();
     }

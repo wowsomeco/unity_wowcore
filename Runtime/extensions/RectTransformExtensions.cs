@@ -109,16 +109,20 @@ namespace Wowsome {
 
     #region Scale
 
-    public static void SetScale(this RectTransform rt, Vector2 scale) {
+    public static RectTransform SetScale(this RectTransform rt, Vector2 scale) {
       rt.localScale = scale;
+
+      return rt;
     }
 
-    public static void SetScale(this RectTransform rt, float x, float y) {
-      rt.SetScale(new Vector2(x, y));
+    public static RectTransform SetScale(this RectTransform rt, float x, float y) {
+      return rt.SetScale(new Vector2(x, y));
     }
 
-    public static void SetScale(this RectTransform rt, float scale) {
+    public static RectTransform SetScale(this RectTransform rt, float scale) {
       rt.localScale = Vector2.one * scale;
+
+      return rt;
     }
 
     public static void SetScaleX(this RectTransform rt, float x) {
@@ -133,8 +137,8 @@ namespace Wowsome {
       trans.SetScale(Vector2.one);
     }
 
-    public static void SetScale(this RectTransform rt, float[] scale) {
-      rt.SetScale(new Vector2(scale[0], scale[1]));
+    public static RectTransform SetScale(this RectTransform rt, float[] scale) {
+      return rt.SetScale(new Vector2(scale[0], scale[1]));
     }
 
     public static Vector2 Scale(this RectTransform rt) {
