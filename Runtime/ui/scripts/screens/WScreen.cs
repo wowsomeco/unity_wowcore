@@ -37,7 +37,7 @@ namespace Wowsome.UI {
 
     List<IScreenComponent> _components = new List<IScreenComponent>();
 
-    public void InitScreen(ISceneStarter sceneStarter, WScreenManager controller) {
+    public virtual void InitScreen(ISceneStarter sceneStarter, WScreenManager controller) {
       SceneStarter = sceneStarter;
       // cache the listener
       _screenManager = controller;
@@ -79,7 +79,7 @@ namespace Wowsome.UI {
       }
     }
 
-    public void UpdateScreen(float dt) {
+    public virtual void UpdateScreen(float dt) {
       for (int i = 0; i < _components.Count; ++i) {
         _components[i].UpdateScreenComponent(dt);
       }
