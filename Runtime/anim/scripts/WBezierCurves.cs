@@ -3,7 +3,6 @@ using UnityEngine;
 using Wowsome.Chrono;
 
 namespace Wowsome.Anim {
-  // WIP
   public class WBezierCurve {
     public static Vector2 Quadratic(Vector2 p0, Vector2 p1, Vector2 p2, float t) {
       float u = 1 - t;
@@ -28,6 +27,7 @@ namespace Wowsome.Anim {
     /// Useful if you want to do something when it's currently lerp ing
     /// </summary>
     public Action<float> Time { get; set; }
+    public Action OnStart { get; set; }
     public Action OnDone { get; set; }
 
     Vector2 _control;
@@ -41,10 +41,7 @@ namespace Wowsome.Anim {
       _to = to;
       _control = control;
       _timer = new Timer(duration);
-
-      if (delay > 0f) {
-        _delay = new Timer(delay);
-      }
+      _delay = new Timer(delay);
     }
 
     public bool Update(float dt) {
@@ -55,6 +52,8 @@ namespace Wowsome.Anim {
           return true;
         } else {
           _delay = null;
+
+          OnStart?.Invoke();
         }
       }
 

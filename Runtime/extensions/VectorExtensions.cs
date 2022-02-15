@@ -50,7 +50,7 @@ namespace Wowsome {
     }
 
     public static bool IsZero(this Vector2 v) {
-      return Mathf.FloorToInt(v.x) == 0 && Mathf.FloorToInt(v.y) == 0;
+      return Mathf.Approximately(v.x, 0f) && Mathf.Approximately(v.y, 0f);
     }
 
     public static float[] ToFloats(this Vector2 self) {
@@ -122,6 +122,13 @@ namespace Wowsome {
     public static Vector2 WorldToLocalPos(this Vector3 worldPos, RectTransform parent, Camera camera = null) {
       Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(camera, worldPos);
       return screenPos.ScreenToLocalPos(parent, camera);
+    }
+
+    public static Vector2 Randomize(this Vector2 v, float range = 1f) {
+      float x = v.x.Multiply(FloatExt.Random(-range, range));
+      float y = v.y.Multiply(FloatExt.Random(-range, range));
+
+      return new Vector2(x, y);
     }
   }
 

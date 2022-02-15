@@ -33,7 +33,7 @@ namespace Wowsome.Anim {
       return tweener;
     }
 
-    public static InterpolationSequence<InterpolationFloat, float> Shake(float duration = .1f, float rotation = 5f, int count = 1, Easing easing = Easing.Linear) {
+    public static InterpolationSequence<InterpolationFloat, float> ShakeRotate(float duration = .1f, float rotation = 5f, int count = 1, Easing easing = Easing.Linear) {
       Timing timing = new Timing(duration, easing);
       List<InterpolationFloat> tws = new List<InterpolationFloat>();
 
@@ -46,6 +46,32 @@ namespace Wowsome.Anim {
       InterpolationSequence<InterpolationFloat, float> tweener = new InterpolationSequence<InterpolationFloat, float>(tws);
 
       return tweener;
+    }
+
+    public static InterpolationSequence<InterpolationVec2, Vector2> ShakeMove(Vector2 initPos, float duration, IEnumerable<Vector2> offsets) {
+      Timing timing = new Timing(duration);
+
+      Vector2 from = initPos;
+      List<InterpolationVec2> tws = new List<InterpolationVec2>();
+
+      foreach (Vector2 offset in offsets) {
+        Vector2 to = from.Add(offset);
+
+        InterpolationVec2 tw = new InterpolationVec2(
+          timing,
+          from,
+          to
+        );
+
+        tws.Add(tw);
+
+        from = to;
+      }
+
+      // add last interpolation to go back to init pos again
+      tws.Add(new InterpolationVec2(timing, from, initPos));
+
+      return new InterpolationSequence<InterpolationVec2, Vector2>(tws);
     }
   }
 }

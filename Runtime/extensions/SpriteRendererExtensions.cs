@@ -13,10 +13,7 @@ namespace Wowsome {
     }
 
     public static Vector2 WorldSize(this SpriteRenderer s, bool roundDown = true) {
-      Vector2 spriteSize = s.sprite.rect.size;
-      float ppu = roundDown ? Mathf.Ceil(s.sprite.pixelsPerUnit) : Mathf.Floor(s.sprite.pixelsPerUnit);
-
-      return spriteSize / ppu;
+      return s.bounds.size;
     }
 
     /// <summary>
@@ -35,6 +32,8 @@ namespace Wowsome {
     }
 
     public static SpriteRenderer SetSprite(this SpriteRenderer renderer, Sprite sprite) {
+      if (renderer == null || null == sprite) return renderer;
+
       renderer.sprite = sprite;
 
       return renderer;
@@ -50,6 +49,10 @@ namespace Wowsome {
       renderer.color = curColor;
 
       return renderer;
+    }
+
+    public static SpriteRenderer AddAlpha(this SpriteRenderer renderer, float a) {
+      return renderer.SetAlpha(renderer.Alpha() + a);
     }
 
     public static Vector2 Scale(this SpriteRenderer renderer) {

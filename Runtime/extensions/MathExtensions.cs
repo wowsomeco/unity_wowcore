@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Wowsome {
   public static class MathExtensions {
@@ -9,6 +9,10 @@ namespace Wowsome {
 
     public static System.Random GetRandom() {
       return new System.Random(Guid.NewGuid().GetHashCode());
+    }
+
+    public static int RandomBetween(int min, int max) {
+      return GetRandom().Next(min, max);
     }
 
     public static List<int> GetRandomValue(int min, int max, int count) {
