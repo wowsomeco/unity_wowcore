@@ -2,16 +2,15 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Wowsome.UI {
+namespace Wowsome.TwoDee {
+  /// <summary>
+  /// The base class for a tappable object.
+  /// 
+  /// You need to extends this accordingly.
+  /// Take a look at [[WTappableUI]] for example of how to use
+  /// </summary>
   [DisallowMultipleComponent]
-  public class WTappable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
-    public class Scaler {
-      public Scaler(WTappable tappable, float scaleTap, float scaleNormal = 1f) {
-        tappable.OnStartTap += ev => tappable.Rt.SetScale(scaleTap);
-        tappable.OnEndTap += ev => tappable.Rt.SetScale(scaleNormal);
-      }
-    }
-
+  public abstract class WTappable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
     public bool Disabled { get; set; } = true;
     /// <summary>
     /// Invoked the first time this object receives a touch
@@ -29,19 +28,23 @@ namespace Wowsome.UI {
     /// Invoked when the touch ends regardless inside or outside of the rect transform
     /// </summary>
     public Action<PointerEventData> OnEndTap { get; set; }
-    public RectTransform Rt => _rt;
 
-    protected RectTransform _rt;
+    protected abstract void OnTap(PointerEventData ed);
 
-    Camera _cam;
+    protected Camera _camera;
 
     /// <summary>
     /// You need to call this method first in order to make this script functional
     /// </summary>
     public virtual void InitTappable(Camera cam) {
-      _rt = GetComponent<RectTransform>();
-      _cam = cam;
+      _camera = cam;
+
       Disabled = false;
+    }
+
+    public void AddScaleListener(float startTapScale, float endTapScale = 1f) {
+      OnStartTap += _ => transform.Scale(startTapScale);
+      OnEndTap += _ => transform.Scale(endTapScale);
     }
 
     public void OnPointerDown(PointerEventData eventData) {
@@ -52,11 +55,7 @@ namespace Wowsome.UI {
 
     public void OnPointerUp(PointerEventData eventData) {
       ExecOnEnabled(() => {
-        if (_rt.IsPointInRect(eventData.position, _cam)) {
-          OnEndInside?.Invoke(eventData);
-        } else {
-          OnEndOutside?.Invoke(eventData);
-        }
+        OnTap(eventData);
 
         OnEndTap?.Invoke(eventData);
       });
@@ -67,4 +66,3 @@ namespace Wowsome.UI {
     }
   }
 }
-

@@ -22,6 +22,11 @@ namespace Wowsome {
       return t.SetPos(other.position);
     }
 
+    public static Transform AddPos(this Transform t, Vector2 pos) {
+      Vector2 curPos = t.WorldPos();
+      return t.SetPos(curPos.x + pos.x, curPos.y + pos.y);
+    }
+
     public static Transform SetLocalPos(this Transform t, Vector2 pos) {
       t.localPosition = new Vector3(pos.x, pos.y, t.localPosition.z);
 

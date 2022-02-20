@@ -10,9 +10,13 @@ namespace Wowsome.Audio {
     public WSound prefabSound;
     public int sfxChannel = 16;
     /// <summary>
-    /// When it's true, it wont load the sounds in the given [[path]] on init
+    /// When it's true, it loads all the sounds in the given [[path]] on init
+    /// 
+    /// it's always recommended to set it to false. 
+    /// it will waste the memory as well as slow down the init phase if otherwise
+    /// 
     /// </summary>
-    public bool isLazyLoad = false;
+    public bool isPreLoad;
 
     List<WSound> _sources = new List<WSound>();
     List<WSound> _currentPlaying = new List<WSound>();
@@ -32,7 +36,7 @@ namespace Wowsome.Audio {
     }
 
     public void InitAudioManager() {
-      if (!isLazyLoad) {
+      if (isPreLoad) {
         AudioClip[] audioClips = Resources.LoadAll<AudioClip>(path);
         for (int i = 0; i < audioClips.Length; ++i) {
           _audioClips.Add(audioClips[i].name, audioClips[i]);
@@ -95,6 +99,8 @@ namespace Wowsome.Audio {
     }
 
     public void PlaySound(string audioClipName, WSound.PlayOptions options = null, Action onStopCallback = null) {
+      if (audioClipName.IsEmpty()) return;
+
       AudioClip clip = GetAudioClip(audioClipName);
       if (null != clip) {
         WSound soundFX = GetAvailableSound();
@@ -112,6 +118,12 @@ namespace Wowsome.Audio {
       if (shouldRecycle) ReleaseCurrentPlaying(audioClipName);
 
       PlaySound(audioClipName, null, onStopCallback);
+    }
+
+    public void PlaySoundIfNotPlaying(string audioClipName) {
+      if (IsSoundPlaying(audioClipName)) return;
+
+      PlaySound(audioClipName);
     }
 
     public void StopAllAudio() {

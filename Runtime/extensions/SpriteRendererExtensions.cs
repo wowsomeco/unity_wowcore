@@ -16,6 +16,20 @@ namespace Wowsome {
       return s.bounds.size;
     }
 
+    public static SpriteRenderer AnchorToCamera(this SpriteRenderer s, Camera c, Vector3 screenAnchor) {
+      Vector2 pos = c.ViewportToWorldPoint(screenAnchor);
+      return s.SetPos(pos);
+    }
+
+    public static Vector2 SignedPos(this SpriteRenderer s) {
+      Vector2 pos = s.WorldPos();
+
+      float x = Mathf.Approximately(pos.x, 0f) ? 0f : Mathf.Sign(pos.x);
+      float y = Mathf.Approximately(pos.y, 0f) ? 0f : Mathf.Sign(pos.y);
+
+      return new Vector2(x, y);
+    }
+
     /// <summary>
     /// Checks whether the sprite is still visible within the camera viewport
     /// </summary>
@@ -105,6 +119,11 @@ namespace Wowsome {
     public static SpriteRenderer SetPos(this SpriteRenderer renderer, Vector2 worldPos) {
       renderer.transform.SetPos(worldPos);
 
+      return renderer;
+    }
+
+    public static SpriteRenderer AddPos(this SpriteRenderer renderer, Vector2 delta) {
+      renderer.transform.AddPos(delta);
       return renderer;
     }
 

@@ -36,20 +36,24 @@ namespace Wowsome.Audio {
     }
 
     public float Volume {
-      get { return soundSource.Volume; }
-      set { soundSource.Volume = value; }
+      get { return _sound.Volume; }
+      set { _sound.Volume = value; }
     }
 
-    public WSound soundSource;
+    public WSound prefabSound;
     public List<BgmsData> bgms = new List<BgmsData>();
     public string path = "audio/bgm";
 
+    WSound _sound;
     Dictionary<string, AudioClip> _audioClips = new Dictionary<string, AudioClip>();
     int _bgmCount = 0;
     BgmsData _curPlaying;
 
     #region IAudioManager
     public void InitAudioManager() {
+      _sound = prefabSound.Clone<WSound>(transform);
+      Assert.Null<WSound>(_sound);
+
       // on init, load all the sfx in the path defined
       AudioClip[] audioClipsFromResources = Resources.LoadAll<AudioClip>(path);
       for (int i = 0; i < audioClipsFromResources.Length; ++i) {
@@ -57,9 +61,7 @@ namespace Wowsome.Audio {
       }
 
       // init sound
-      soundSource.InitSound();
-
-      Debug.Assert(null != soundSource);
+      _sound.InitSound();
     }
 
     public void OnChangeScene(Scene scene) {
@@ -79,7 +81,7 @@ namespace Wowsome.Audio {
 
     public void UpdateAudio(float dt) {
       // check whenever the current source sound has finished playing
-      if (!soundSource.gameObject.activeSelf) {
+      if (!_sound.gameObject.activeSelf) {
         // set next                  
         ++_bgmCount;
         // if exceeds, reset the count to 0
@@ -87,12 +89,12 @@ namespace Wowsome.Audio {
           _bgmCount = 0;
         }
         // re activate the source sound
-        soundSource.gameObject.SetActive(true);
+        _sound.gameObject.SetActive(true);
         // play the next bgm
         Play(_curPlaying.bgms[_bgmCount]);
       } else {
         // update the sound
-        soundSource.UpdateSound(dt);
+        _sound.UpdateSound(dt);
       }
     }
     #endregion
@@ -101,8 +103,8 @@ namespace Wowsome.Audio {
       AudioClip audioClip = null;
       // find the bgm name in the audio clips dictionary        
       if (_audioClips.TryGetValue(bgmData.name, out audioClip)) {
-        soundSource.StopSound();
-        soundSource.PlaySound(audioClip);
+        _sound.StopSound();
+        _sound.PlaySound(audioClip);
       }
     }
   }

@@ -167,7 +167,7 @@ namespace Wowsome.Anim {
 
     public InterpolationFloat(Timing timing, float f, float t, bool autoPlay = false) : base(timing, f, t, autoPlay) { }
 
-    public InterpolationFloat(float f, float t, float duration) : this(new Timing(duration), f, t, true) { }
+    public InterpolationFloat(float f, float t, float duration, float delay = 0f) : this(new Timing(duration, delay), f, t, true) { }
 
     public override float Lerp() {
       return Mathf.Lerp(_from, _to, Time.Value);
