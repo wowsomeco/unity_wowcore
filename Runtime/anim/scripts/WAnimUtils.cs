@@ -93,31 +93,39 @@ namespace Wowsome.Anim {
   }
 
   public class WSmoothPingPong {
+    public class InitOptions {
+      public float Delay { get; set; } = 0f;
+      public float Value { get; set; } = 0f;
+    }
+
     public Action<float> Current { get; set; }
     public Action OnDone { get; set; }
 
     WAnimPingPong _pingPong = null;
     InterpolationFloat _smoother = null;
     PingPongOptions _options = null;
+    InitOptions _initOptions = null;
     float _cur;
-    float _initValue;
 
-    public WSmoothPingPong(float initValue, PingPongOptions options) {
-      _initValue = initValue;
+    public WSmoothPingPong(InitOptions initOptions, PingPongOptions options) {
+      _initOptions = initOptions;
       _options = options;
 
       SmoothStart();
     }
+
+    public WSmoothPingPong(float initValue, PingPongOptions options) :
+      this(new InitOptions { Value = initValue }, options) { }
 
     public void Update(float dt) {
       _pingPong?.Update(dt);
       _smoother?.Run(dt);
     }
 
-    void Smoothen(float f, float t, Action onDone) {
+    void Smoothen(float f, float t, Action onDone, float delay = 0f) {
       // duration will be 1/2 of the ping pong duration
       _smoother = new InterpolationFloat(
-        new Timing(_options.Duration.Half()),
+        new Timing(_options.Duration.Half(), delay),
         f, t, true
       );
 
@@ -131,7 +139,7 @@ namespace Wowsome.Anim {
     }
 
     void SmoothStart() {
-      Smoothen(_initValue, _options.From, () => {
+      Smoothen(_initOptions.Value, _options.From, () => {
         _pingPong = new WAnimPingPong(_options);
 
         _pingPong.Current += c => {
@@ -142,11 +150,11 @@ namespace Wowsome.Anim {
         _pingPong.OnDone += () => {
           SmoothEnd();
         };
-      });
+      }, _initOptions.Delay);
     }
 
     void SmoothEnd() {
-      Smoothen(_cur, _initValue, () => {
+      Smoothen(_cur, _initOptions.Value, () => {
         OnDone?.Invoke();
       });
     }

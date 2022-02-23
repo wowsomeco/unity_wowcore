@@ -15,12 +15,13 @@ namespace Wowsome.Core {
   /// </description>
   public class WEngine : MonoBehaviour {
     public struct ChangeSceneEv {
-      public bool IsInitial { get; private set; }
+      public bool IsInitial => PrevScene.IsEmpty();
       public Scene Scene { get; private set; }
+      public string PrevScene { get; private set; }
 
-      public ChangeSceneEv(bool isInit, Scene scene) {
-        IsInitial = isInit;
+      public ChangeSceneEv(Scene scene, string prevScene) {
         Scene = scene;
+        PrevScene = prevScene;
       }
     }
 
@@ -37,23 +38,28 @@ namespace Wowsome.Core {
     /// Right now it's editor only for performance reason
     /// </summary>            
     public Action OnScreenSizeChanged { get; set; }
+    public string PrevSceneName { get; private set; } = string.Empty;
+    public string CurSceneName { get; private set; } = string.Empty;
 
     public List<GameObject> m_systemPrefabs = new List<GameObject>();
 
     List<ISystem> _systems = new List<ISystem>();
     WConditional<Vector2Int> _screenSizeChecker = null;
-    bool _isInitialScene = true;
 
     void OnSceneLoaded(Scene scene, LoadSceneMode m) {
-      OnChangeScene?.Invoke(new ChangeSceneEv(_isInitialScene, scene));
-      if (_isInitialScene) _isInitialScene = false;
+      PrevSceneName = string.Copy(CurSceneName);
+
+      OnChangeScene?.Invoke(new ChangeSceneEv(scene, PrevSceneName));
+
+      CurSceneName = scene.name;
     }
 
     void Awake() {
       if (!Instance) {
         Instance = this;
-        // INIT SYSTEMS HERE
+        // init all
         InitSystems();
+        // then call start
         StartSystem();
         // observer scene changes
         SceneManager.sceneLoaded += OnSceneLoaded;

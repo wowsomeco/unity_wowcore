@@ -102,7 +102,7 @@ namespace Wowsome.Anim {
       tw.OnLerp += t => {
         Vector2 curPos = WBezierCurve.Quadratic(
           options.From,
-          options.From.LerpWithOffset(options.To, .5f, new Vector2(3f, 1f)),
+          options.From.LerpWithOffset(options.To, .5f, options.ControlPoint),
           options.To,
           t
         );
