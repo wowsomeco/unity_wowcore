@@ -77,6 +77,10 @@ namespace Wowsome {
       return t.Scale(new Vector2(scale, scale));
     }
 
+    public static Transform AddScale(this Transform t, float delta) {
+      return t.Scale(t.localScale + new Vector3(delta, delta, 0f));
+    }
+
     public static float Rotation(this Transform t) {
       return t.localEulerAngles.z.WrapAngle();
     }

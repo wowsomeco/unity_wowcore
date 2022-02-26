@@ -17,6 +17,7 @@ namespace Wowsome.Core {
     public struct ChangeSceneEv {
       public bool IsInitial => PrevScene.IsEmpty();
       public Scene Scene { get; private set; }
+      public string SceneName => Scene.name;
       public string PrevScene { get; private set; }
 
       public ChangeSceneEv(Scene scene, string prevScene) {
