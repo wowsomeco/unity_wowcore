@@ -13,5 +13,12 @@ namespace Wowsome {
 
       return bounds;
     }
+
+    public static Vector2 OrthoSize(this Camera camera) {
+      float height = 2f * camera.orthographicSize;
+      float width = height * camera.aspect;
+
+      return new Vector2(width, height);
+    }
   }
 }
