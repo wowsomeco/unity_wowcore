@@ -18,7 +18,6 @@ namespace Wowsome.Anim {
     public Action OnDone { get; set; }
     public Action OnSwitch { get; set; }
 
-
     PingPongOptions _options = null;
     int _counter = 0;
     bool _isBackwards = false;

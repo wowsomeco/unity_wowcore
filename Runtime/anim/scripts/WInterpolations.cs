@@ -38,9 +38,8 @@ namespace Wowsome.Anim {
   }
 
   /// <summary>
-  /// The base class of any different Interpolation with various data types below.
-  /// You can use this class for your on Lerp needs OR 
-  /// sub-class it accordingly to create your own custom logic instead.
+  /// The base class of any different Interpolation with various data types below.  
+  /// sub-class it accordingly to create your own custom logic.
   /// </summary>
   public abstract class Interpolation {
     /// <summary>
@@ -78,7 +77,7 @@ namespace Wowsome.Anim {
       if (_timing.dly > 0f) _delay = new Timer((float)_timing.dly);
     }
 
-    public bool Update(float dt) {
+    protected bool Update(float dt) {
       if (null != _delay) {
         if (!_delay.UpdateTimer(dt)) {
           _delay = null;
