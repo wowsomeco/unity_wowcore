@@ -12,5 +12,11 @@ namespace Wowsome {
 
       return AppSettings.AndroidPlatform == AndroidPlatform.Google ? google : amazon;
     }
+
+    public static string GetStringByPlatform(string ios, string google) {
+      if (Application.platform == RuntimePlatform.IPhonePlayer) return ios;
+
+      return google;
+    }
   }
 }

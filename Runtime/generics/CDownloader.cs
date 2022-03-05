@@ -3,6 +3,7 @@ using System.Collections;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
+using Wowsome.Generic;
 
 namespace Wowsome {
   public class DownloadResponse<T> {
@@ -32,6 +33,7 @@ namespace Wowsome {
 
         using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(url)) {
           yield return uwr.SendWebRequest();
+
           if (uwr.HasErrors()) {
             Print.Log(() => "yellow", $"download error: {uwr.error}, url {url}");
 
@@ -51,13 +53,14 @@ namespace Wowsome {
   }
 
   public class JsonDownloader<T> {
-    public bool Downloading { get; private set; }
+    public WObservable<bool> Downloading { get; private set; } = new WObservable<bool>(false);
 
     public IEnumerator Download(string url, Action<DownloadResponse<T>> result) {
-      Downloading = true;
+      Downloading.Next(true);
 
       using (UnityWebRequest uwr = UnityWebRequest.Get(url)) {
         yield return uwr.SendWebRequest();
+
         if (uwr.HasErrors()) {
           result(new DownloadResponse<T>(default(T), uwr));
         } else {
@@ -67,7 +70,7 @@ namespace Wowsome {
           result(new DownloadResponse<T>(json, uwr));
         }
 
-        Downloading = false;
+        Downloading.Next(false);
       }
     }
   }

@@ -45,6 +45,7 @@ namespace Wowsome.UI {
       return RectTransformUtility.RectangleContainsScreenPoint(_rt, screenPos, _camera);
     }
 
+    // FIXME: Do not rely on OnDestroy() completely as it won't get called if the object is not active
     protected virtual void OnDestroy() {
       _touchSurface.OnStartTouch -= ObserveStartTouch;
       _touchSurface.OnEndTouch -= ObserveEndTouch;
