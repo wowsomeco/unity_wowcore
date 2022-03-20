@@ -2,9 +2,8 @@
 using UnityEngine;
 using Wowsome.Chrono;
 using Wowsome.Generic;
-using Wowsome.Tween;
 
-namespace Wowsome.Anim {
+namespace Wowsome.Tween {
   [Serializable]
   public class Timing {
     public float dur;

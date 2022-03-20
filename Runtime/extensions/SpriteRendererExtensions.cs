@@ -41,8 +41,16 @@ namespace Wowsome {
       return lhs.bounds.Intersects(rhs.bounds);
     }
 
-    public static bool Contains(this SpriteRenderer lhs, Vector2 point) {
-      return lhs.bounds.Contains(point.ToVector3().SetZ(lhs.transform.position.z));
+    public static bool Contains(this SpriteRenderer sr, Vector2 point) {
+      return sr.bounds.Contains(point.ToVector3().SetZ(sr.transform.position.z));
+    }
+
+    public static bool Contains(this IList<SpriteRenderer> renderers, Vector2 point) {
+      foreach (SpriteRenderer sr in renderers) {
+        if (sr.Contains(point)) return true;
+      }
+
+      return false;
     }
 
     public static SpriteRenderer SetSprite(this SpriteRenderer renderer, Sprite sprite) {
@@ -124,6 +132,18 @@ namespace Wowsome {
 
     public static SpriteRenderer AddPos(this SpriteRenderer renderer, Vector2 delta) {
       renderer.transform.AddPos(delta);
+      return renderer;
+    }
+
+    public static SpriteRenderer SetX(this SpriteRenderer renderer, float x) {
+      renderer.transform.SetX(x);
+
+      return renderer;
+    }
+
+    public static SpriteRenderer SetY(this SpriteRenderer renderer, float y) {
+      renderer.transform.SetY(y);
+
       return renderer;
     }
 

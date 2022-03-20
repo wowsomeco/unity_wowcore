@@ -39,5 +39,17 @@ namespace Wowsome {
       Debug.Log(t);
 #endif
     }
+
+    public static void Info(params object[] msg) {
+      Log(() => "cyan", msg);
+    }
+
+    public static void Warn(params object[] msg) {
+      Log(() => "yellow", msg);
+    }
+
+    public static void Error(params object[] msg) {
+      Log(() => "red", msg);
+    }
   }
 }

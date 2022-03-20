@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Wowsome.Generic;
 
-namespace Wowsome.Anim {
+namespace Wowsome.Tween {
   /// <summary>
   /// Plays interpolation(s) sequentially
   /// </summary>    

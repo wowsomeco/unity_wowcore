@@ -41,41 +41,6 @@ public void UpdateSceneController(float dt) {
 
 - Tween
 
-  - Can be attached directly to a Gameobject, where each Gameobject can have one or more Tween(s).
-  - Can be also instantiated and updated programmatically accordingly e.g. no Awake() or Update() calls internally, you need to call it from your own script. That way you
-
-  ### Tween Samples
-
-  ```csharp
-  // Fade Tween
-  ITween tweenFade = new CTweenFade(TargetType.Image, gameObject, new FadeData(0f, 1f));
-  // Rotation Tween
-  ITween tweenRotation = new CTweenRotation(TargetType.RectTransform, gameObject, new RotationData(50f, 0.5f))
-          .SetCompleteCallback(OnCompleteRotation)
-          .SetLoop(3, Loop.Yoyo);
-  // Move Tween
-  ITween tweenMove = new CTweenMove(
-          TargetType.RectTransform
-          , gameObject
-          , new MoveData(
-              Vector2.zero
-              , 1f
-              , TweenType.To
-              , Easing.Linear
-              , 1f
-              ));
-  ```
-
-  ### You can also Chain the tween(s) accordingly
-
-  ```csharp
-  // this chainer will play all the tweens one at a time.
-  m_chainer = new CTweenChainer(TweenerType.StepByStep); // either StepByStep OR Simultaneously
-  m_chainer.Add(tweenRotation).Add(tweenMove).Add(tweenFade).PlayExistingAll(() => print("On Done"));
-  ```
-
-  Take a look at the [Unit Tests](https://github.com/wowsomeco/unity_wowcore/tree/master/Runtime/tween/scripts/test) for more details of how to use the Tweens.
-
 - Extensions
 
   - C# Native Extensions e.g. List Extensions, Int Extensions, Float Extensions, String Extensions, etc.
@@ -96,12 +61,7 @@ public void UpdateSceneController(float dt) {
   float sumX = vecs.Fold(0f, (prev, cur) => prev += cur.x);
   ```
 
-  - Unity Extensions e.g. UI Extensions, Rect Transform Extensions, etc.
-
-- UI Helpers
-  - Screen Manager
-  - Gesture Handlers
-  - etc.
+  - Unity Extensions e.g. UI Extensions, Rect Transform Extensions, Sprite Renderer Extensions, etc.
 
 ## Documentation
 

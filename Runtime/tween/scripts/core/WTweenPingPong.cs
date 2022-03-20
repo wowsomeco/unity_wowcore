@@ -2,7 +2,7 @@
 using UnityEngine;
 using Wowsome.Chrono;
 
-namespace Wowsome.Anim {
+namespace Wowsome.Tween {
   public class PingPongOptions {
     public float From { get; set; }
     public float To { get; set; }

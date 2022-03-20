@@ -2,7 +2,7 @@
 using UnityEngine;
 using Wowsome.Chrono;
 
-namespace Wowsome.Anim {
+namespace Wowsome.Tween {
   public class WBezierCurve {
     public static Vector2 Quadratic(Vector2 p0, Vector2 p1, Vector2 p2, float t) {
       float u = 1 - t;

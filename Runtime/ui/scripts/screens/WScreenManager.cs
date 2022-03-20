@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Wowsome.Core;
-using Wowsome.Tween;
 
 namespace Wowsome.UI {
   public class WScreenManager : MonoBehaviour {
@@ -31,18 +30,23 @@ namespace Wowsome.UI {
 
     public Action<ShowEv> OnShow { get; set; }
     public Action<HideEv> OnHide { get; set; }
-    public bool IsTransitioning => _tweener.IsPlaying;
+    public bool IsTransitioning {
+      get {
+        foreach (var kv in _screens) {
+          if (kv.Value.IsTransitioning) return true;
+        }
 
-    [Tooltip("determines how the transition between the screens should be, either in parralel or one at a time")]
-    public TweenerType transitionType;
+        return false;
+      }
+    }
+
     [Tooltip("true = the screens are stackable, false = if it's showing one at a time")]
     public bool isStackable;
     public string onShowTweenId = "onshow";
     public string onHideTweenId = "onhide";
 
     Dictionary<string, WScreen> _screens = new Dictionary<string, WScreen>();
-    Stack<WScreen> _showings = new Stack<WScreen>();
-    CTweenChainer _tweener;
+    List<WScreen> _showings = new List<WScreen>();
     HashSet<IScreenObject> _screenObjects = new HashSet<IScreenObject>();
 
     public void ShowScreen(string screenId, bool flag) {
@@ -59,8 +63,6 @@ namespace Wowsome.UI {
 
     public void InitScreenManager(ISceneStarter sceneStarter) {
       var screens = GetComponentsInChildren<WScreen>(true);
-      // instantiate the tweener
-      _tweener = new CTweenChainer(transitionType);
       // setup the components
       for (int i = 0; i < screens.Length; ++i) {
         WScreen screen = screens[i];
@@ -81,7 +83,7 @@ namespace Wowsome.UI {
         if (view.isDefault) {
           ShowView(view, true);
         } else {
-          view.Visible = false;
+          view.IsVisible = false;
         }
       }
     }
@@ -99,8 +101,6 @@ namespace Wowsome.UI {
     }
 
     public void UpdateScreenManager(float dt) {
-      _tweener.Update(dt);
-
       foreach (IScreenObject so in _screenObjects) {
         so.UpdateScreenObject(dt);
       }
@@ -112,72 +112,43 @@ namespace Wowsome.UI {
 
     bool TryShow(WScreen view, bool flag) {
       // dont process if the flag is same as the visibility
-      if (view.Visible == flag) return false;
-      // or if the tweener is currently playing and it's not stackable
+      if (view.IsVisible == flag) return false;
+      // or if the screen is currently transitioning and it's not stackable
       if (IsTransitioning && !isStackable) return false;
       // check whether the view manager is not stackable
       if (!isStackable && flag) {
-        // hide the current showing if so
+        // hide the last showing
         if (_showings.Count > 0) {
-          ShowView(_showings.Peek(), false);
+          ShowView(_showings.Last(), false);
         }
       }
       // finally, show time
       ShowView(view, flag);
+
       return true;
     }
 
     void ShowView(WScreen screen, bool flag) {
-      // get the tween
-      HashSet<ITween> tweens = new HashSet<ITween>();
-      string tweenId = flag ? onShowTweenId : onHideTweenId;
-      foreach (ITween viewTween in screen.Tweens) {
-        if (viewTween.TweenId.CompareStandard(tweenId)) tweens.Add(viewTween);
+      // set visibly on appear
+      if (flag) {
+        OnShowScreen(screen.id, ShowState.WillShow);
+      } else {
+        OnHideScreen(screen.id, HideState.WillHide);
       }
-      // check if the tween exists
-      if (tweens.Count > 0) {
-        // set visibly on appear
-        if (flag) {
-          screen.Visible = true;
-          OnShowScreen(screen.id, ShowState.WillShow);
+      // show the screen
+      screen.SetShow(flag, () => {
+        // hide on did disappear
+        if (!flag) {
+          OnHideScreen(screen.id, HideState.DidHide);
         } else {
-          OnHideScreen(screen.id, HideState.WillHide);
+          OnShowScreen(screen.id, ShowState.DidShow);
         }
-        // add to the chainer and play the hide/show tween
-        _tweener.PlayOnly(tweens, () => {
-          // hide on did disappear
-          if (!flag) {
-            screen.Visible = false;
-            OnHideScreen(screen.id, HideState.DidHide);
-          } else {
-            OnShowScreen(screen.id, ShowState.DidShow);
-          }
-        });
-      }
-      // otherwise if no tweens, just set the visibility directly
-      else {
-        screen.Visible = flag;
-        // broadcast event
-        if (flag)
-          OnShowScreen(screen.id);
-        else
-          OnHideScreen(screen.id);
-      }
-      // add the view to the showing stack if flag is true
+      });
+      // add the view to the showing list if flag is true
       if (flag)
-        _showings.Push(screen);
+        _showings.Add(screen);
       else
-        _showings.Pop();
-    }
-
-    void OnHideScreen(string screenId) {
-      OnHideScreen(screenId, HideState.WillHide);
-      OnHideScreen(screenId, HideState.DidHide);
-    }
-
-    void OnShowScreen(string screenId) {
-      OnShowScreen(screenId, ShowState.WillShow);
-      OnShowScreen(screenId, ShowState.DidShow);
+        _showings.Remove(screen);
     }
 
     void OnShowScreen(string screenId, ShowState state) {

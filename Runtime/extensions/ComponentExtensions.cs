@@ -105,5 +105,23 @@ namespace Wowsome {
         list.Add(comp);
       }
     }
+
+    public static T GetNearestDistance<T>(this IList<T> list, Vector2 pos) where T : Component {
+      if (list.IsEmpty()) return null;
+
+      T nearest = list.First();
+      float distance = Vector2.Distance(pos, nearest.WorldPos());
+
+      foreach (T comp in list) {
+        float d = Vector2.Distance(pos, comp.WorldPos());
+
+        if (d < distance) {
+          distance = d;
+          nearest = comp;
+        }
+      }
+
+      return nearest;
+    }
   }
 }

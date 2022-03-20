@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Wowsome.Tween;
 
-namespace Wowsome.Anim {
-  public static class WAnimFactory {
+namespace Wowsome.Tween {
+  public static class WTweenFactory {
     public class PulseOptions {
       public Vector2 InitScale { get; set; } = Vector2.one;
       public float ScaleDelta { get; set; } = .05f;
