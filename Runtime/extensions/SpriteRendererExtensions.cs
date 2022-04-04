@@ -147,6 +147,12 @@ namespace Wowsome {
       return renderer;
     }
 
+    public static SpriteRenderer SetParent(this SpriteRenderer renderer, Transform parent) {
+      renderer.transform.SetParent(parent);
+
+      return renderer;
+    }
+
     public static Vector3 Size(this SpriteRenderer renderer) => renderer.bounds.size;
 
     public static float Width(this SpriteRenderer renderer) => renderer.Size().x;
