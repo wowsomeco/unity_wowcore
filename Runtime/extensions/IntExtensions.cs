@@ -60,5 +60,9 @@ namespace Wowsome {
     public static int Add(this int i, int delta) {
       return i + delta;
     }
+
+    public static bool IsEven(this int i) => i % 2 == 0;
+
+    public static bool IsOdd(this int i) => !i.IsEven();
   }
 }
