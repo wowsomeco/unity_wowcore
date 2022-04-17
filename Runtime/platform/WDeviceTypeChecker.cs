@@ -14,12 +14,12 @@ namespace Wowsome {
   public static class WDeviceTypeChecker {
     public static WDeviceType GetDeviceType() {
 #if UNITY_IOS
-      bool deviceIsIpad = UnityEngine.iOS.Device.generation.ToString().Contains("iPad");
+      bool deviceIsIpad = Device.generation.ToString().Contains("iPad");
       if (deviceIsIpad) {
         return WDeviceType.Tablet;
       }
 
-      bool deviceIsIphone = UnityEngine.iOS.Device.generation.ToString().Contains("iPhone");
+      bool deviceIsIphone = Device.generation.ToString().Contains("iPhone");
       if (deviceIsIphone) {
         return WDeviceType.Phone;
       }
