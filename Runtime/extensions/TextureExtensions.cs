@@ -64,5 +64,13 @@ namespace Wowsome {
     public static Color SetAlpha(this Color col, float a) {
       return new Color(col.r, col.g, col.b, a);
     }
+
+    public static bool IsTransparent(this Color32 c) {
+      return c.a == 0;
+    }
+
+    public static Color32 WithAlpha(this Color32 color, byte a) {
+      return new Color32(color.r, color.g, color.b, a);
+    }
   }
 }
