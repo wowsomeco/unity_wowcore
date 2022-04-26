@@ -158,5 +158,22 @@ namespace Wowsome {
     public static float Width(this SpriteRenderer renderer) => renderer.Size().x;
 
     public static float Height(this SpriteRenderer renderer) => renderer.Size().y;
+
+    public static SpriteRenderer LookAt(this SpriteRenderer renderer, Vector2 worldPos, float angleOffset = 0f) {
+      Vector2 dir = worldPos - renderer.WorldPos().ToVector2();
+
+      float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+      angle += angleOffset;
+
+      renderer.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
+      return renderer;
+    }
+
+    public static bool IsWithinDistance(this SpriteRenderer renderer, Vector2 worldPos, float maxLimit) {
+      float distance = Vector2.Distance(renderer.WorldPos(), worldPos);
+
+      return distance < maxLimit;
+    }
   }
 }

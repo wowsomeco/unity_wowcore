@@ -130,6 +130,12 @@ namespace Wowsome {
 
       return new Vector2(x, y);
     }
+
+    public static float InverseLerp(Vector2 a, Vector2 b, Vector2 v) {
+      Vector2 ab = b - a;
+      Vector2 av = v - a;
+      return Vector2.Dot(av, ab) / Vector2.Dot(ab, ab);
+    }
   }
 
   public static class Vector2IntExt {
