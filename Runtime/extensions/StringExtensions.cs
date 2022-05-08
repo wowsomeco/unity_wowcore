@@ -12,7 +12,7 @@ namespace Wowsome {
 
   public static class StringExt {
     public static bool IsEqual(this string lhs, string rhs) {
-      //check length first, for faster comparison
+      // check length first, for faster comparison
       if (lhs.Length == rhs.Length) {
         if (string.Compare(lhs, rhs, true) == 0) {
           return true;
