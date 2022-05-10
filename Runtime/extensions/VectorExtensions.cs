@@ -134,7 +134,9 @@ namespace Wowsome {
     public static float InverseLerp(Vector2 a, Vector2 b, Vector2 v) {
       Vector2 ab = b - a;
       Vector2 av = v - a;
-      return Vector2.Dot(av, ab) / Vector2.Dot(ab, ab);
+
+      float t = Vector2.Dot(av, ab) / Vector2.Dot(ab, ab);
+      return t.Clamp(0f, 1f);
     }
   }
 
