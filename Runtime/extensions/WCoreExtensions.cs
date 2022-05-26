@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using Wowsome.Audio;
+using Wowsome.Core;
 using Wowsome.Tasks;
 
 namespace Wowsome {
@@ -15,6 +17,10 @@ namespace Wowsome {
 
     public static void RestartScene(this WTaskQueue taskLoader, Action act = null) {
       taskLoader.LoadScene(SceneManager.GetActiveScene().name, act);
+    }
+
+    public static WSfxManager GetSfxManager(this WEngine engine) {
+      return engine.GetSystem<WAudioSystem>().GetManager<WSfxManager>();
     }
   }
 }
