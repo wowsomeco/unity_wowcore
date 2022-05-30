@@ -18,7 +18,7 @@ namespace Wowsome {
     public sealed class SceneStarter : MonoBehaviour, ISceneStarter {
       public GameObject[] m_sceneControllerObjs;
 
-      HashSet<ISceneController> m_controllers = new HashSet<ISceneController>();
+      HashSet<ISceneController> _controllers = new HashSet<ISceneController>();
 
       #region ISceneStarter
       public WEngine Engine { get; private set; }
@@ -26,7 +26,7 @@ namespace Wowsome {
       public StartSceneController OnStartSceneController { get; set; }
 
       public T GetController<T>(bool assertIfNull = true) where T : class, ISceneController {
-        foreach (ISceneController controller in m_controllers) {
+        foreach (ISceneController controller in _controllers) {
           T t = controller as T;
           if (null != t) {
             return t;
@@ -46,15 +46,15 @@ namespace Wowsome {
           ISceneController sceneController = m_sceneControllerObjs[i].GetComponent<ISceneController>();
           if (null != sceneController) {
             //only add if it doesnt exist yet
-            if (!m_controllers.Contains(sceneController)) {
-              m_controllers.Add(sceneController);
+            if (!_controllers.Contains(sceneController)) {
+              _controllers.Add(sceneController);
             }
           } else {
             Debug.LogError("scene controller objects " + m_sceneControllerObjs[i] + " is not a scene controller");
           }
         }
 
-        foreach (ISceneController controller in m_controllers) {
+        foreach (ISceneController controller in _controllers) {
           controller.InitSceneController(this);
         }
 
@@ -63,7 +63,7 @@ namespace Wowsome {
       }
 
       void Update() {
-        foreach (ISceneController controller in m_controllers) {
+        foreach (ISceneController controller in _controllers) {
           controller.UpdateSceneController(Time.deltaTime);
         }
       }
