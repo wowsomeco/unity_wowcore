@@ -40,7 +40,11 @@ namespace Wowsome.Tween {
   /// The base class of any different Interpolation with various data types below.  
   /// sub-class it accordingly to create your own custom logic.
   /// </summary>
-  public abstract class Interpolation {
+  public abstract class InterpolationBase<T> {
+    /// <summary>
+    /// The current interpolation value to be observed
+    /// </summary>    
+    public Action<T> OnLerp { get; set; }
     /// <summary>
     /// The percentage from 0 to 100
     /// </summary>    
@@ -58,17 +62,27 @@ namespace Wowsome.Tween {
     /// </summary>    
     public Action OnStart { get; set; }
 
-    Timing _timing = null;
+    protected T _from;
+    protected T _to;
+
     Timer _timer = null;
+    Timing _timing = null;
     Timer _delay = null;
     int _counter = 0;
 
-    public Interpolation(Timing timing) {
+    public InterpolationBase(Timing timing, T f, T t, bool autoPlay = false) {
       Percent = new WObservable<int>(0);
       Time = new WObservable<float>(0f);
 
       _timing = timing;
+
+      _from = f;
+      _to = t;
+
+      if (autoPlay) Start();
     }
+
+    public abstract T Lerp();
 
     public void Start() {
       _counter = 0;
@@ -76,7 +90,27 @@ namespace Wowsome.Tween {
       if (_timing.dly > 0f) _delay = new Timer((float)_timing.dly);
     }
 
-    protected bool Update(float dt) {
+    /// <summary>
+    /// Updates and performs OnLerp automagically.    
+    /// </summary>
+    public bool Run(float dt) {
+      if (Update(dt)) {
+        T cur = Lerp();
+        OnLerp?.Invoke(cur);
+
+        bool stillUpdating = null != _timer;
+
+        if (!stillUpdating) {
+          OnDone?.Invoke();
+        }
+
+        return stillUpdating;
+      }
+
+      return false;
+    }
+
+    bool Update(float dt) {
       if (null != _delay) {
         if (!_delay.UpdateTimer(dt)) {
           _delay = null;
@@ -94,14 +128,14 @@ namespace Wowsome.Tween {
           if (_counter <= _timing.repeat) {
             _timer.Reset();
           } else {
-            return SetDone();
+            return Finalize();
           }
         } else if (_timing.repeat < 0) {
           // restart if it needs to repeat forever
           Start();
         } else {
           // if it doesnt need to repeat, set done immediately
-          return SetDone();
+          return Finalize();
         }
       }
 
@@ -117,47 +151,13 @@ namespace Wowsome.Tween {
       return _timer != null;
     }
 
-    bool SetDone() {
+    bool Finalize() {
       _timer = null;
 
       Time.Next(1f);
       Percent.Next(100);
 
-      OnDone?.Invoke();
-
       return true;
-    }
-  }
-
-  public abstract class InterpolationBase<T> : Interpolation {
-    /// <summary>
-    /// The current interpolation value to be observed
-    /// </summary>    
-    public Action<T> OnLerp { get; set; }
-
-    protected T _from;
-    protected T _to;
-
-    public InterpolationBase(Timing timing, T f, T t, bool autoPlay = false) : base(timing) {
-      _from = f;
-      _to = t;
-
-      if (autoPlay) Start();
-    }
-
-    public abstract T Lerp();
-
-    /// <summary>
-    /// Updates and performs OnLerp automagically.    
-    /// </summary>
-    public bool Run(float dt) {
-      if (Update(dt)) {
-        T cur = Lerp();
-        OnLerp?.Invoke(cur);
-        return true;
-      }
-
-      return false;
     }
   }
 
