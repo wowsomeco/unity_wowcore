@@ -95,5 +95,17 @@ namespace Wowsome {
       float curRotation = t.Rotation() + delta;
       return t.SetRotation(curRotation);
     }
+
+    public static Transform FlipX(this Transform t) {
+      Vector2 curScale = t.localScale;
+
+      return t.Scale(new Vector2(curScale.x.Multiply(-1f), curScale.y));
+    }
+
+    public static Transform FlipY(this Transform t) {
+      Vector2 curScale = t.localScale;
+
+      return t.Scale(new Vector2(curScale.x, curScale.y.Multiply(-1f)));
+    }
   }
 }
