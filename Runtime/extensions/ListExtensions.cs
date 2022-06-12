@@ -155,12 +155,16 @@ namespace Wowsome {
       return item;
     }
 
-    public static bool RemoveLast<T>(this IList<T> list) {
+    public static T RemoveLast<T>(this IList<T> list) {
       if (list.Count > 0) {
+        T item = list.Last();
+
         list.RemoveAt(list.Count - 1);
-        return true;
+
+        return item;
       }
-      return false;
+
+      return default(T);
     }
 
     public static T TryGet<T>(this IList<T> list, int idx) {

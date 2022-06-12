@@ -25,7 +25,7 @@ namespace Wowsome {
       }
 #endif
 
-      float aspectRatio = Mathf.Max(Screen.width, Screen.height) / Mathf.Min(Screen.width, Screen.height);
+      float aspectRatio = ScreenExtensions.AspectRatio();
       bool isTablet = (DeviceDiagonalSizeInInches() > 6.5f && aspectRatio < 2f);
 
       return isTablet ? WDeviceType.Tablet : WDeviceType.Phone;

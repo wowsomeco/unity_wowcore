@@ -3,14 +3,18 @@ using UnityEngine.UI;
 
 namespace Wowsome {
   public static class ImageExtensions {
-    public static void SetNativeSizeWithMul(this Image img, float multiplier) {
+    public static Image SetNativeSizeWithMul(this Image img, float multiplier) {
       img.SetNativeSize();
       img.rectTransform.MultiplySize(multiplier);
+
+      return img;
     }
 
-    public static void SetMaxSize(this Image img, float maxSize) {
+    public static Image SetMaxSize(this Image img, float maxSize) {
       img.SetNativeSize();
       img.rectTransform.SetMaxSize(maxSize);
+
+      return img;
     }
 
     public static void SetColor(this Image img, float[] rgba) {
@@ -34,9 +38,11 @@ namespace Wowsome {
       return img;
     }
 
-    public static void AddAlpha(this Image img, float delta) {
+    public static Image AddAlpha(this Image img, float delta) {
       float cur = img.Alpha();
       img.SetAlpha(cur + delta);
+
+      return img;
     }
 
     public static float Alpha(this Image img) {
@@ -71,32 +77,40 @@ namespace Wowsome {
       return img;
     }
 
-    public static void SetParent(this Image img, RectTransform parent) {
+    public static Image SetParent(this Image img, RectTransform parent) {
       img.rectTransform.SetParent(parent);
+      return img;
     }
 
     public static float Width(this Image img) {
       return img.rectTransform.Width();
     }
 
-    public static void SetWidth(this Image img, float w) {
+    public static Image SetWidth(this Image img, float w) {
       img.rectTransform.SetWidth(w);
+      return img;
     }
 
     public static float Height(this Image img) {
       return img.rectTransform.Height();
     }
 
-    public static void SetHeight(this Image img, float h) {
+    public static Image SetHeight(this Image img, float h) {
       img.rectTransform.SetHeight(h);
+      return img;
+    }
+
+    public static Vector2 Size(this Image img) {
+      return img.rectTransform.Size();
+    }
+
+    public static Image SetSize(this Image img, Vector2 size) {
+      img.rectTransform.SetSize(size);
+      return img;
     }
 
     public static Image Normalize(this Image img) {
-      img.SetAlpha(1f);
-      img.SetRotation(0f);
-      img.SetScale(1f);
-
-      return img;
+      return img.SetAlpha(1f).SetRotation(0f).SetScale(1f);
     }
   }
 }

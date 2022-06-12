@@ -153,6 +153,12 @@ namespace Wowsome {
       return renderer;
     }
 
+    public static SpriteRenderer SetSortingOrder(this SpriteRenderer renderer, int sortOrder) {
+      renderer.sortingOrder = sortOrder;
+
+      return renderer;
+    }
+
     public static Vector3 Size(this SpriteRenderer renderer) => renderer.bounds.size;
 
     public static float Width(this SpriteRenderer renderer) => renderer.Size().x;
