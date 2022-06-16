@@ -180,10 +180,10 @@ namespace Wowsome {
       return new List<T>(arr);
     }
 
-    public static string Flatten(this IList<string> strs, char separator = ' ') {
+    public static string Flatten<T>(this IList<T> strs, char separator = ' ') {
       string s = string.Empty;
       strs.LoopWithPointer((str, idx, first, last) => {
-        s += str;
+        s += str.ToString();
         if (!last) s += separator;
       });
 

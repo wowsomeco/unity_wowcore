@@ -135,7 +135,7 @@ namespace Wowsome {
     public static string ReplaceRandom(this string str, int count, char with) {
       char[] chars = str.ToCharArray();
 
-      HashSet<int> rands = MathExtensions.GetUniqueRandomValue(0, str.Length, count);
+      var rands = MathExtensions.GetUniqueRandomValue(0, str.Length, count);
       foreach (int idx in rands) {
         chars[idx] = with;
       }
