@@ -82,7 +82,7 @@ namespace Wowsome {
     }
 
     public static SpriteRenderer SetScale(this SpriteRenderer renderer, float scale) {
-      renderer.transform.Scale(scale);
+      renderer.transform.SetScale(scale);
 
       return renderer;
     }
@@ -93,7 +93,7 @@ namespace Wowsome {
 
     public static SpriteRenderer AddScale(this SpriteRenderer renderer, Vector2 delta) {
       Vector2 newScale = renderer.Scale().Add(delta);
-      renderer.transform.Scale(newScale);
+      renderer.transform.SetScale(newScale);
 
       return renderer;
     }

@@ -67,18 +67,30 @@ namespace Wowsome {
       return t;
     }
 
-    public static Transform Scale(this Transform t, Vector2 scale) {
+    public static Transform SetScale(this Transform t, Vector2 scale) {
       t.localScale = new Vector3(scale.x, scale.y, t.localScale.z);
 
       return t;
     }
 
-    public static Transform Scale(this Transform t, float scale) {
-      return t.Scale(new Vector2(scale, scale));
+    public static Transform SetScale(this Transform t, float scale) {
+      return t.SetScale(new Vector2(scale, scale));
+    }
+
+    public static Transform SetScaleX(this Transform t, float x) {
+      t.localScale = new Vector3(x, t.localScale.y, t.localScale.z);
+
+      return t;
+    }
+
+    public static Transform SetScaleY(this Transform t, float y) {
+      t.localScale = new Vector3(t.localScale.x, y, t.localScale.z);
+
+      return t;
     }
 
     public static Transform AddScale(this Transform t, float delta) {
-      return t.Scale(t.localScale + new Vector3(delta, delta, 0f));
+      return t.SetScale(t.localScale + new Vector3(delta, delta, 0f));
     }
 
     public static float Rotation(this Transform t) {
@@ -99,13 +111,13 @@ namespace Wowsome {
     public static Transform FlipX(this Transform t) {
       Vector2 curScale = t.localScale;
 
-      return t.Scale(new Vector2(curScale.x.Multiply(-1f), curScale.y));
+      return t.SetScale(new Vector2(curScale.x.Multiply(-1f), curScale.y));
     }
 
     public static Transform FlipY(this Transform t) {
       Vector2 curScale = t.localScale;
 
-      return t.Scale(new Vector2(curScale.x, curScale.y.Multiply(-1f)));
+      return t.SetScale(new Vector2(curScale.x, curScale.y.Multiply(-1f)));
     }
   }
 }

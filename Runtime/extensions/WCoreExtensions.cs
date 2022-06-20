@@ -19,8 +19,16 @@ namespace Wowsome {
       taskLoader.LoadScene(SceneManager.GetActiveScene().name, act);
     }
 
+    public static WAudioSystem GetAudioSystem(this WEngine engine) {
+      return engine.GetSystem<WAudioSystem>();
+    }
+
     public static WSfxManager GetSfxManager(this WEngine engine) {
-      return engine.GetSystem<WAudioSystem>().GetManager<WSfxManager>();
+      return engine.GetAudioSystem().GetManager<WSfxManager>();
+    }
+
+    public static WBgmManager GetBgmManager(this WEngine engine) {
+      return engine.GetAudioSystem().GetManager<WBgmManager>();
     }
   }
 }

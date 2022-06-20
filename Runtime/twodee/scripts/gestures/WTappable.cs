@@ -43,8 +43,8 @@ namespace Wowsome.TwoDee {
     }
 
     public void AddScaleListener(float startTapScale, float endTapScale = 1f) {
-      OnStartTap += _ => transform.Scale(startTapScale);
-      OnEndTap += _ => transform.Scale(endTapScale);
+      OnStartTap += _ => transform.SetScale(startTapScale);
+      OnEndTap += _ => transform.SetScale(endTapScale);
     }
 
     public void OnPointerDown(PointerEventData eventData) {
