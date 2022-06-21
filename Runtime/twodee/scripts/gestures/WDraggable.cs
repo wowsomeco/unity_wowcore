@@ -116,7 +116,7 @@ namespace Wowsome.TwoDee {
     }
 
     void SetDragPos(PointerEventData ed) {
-      if (!IsFocus.Value) return;
+      if (!IsFocus.Value || !_isDragged) return;
 
       Vector2 worldPos = _camera.ScreenToWorldPoint(ed.position);
 
