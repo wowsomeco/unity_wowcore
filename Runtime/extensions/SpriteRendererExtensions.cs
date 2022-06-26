@@ -136,6 +136,12 @@ namespace Wowsome {
       return renderer;
     }
 
+    public static SpriteRenderer SetLocalPos(this SpriteRenderer renderer, Vector2 localPos) {
+      renderer.transform.SetLocalPos(localPos);
+
+      return renderer;
+    }
+
     public static SpriteRenderer AddPos(this SpriteRenderer renderer, Vector2 delta) {
       renderer.transform.AddPos(delta);
       return renderer;
