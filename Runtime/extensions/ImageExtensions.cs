@@ -109,6 +109,11 @@ namespace Wowsome {
       return img;
     }
 
+    public static Image SetSprite(this Image img, Sprite spr) {
+      img.sprite = spr;
+      return img;
+    }
+
     public static Image Normalize(this Image img) {
       return img.SetAlpha(1f).SetRotation(0f).SetScale(1f);
     }

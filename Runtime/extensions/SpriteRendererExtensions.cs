@@ -153,8 +153,20 @@ namespace Wowsome {
       return renderer;
     }
 
+    public static SpriteRenderer SetLocalX(this SpriteRenderer renderer, float x) {
+      renderer.transform.SetLocalX(x);
+
+      return renderer;
+    }
+
     public static SpriteRenderer SetY(this SpriteRenderer renderer, float y) {
       renderer.transform.SetY(y);
+
+      return renderer;
+    }
+
+    public static SpriteRenderer SetLocalY(this SpriteRenderer renderer, float y) {
+      renderer.transform.SetLocalY(y);
 
       return renderer;
     }

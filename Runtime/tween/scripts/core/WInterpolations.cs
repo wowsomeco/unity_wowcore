@@ -87,7 +87,13 @@ namespace Wowsome.Tween {
     public void Start() {
       _counter = 0;
       _timer = new Timer((float)_timing.dur);
-      if (_timing.dly > 0f) _delay = new Timer((float)_timing.dly);
+      // check if there is delay, if so create a timer for it
+      // otherwise, invoke the OnStart immediately
+      if (_timing.dly > 0f) {
+        _delay = new Timer((float)_timing.dly);
+      } else {
+        OnStart?.Invoke();
+      }
     }
 
     /// <summary>
