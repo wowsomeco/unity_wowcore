@@ -3,12 +3,13 @@
 namespace Wowsome {
   public static class CameraExtensions {
     public static Bounds OrthoBounds(this Camera camera) {
-      float screenAspect = (float)Screen.width / Screen.height;
-      float cameraHeight = camera.orthographicSize * 2;
+      float size = camera.orthographicSize * 2;
+      float width = size * (float)Screen.width / Screen.height;
+      float height = size;
 
       Bounds bounds = new Bounds(
         camera.transform.position,
-        new Vector3(cameraHeight * screenAspect, cameraHeight, 0)
+        new Vector3(width, height, 0)
       );
 
       return bounds;
