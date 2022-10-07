@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace Wowsome {
   public static class FloatExt {
+    public static bool IsWithin(this float v, float min, float max) {
+      return v > min && v < max;
+    }
+
     public static float GetNearestPointf(this float candidate, IList<float> lists) {
       float nearest = lists[0];
       for (int i = 0; i < lists.Count; ++i) {
