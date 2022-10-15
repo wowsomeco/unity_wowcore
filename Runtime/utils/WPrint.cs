@@ -21,7 +21,7 @@ namespace Wowsome {
 
     public static void Log(Func<string> color, params object[] msg) {
 #if UNITY_EDITOR
-      string str = msg.Map(x => x.ToString()).Flatten();
+      string str = msg.Map(x => x != null ? x.ToString() : "null").Flatten();
       Txt t = new Txt(str, color?.Invoke());
       Debug.Log(t.GetText);
 #endif

@@ -13,7 +13,7 @@ namespace Wowsome.Tween {
     public float GetCurrent(float t) => Mathf.Lerp(From, To, t);
   }
 
-  public class WAnimPingPong {
+  public class WPingPong {
     public Action<float> Current { get; set; }
     public Action OnDone { get; set; }
     public Action OnSwitch { get; set; }
@@ -23,14 +23,14 @@ namespace Wowsome.Tween {
     bool _isBackwards = false;
     ObservableTimer _timer = null;
 
-    public WAnimPingPong(float f, float t, float duration, int count = -1) : this(new PingPongOptions {
+    public WPingPong(float f, float t, float duration, int count = -1) : this(new PingPongOptions {
       From = f,
       To = t,
       Duration = duration,
       Count = count
     }) { }
 
-    public WAnimPingPong(PingPongOptions options) {
+    public WPingPong(PingPongOptions options) {
       _options = options;
 
       Start();
@@ -100,7 +100,7 @@ namespace Wowsome.Tween {
     public Action<float> Current { get; set; }
     public Action OnDone { get; set; }
 
-    WAnimPingPong _pingPong = null;
+    WPingPong _pingPong = null;
     InterpolationFloat _smoother = null;
     PingPongOptions _options = null;
     InitOptions _initOptions = null;
@@ -139,7 +139,7 @@ namespace Wowsome.Tween {
 
     void SmoothStart() {
       Smoothen(_initOptions.Value, _options.From, () => {
-        _pingPong = new WAnimPingPong(_options);
+        _pingPong = new WPingPong(_options);
 
         _pingPong.Current += c => {
           _cur = c;

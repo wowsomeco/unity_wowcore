@@ -125,8 +125,12 @@ namespace Wowsome {
     }
 
     public static Vector2 Randomize(this Vector2 v, float range = 1f) {
-      float x = v.x.Multiply(FloatExt.Random(-range, range));
-      float y = v.y.Multiply(FloatExt.Random(-range, range));
+      return v.Randomize(-range, range);
+    }
+
+    public static Vector2 Randomize(this Vector2 v, float from, float to) {
+      float x = v.x.Multiply(FloatExt.Random(from, to));
+      float y = v.y.Multiply(FloatExt.Random(from, to));
 
       return new Vector2(x, y);
     }

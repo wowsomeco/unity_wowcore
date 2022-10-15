@@ -123,5 +123,9 @@ namespace Wowsome {
 
       return nearest;
     }
+
+    public static List<T> FindAllWithinDistance<T>(this List<T> list, Vector2 pos, float maxDistance) where T : Component {
+      return list.FindAll(x => Vector2.Distance(x.WorldPos(), pos) < maxDistance);
+    }
   }
 }
