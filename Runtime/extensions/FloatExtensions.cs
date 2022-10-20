@@ -45,6 +45,10 @@ namespace Wowsome {
       return angle;
     }
 
+    public static float NormalizeAngle(this float angle) {
+      return angle < 0f ? angle + 360f : angle;
+    }
+
     public static float AngleBetween(float x, float y, float angleOffset = 0f) {
       float angle = Mathf.Atan2(y, x) * Mathf.Rad2Deg + angleOffset;
       if (angle < 0f) {
@@ -67,6 +71,10 @@ namespace Wowsome {
 
     public static float Random(float v) {
       return Random(-v, v);
+    }
+
+    public static float GetFirstHorizontalX(int totalCount, float itemWidth, float spacing) {
+      return -(totalCount * itemWidth + totalCount * spacing).Half() + itemWidth.Half() + spacing.Half();
     }
   }
 }

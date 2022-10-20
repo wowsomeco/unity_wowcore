@@ -217,11 +217,26 @@ namespace Wowsome {
     }
 
     public static string RemoveNonLetters(this string str) {
+      if (str.IsEmpty()) return str;
+
       string s = string.Empty;
       foreach (char ch in str) {
         // include whitespace too for now
         if (char.IsLetter(ch) || char.IsWhiteSpace(ch)) s += ch;
       }
+
+      return s.Trim();
+    }
+
+    public static string RemoveNonDigit(this string str) {
+      if (str.IsEmpty()) return str;
+
+      string s = string.Empty;
+      foreach (char ch in str) {
+        // include whitespace too for now
+        if (char.IsDigit(ch)) s += ch;
+      }
+
       return s.Trim();
     }
 

@@ -30,6 +30,14 @@ namespace Wowsome.Tween {
       Count = count
     }) { }
 
+    public WPingPong(float f, float t, float duration, float delay, int count = -1) : this(new PingPongOptions {
+      From = f,
+      To = t,
+      Duration = duration,
+      Delay = delay,
+      Count = count
+    }) { }
+
     public WPingPong(PingPongOptions options) {
       _options = options;
 

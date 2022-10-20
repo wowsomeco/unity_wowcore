@@ -32,10 +32,21 @@ namespace Wowsome {
       return (val >= lower && val <= upper);
     }
 
-    public static string SecToString(this int sec) {
+    public static string SecToClockDigit(this int sec) {
       int minutes = (sec % 3600) / 60;
       int seconds = (sec % 60);
+
       return string.Format("{0}:{1}", minutes, seconds.ToString("00"));
+    }
+
+    public static string SecToReadableTime(this int sec) {
+      int minutes = (sec % 3600) / 60;
+      int seconds = (sec % 60);
+
+      string m = minutes > 0 ? $"{minutes}m " : "";
+      string s = seconds > 0 ? $"{seconds}s" : "";
+
+      return m + s;
     }
 
     public static int PrevPowerOfTwo(this int v) {
@@ -64,5 +75,22 @@ namespace Wowsome {
     public static bool IsEven(this int i) => i % 2 == 0;
 
     public static bool IsOdd(this int i) => !i.IsEven();
+
+    public static int GetRandomIdxByWeights(this List<int> weights) {
+      int total = weights.Fold(0, (p, c) => p + c);
+
+      int randomNumber = MathExtensions.RandomBetween(0, total) + 1;
+
+      int accumulatedProbability = 0;
+
+      for (int i = 0; i < weights.Count; i++) {
+        accumulatedProbability += weights[i];
+
+        if (randomNumber <= accumulatedProbability)
+          return i;
+      }
+
+      return 0;
+    }
   }
 }

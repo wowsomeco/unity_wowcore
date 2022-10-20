@@ -236,5 +236,12 @@ namespace Wowsome {
 
       return false;
     }
+
+    public static bool TrueIf<T>(this List<T> list, Func<T, bool> predicate) {
+      foreach (var item in list)
+        if (predicate(item)) return true;
+
+      return false;
+    }
   }
 }
