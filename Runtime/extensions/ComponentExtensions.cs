@@ -29,6 +29,8 @@ namespace Wowsome {
       return c;
     }
 
+    public static bool IsVisible(this Component c) => c.gameObject.activeSelf;
+
     public static List<T> GetComponentsWithoutSelf<T>(this Component obj, bool includeInactive) where T : Component {
       List<T> components = new List<T>();
       var comps = obj.GetComponentsInChildren<T>(includeInactive);

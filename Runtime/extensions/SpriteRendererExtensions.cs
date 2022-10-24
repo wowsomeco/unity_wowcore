@@ -45,8 +45,10 @@ namespace Wowsome {
       return sr.bounds.Contains(point.ToVector3().SetZ(sr.transform.position.z));
     }
 
-    public static bool Contains(this IList<SpriteRenderer> renderers, Vector2 point) {
+    public static bool Contains(this IList<SpriteRenderer> renderers, Vector2 point, bool shouldActive = false) {
       foreach (SpriteRenderer sr in renderers) {
+        if (shouldActive && !sr.IsVisible()) continue;
+
         if (sr.Contains(point)) return true;
       }
 
