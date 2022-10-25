@@ -1,15 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Wowsome {
-  public enum ComparisonType {
-    Match,
-    Contain,
-    StartsWith,
-    EndsWith,
-    NotEqual
-  }
-
   public static class StringExt {
     public static bool IsEqual(this string lhs, string rhs) {
       // check length first, for faster comparison
@@ -18,23 +11,6 @@ namespace Wowsome {
           return true;
         }
       }
-      return false;
-    }
-
-    public static bool Matches(this string lhs, string rhs, ComparisonType type) {
-      switch (type) {
-        case ComparisonType.Match:
-          return lhs.IsEqual(rhs);
-        case ComparisonType.Contain:
-          return lhs.Contains(rhs);
-        case ComparisonType.StartsWith:
-          return lhs.StartsWith(rhs, StringComparison.Ordinal);
-        case ComparisonType.EndsWith:
-          return lhs.EndsWith(rhs, StringComparison.Ordinal);
-        case ComparisonType.NotEqual:
-          return !lhs.IsEqual(rhs);
-      }
-
       return false;
     }
 
@@ -287,6 +263,10 @@ namespace Wowsome {
       }
 
       return s;
+    }
+
+    public static string ShortGuid() {
+      return Regex.Replace(Convert.ToBase64String(Guid.NewGuid().ToByteArray()), "[/+=]", "");
     }
   }
 }
