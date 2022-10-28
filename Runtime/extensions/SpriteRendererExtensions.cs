@@ -12,10 +12,6 @@ namespace Wowsome {
       return b;
     }
 
-    public static Vector2 WorldSize(this SpriteRenderer s, bool roundDown = true) {
-      return s.bounds.size;
-    }
-
     public static SpriteRenderer AnchorToCamera(this SpriteRenderer s, Camera c, Vector3 screenAnchor) {
       Vector2 pos = c.ViewportToWorldPoint(screenAnchor);
       return s.SetPos(pos);
