@@ -73,8 +73,14 @@ namespace Wowsome {
       return Random(-v, v);
     }
 
-    public static float GetFirstHorizontalX(int totalCount, float itemWidth, float spacing) {
+    public static float FirstHorizontalCenterX(int totalCount, float itemWidth, float spacing) {
       return -(totalCount * itemWidth + totalCount * spacing).Half() + itemWidth.Half() + spacing.Half();
+    }
+
+    public static float FirstHorizontalRightX(float containerWidth, int totalCount, float itemWidth, float spacing) {
+      float x = containerWidth.Half() - (totalCount * itemWidth + totalCount * spacing) + itemWidth.Half() + spacing.Half();
+
+      return x;
     }
   }
 }

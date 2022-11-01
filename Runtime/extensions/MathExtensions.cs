@@ -12,7 +12,20 @@ namespace Wowsome {
     }
 
     public static int RandomBetween(int min, int max) {
-      return GetRandom().Next(min, max);
+      if (min == max) return max;
+
+      int _min = min;
+      int _max = max;
+
+      if (_max < _min) {
+        _min = max;
+        _max = min;
+      } else if (_max - _min == 1) {
+        // if max is just 1 number higher than min, add up 1 number since random.next.max is exclusive
+        _max += 1;
+      }
+
+      return GetRandom().Next(_min, _max);
     }
 
     public static List<int> GetRandomValue(int min, int max, int count) {
