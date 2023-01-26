@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Wowsome {
   public static class MathExtensions {
@@ -71,6 +72,21 @@ namespace Wowsome {
         ++i;
       }
       return randArr;
+    }
+
+    public static List<Vector2> GetPosInCircle(float rad, int count) {
+      List<Vector2> positions = new List<Vector2>();
+
+      count.Loop(i => {
+        float angle = i * Mathf.PI * 2f / count;
+
+        float x = Mathf.Cos(angle) * rad;
+        float y = Mathf.Sin(angle) * rad;
+
+        positions.Add(new Vector2(x, y));
+      });
+
+      return positions;
     }
   }
 }
