@@ -21,5 +21,13 @@ namespace Wowsome {
 
       return new Vector2(width, height);
     }
+
+    public static Vector2 GetAnchoredPos(this Camera cam, Vector2 anchor, Vector2 offset) {
+      Vector2 pos = cam.ViewportToWorldPoint(anchor);
+
+      pos = pos.Add(offset);
+
+      return pos;
+    }
   }
 }

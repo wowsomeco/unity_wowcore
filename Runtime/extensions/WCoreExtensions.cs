@@ -15,6 +15,12 @@ namespace Wowsome {
       taskLoader.Load(tasks);
     }
 
+    public static void LoadPrevScene(this WTaskQueue taskLoader, WEngine engine, Action act = null) {
+      string prevScene = engine.PrevSceneName;
+
+      LoadScene(taskLoader, prevScene, act);
+    }
+
     public static void RestartScene(this WTaskQueue taskLoader, Action act = null) {
       taskLoader.LoadScene(SceneManager.GetActiveScene().name, act);
     }
