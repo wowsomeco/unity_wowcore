@@ -58,6 +58,10 @@ namespace Wowsome.Generic {
       }
     }
 
+    public void Stop() {
+      _curAnim = null;
+    }
+
     public void Update(float dt) {
       if (null != _curAnim) {
         int spriteCount = _curAnim.sprites.Count;
