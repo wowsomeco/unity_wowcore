@@ -243,5 +243,26 @@ namespace Wowsome {
 
       return false;
     }
+
+    public static bool HasDuplicate<T>(this IEnumerable<T> source, out T firstDuplicate) {
+      if (null == source) {
+        firstDuplicate = default(T);
+
+        return false;
+      }
+
+      var checkBuffer = new HashSet<T>();
+      foreach (var t in source) {
+        if (checkBuffer.Add(t)) {
+          continue;
+        }
+
+        firstDuplicate = t;
+        return true;
+      }
+
+      firstDuplicate = default(T);
+      return false;
+    }
   }
 }
