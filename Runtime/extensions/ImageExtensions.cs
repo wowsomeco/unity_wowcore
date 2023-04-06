@@ -58,6 +58,21 @@ namespace Wowsome {
       return img;
     }
 
+    public static Image SetWorldPos(this Image img, Vector2 pos) {
+      img.rectTransform.SetWorldPos(pos);
+      return img;
+    }
+
+    public static Image SetLocalX(this Image img, float x) {
+      img.rectTransform.SetX(x);
+      return img;
+    }
+
+    public static Image SetLocalY(this Image img, float y) {
+      img.rectTransform.SetY(y);
+      return img;
+    }
+
     public static Image SetScale(this Image img, Vector2 scale) {
       img.rectTransform.SetScale(scale);
       return img;

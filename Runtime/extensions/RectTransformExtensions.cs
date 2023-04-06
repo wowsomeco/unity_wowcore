@@ -52,33 +52,47 @@ namespace Wowsome {
 
     #region Position
 
-    public static void SetPos(this RectTransform rt, Vector2 pos) {
+    public static RectTransform SetPos(this RectTransform rt, Vector2 pos) {
       rt.anchoredPosition = pos;
+      return rt;
     }
 
-    public static void SetPos(this RectTransform rt, float[] pos) {
+    public static RectTransform SetPos(this RectTransform rt, float[] pos) {
       rt.SetPos(new Vector2(pos[0], pos[1]));
+      return rt;
     }
 
-    public static void SetPos(this RectTransform rt, List<float> pos) {
+    public static RectTransform SetPos(this RectTransform rt, List<float> pos) {
       rt.SetPos(new Vector2(pos[0], pos[1]));
+      return rt;
     }
 
-    public static void AddPosY(this RectTransform rt, float delta) {
+    public static RectTransform SetWorldPos(this RectTransform rt, Vector2 pos) {
+      rt.transform.SetPos(pos);
+      return rt;
+    }
+
+    public static RectTransform AddPosY(this RectTransform rt, float delta) {
       Vector2 addPos = rt.Pos();
       addPos.y += delta;
       rt.SetPos(addPos);
+
+      return rt;
     }
 
-    public static void AddPosX(this RectTransform rt, float delta) {
+    public static RectTransform AddPosX(this RectTransform rt, float delta) {
       Vector2 addPos = rt.Pos();
       addPos.x += delta;
       rt.SetPos(addPos);
+
+      return rt;
     }
 
-    public static void AddPos(this RectTransform rt, Vector2 offset) {
+    public static RectTransform AddPos(this RectTransform rt, Vector2 offset) {
       Vector2 pos = rt.Pos();
       rt.SetPos(pos + offset);
+
+      return rt;
     }
 
     public static Vector2 Pos(this RectTransform rt) {
@@ -89,20 +103,24 @@ namespace Wowsome {
       return rt.Pos().x;
     }
 
-    public static void SetX(this RectTransform rt, float x) {
+    public static RectTransform SetX(this RectTransform rt, float x) {
       Vector2 pos = rt.Pos();
       pos.x = x;
       rt.SetPos(pos);
+
+      return rt;
     }
 
     public static float Y(this RectTransform rt) {
       return rt.Pos().y;
     }
 
-    public static void SetY(this RectTransform rt, float y) {
+    public static RectTransform SetY(this RectTransform rt, float y) {
       Vector2 pos = rt.Pos();
       pos.y = y;
       rt.SetPos(pos);
+
+      return rt;
     }
 
     #endregion
