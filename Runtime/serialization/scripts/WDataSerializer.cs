@@ -38,6 +38,31 @@ namespace Wowsome.Serialization {
       }
     }
   }
+
+  public class PlayerPrefsSerializer : IDataSerializer {
+    public void Save<T>(T data, string path, bool isPrettyPrint = false) {
+      string strValue = JsonUtility.ToJson(data);
+      PlayerPrefs.SetString(path, strValue);
+    }
+
+    public T Load<T>(string path) {
+      if (!Exists(path)) return default(T);
+
+      string strValue = PlayerPrefs.GetString(path);
+
+      return JsonUtility.FromJson<T>(strValue);
+    }
+
+    public bool Exists(string path) {
+      return PlayerPrefs.HasKey(path);
+    }
+
+    public void Delete(string path) {
+      if (!Exists(path)) return;
+
+      PlayerPrefs.DeleteKey(path);
+    }
+  }
 }
 
 
