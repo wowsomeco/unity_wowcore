@@ -17,6 +17,30 @@ namespace Wowsome {
       return s.SetPos(pos);
     }
 
+    public static Vector2 MidLeftCameraPos(this SpriteRenderer s, Camera c) {
+      Vector2 pos = c.ViewportToWorldPoint(new Vector2(0f, .5f));
+
+      return pos.AddX(-s.Width().Half());
+    }
+
+    public static Vector2 TopCenterCameraPos(this SpriteRenderer s, Camera c) {
+      Vector2 pos = c.ViewportToWorldPoint(new Vector2(0.5f, 1f));
+
+      return pos.AddY(s.Height().Half());
+    }
+
+    public static Vector2 BottomCenterCameraPos(this SpriteRenderer s, Camera c) {
+      Vector2 pos = c.ViewportToWorldPoint(new Vector2(0.5f, 0f));
+
+      return pos.AddY(-s.Height().Half());
+    }
+
+    public static Vector2 MidRightCameraPos(this SpriteRenderer s, Camera c) {
+      Vector2 pos = c.ViewportToWorldPoint(new Vector2(1f, .5f));
+
+      return pos.AddX(s.Width().Half());
+    }
+
     public static Vector2 SignedPos(this SpriteRenderer s) {
       Vector2 pos = s.WorldPos();
 
@@ -65,7 +89,7 @@ namespace Wowsome {
 
     public static SpriteRenderer SetAlpha(this SpriteRenderer renderer, float a) {
       Color curColor = renderer.color;
-      curColor.a = a;
+      curColor.a = a.Clamp(0f, 1f);
       renderer.color = curColor;
 
       return renderer;

@@ -12,7 +12,7 @@ namespace Wowsome.Generic {
     public string id;
     public List<Sprite> sprites = new List<Sprite>();
     public RangeData duration;
-    public RangeData delay;
+    public RangeData delay = new RangeData(0f);
     [Tooltip("The number of time the anim needs to loop e.g. 0 will play 1 time, -1 = infinitely")]
     public int loop;
     [Tooltip("true = play backwards once reached the last idx, false = start over from the first idx again")]

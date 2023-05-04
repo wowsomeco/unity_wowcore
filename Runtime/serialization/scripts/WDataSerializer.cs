@@ -11,32 +11,43 @@ namespace Wowsome.Serialization {
 
   public class JsonDataSerializer : IDataSerializer {
     public void Save<T>(T data, string path, bool isPrettyPrint = false) {
-#if UNITY_EDITOR
-      Debug.Log(path);
-#endif
+      string fullPath = CombinePath(path);
+
+      Print.Info(fullPath);
+
       string jsondata = JsonUtility.ToJson(data, isPrettyPrint);
-      StreamWriter streamWriter = File.CreateText(path);
+
+      StreamWriter streamWriter = File.CreateText(fullPath);
       streamWriter.Write(jsondata);
       streamWriter.Close();
     }
 
     public T Load<T>(string path) {
       if (Exists(path)) {
-        string jsonData = File.ReadAllText(path);
+        string fullPath = CombinePath(path);
+
+        string jsonData = File.ReadAllText(fullPath);
         return JsonUtility.FromJson<T>(jsonData);
       }
+
       return default(T);
     }
 
     public bool Exists(string path) {
-      return File.Exists(path);
+      string fullPath = CombinePath(path);
+
+      return File.Exists(fullPath);
     }
 
     public void Delete(string path) {
-      if (File.Exists(path)) {
-        File.Delete(path);
+      string fullPath = CombinePath(path);
+
+      if (File.Exists(fullPath)) {
+        File.Delete(fullPath);
       }
     }
+
+    string CombinePath(string path) => Path.Combine(Application.persistentDataPath, path);
   }
 
   public class PlayerPrefsSerializer : IDataSerializer {
@@ -61,6 +72,18 @@ namespace Wowsome.Serialization {
       if (!Exists(path)) return;
 
       PlayerPrefs.DeleteKey(path);
+    }
+  }
+
+  public static class CrossPlatformSerializer {
+    public static IDataSerializer Create() {
+      Print.Info(Application.platform);
+
+      if (Application.platform == RuntimePlatform.WebGLPlayer) {
+        return new PlayerPrefsSerializer();
+      }
+
+      return new JsonDataSerializer();
     }
   }
 }

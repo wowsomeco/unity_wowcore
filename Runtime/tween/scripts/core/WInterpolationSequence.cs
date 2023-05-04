@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Wowsome.Generic;
 
 namespace Wowsome.Tween {
   /// <summary>
@@ -15,15 +14,12 @@ namespace Wowsome.Tween {
     /// Observable on done all sequence
     /// </summary>    
     public Action OnDone { get; set; }
-    /// <summary>
-    /// Observable of the current progress
-    /// </summary>    
-    public WObservable<CapacityData> Progress { get; private set; } = new WObservable<CapacityData>(null);
 
-    Queue<TInterpolation> _lerpers = new Queue<TInterpolation>();
-    IEnumerable<TInterpolation> _steps = null;
+    IList<TInterpolation> _steps = null;
+    int _curStepIdx = 0;
+    bool _isDone = false;
 
-    public InterpolationSequence(IEnumerable<TInterpolation> steps, bool autoStart = true) {
+    public InterpolationSequence(IList<TInterpolation> steps, bool autoStart = true) {
       _steps = steps;
 
       if (autoStart) Start();
@@ -31,43 +27,47 @@ namespace Wowsome.Tween {
 
     public InterpolationSequence(params TInterpolation[] steps) {
       _steps = steps;
+
       Start();
     }
 
     public void Start() {
-      _lerpers.Clear();
+      _curStepIdx = -1;
+      _isDone = false;
 
-      foreach (TInterpolation step in _steps) {
-        step.Start();
-        _lerpers.Enqueue(step);
+      SetNext();
+    }
+
+    void SetNext() {
+      ++_curStepIdx;
+
+      if (_curStepIdx >= _steps.Count) {
+        _isDone = true;
+
+        OnDone?.Invoke();
+      } else {
+        var curStep = _steps[_curStepIdx];
+
+        curStep.Start();
+
+        curStep.OnLerp = null;
+        curStep.OnLerp += t => {
+          OnLerp?.Invoke(t);
+        };
+
+        curStep.OnDone = null;
+        curStep.OnDone += () => {
+          SetNext();
+        };
       }
-
-      Progress.Next(new CapacityData(_lerpers.Count));
     }
 
     public bool Update(float dt) {
-      if (_lerpers.Count > 0) {
-        TInterpolation peek = _lerpers.Peek();
-        bool updating = peek.Run(dt);
-        if (updating) {
-          TType cur = peek.Lerp();
-          // trigger the global lerp event
-          OnLerp?.Invoke(cur);
-        } else {
-          _lerpers.Dequeue();
-          // update progress 
-          Progress.Value.Add();
-          Progress.Broadcast();
-          // broadcast done if no more item in the queue
-          if (_lerpers.Count == 0) {
-            OnDone?.Invoke();
-          }
-        }
+      if (_isDone) return false;
 
-        return true;
-      }
+      _steps[_curStepIdx].Run(dt);
 
-      return false;
+      return true;
     }
   }
 }
