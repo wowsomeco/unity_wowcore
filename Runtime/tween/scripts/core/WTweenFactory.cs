@@ -6,7 +6,7 @@ namespace Wowsome.Tween {
   public static class WTweenFactory {
     public class PulseOptions {
       public Vector2 InitScale { get; set; } = Vector2.one;
-      public float ScaleDelta { get; set; } = .05f;
+      public float ScaleDelta { get; set; } = .08f;
       public float TimeMultiplier { get; set; } = 1f;
       public int Count { get; set; } = 1;
       public Easing Easing { get; set; } = Easing.Linear;

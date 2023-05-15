@@ -72,5 +72,15 @@ namespace Wowsome {
     public static Color32 WithAlpha(this Color32 color, byte a) {
       return new Color32(color.r, color.g, color.b, a);
     }
+
+    public static Color CombineColors(params Color[] colors) {
+      Color result = new Color(0, 0, 0, 0);
+      foreach (Color c in colors) {
+        result += c;
+      }
+
+      result /= colors.Length;
+      return result;
+    }
   }
 }

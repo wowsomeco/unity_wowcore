@@ -34,6 +34,8 @@ namespace Wowsome.TwoDee {
       return po;
     }
 
+    public WParticleObject Activate(string id, Transform transform) => Activate(id, transform.WorldPos());
+
     public bool Stop(string id) {
       return _pool.TryRelease(id);
     }
