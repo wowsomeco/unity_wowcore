@@ -9,7 +9,44 @@ namespace Wowsome.Serialization {
     void Delete(string path);
   }
 
-  public class JsonDataSerializer : IDataSerializer {
+  /// <summary>
+  /// Use this to save or load your data under any path you like,
+  /// You need to provide the fullPath e.g. /Assets/x/y etc.
+  /// </summary>
+  public class JsonSerializer : IDataSerializer {
+    public void Save<T>(T data, string fullPath, bool isPrettyPrint = false) {
+      Print.Info(fullPath);
+
+      string jsondata = JsonUtility.ToJson(data, isPrettyPrint);
+
+      StreamWriter streamWriter = File.CreateText(fullPath);
+      streamWriter.Write(jsondata);
+      streamWriter.Close();
+    }
+
+    public T Load<T>(string fullPath) {
+      if (Exists(fullPath)) {
+        string jsonData = File.ReadAllText(fullPath);
+        return JsonUtility.FromJson<T>(jsonData);
+      }
+
+      return default(T);
+    }
+
+    public bool Exists(string fullPath) => File.Exists(fullPath);
+
+    public void Delete(string fullPath) {
+      if (Exists(fullPath)) {
+        File.Delete(fullPath);
+      }
+    }
+  }
+
+  /// <summary>
+  /// Use this to save your data under Application.persistentDataPath,
+  /// Ideal for mobile
+  /// </summary>
+  public class PersistentSerializer : IDataSerializer {
     public void Save<T>(T data, string path, bool isPrettyPrint = false) {
       string fullPath = CombinePath(path);
 
@@ -50,6 +87,10 @@ namespace Wowsome.Serialization {
     string CombinePath(string path) => Path.Combine(Application.persistentDataPath, path);
   }
 
+  /// <summary>
+  /// Use this to save your data in PlayerPrefs path
+  /// Ideal for web
+  /// </summary>
   public class PlayerPrefsSerializer : IDataSerializer {
     public void Save<T>(T data, string path, bool isPrettyPrint = false) {
       string strValue = JsonUtility.ToJson(data);
@@ -83,7 +124,7 @@ namespace Wowsome.Serialization {
         return new PlayerPrefsSerializer();
       }
 
-      return new JsonDataSerializer();
+      return new PersistentSerializer();
     }
   }
 }
