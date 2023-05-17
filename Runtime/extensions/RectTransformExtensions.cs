@@ -295,8 +295,9 @@ namespace Wowsome {
       Vector3 position = corners[0];
 
       Vector2 size = new Vector2(
-          rt.lossyScale.x * rt.rect.size.x,
-          rt.lossyScale.y * rt.rect.size.y);
+        rt.lossyScale.x * rt.rect.size.x,
+        rt.lossyScale.y * rt.rect.size.y
+      );
 
       return new Rect(position, size);
     }
@@ -354,21 +355,6 @@ namespace Wowsome {
     /// <returns><c>true</c> if is at least partially visible from the specified camera; otherwise, <c>false</c>.</returns>
     public static bool IsVisibleFrom(this RectTransform rectTransform, Camera camera) {
       return CountCornersVisibleFrom(rectTransform, camera) > 0; // True if any corners are visible
-    }
-  }
-
-  public static class RectExt {
-    /// <summary>
-    /// Checks the whether these 2 rects are currently intersecting
-    /// based on https://stackoverflow.com/questions/306316/determine-if-two-rectangles-overlap-each-other
-    /// </summary>
-    public static bool Intersects(this Rect r1, Rect r2) {
-      if (r1.xMin < r2.xMax && r1.xMax > r2.xMin &&
-        r1.yMax > r2.yMin && r1.yMin < r2.yMax) {
-        return true;
-      }
-
-      return false;
     }
   }
 }
