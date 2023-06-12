@@ -21,6 +21,8 @@ namespace Wowsome {
       TObject loaded = Resources.Load<TObject>(path);
       if (null != loaded) {
         _resources[path] = loaded;
+      } else {
+        Print.Warn($"cant load resource from {path}");
       }
 
       return loaded;
