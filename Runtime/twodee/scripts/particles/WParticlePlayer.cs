@@ -38,10 +38,5 @@ namespace Wowsome.TwoDee {
         };
       };
     }
-
-    public void UpdateSceneController(float dt) {
-
-    }
   }
 }
-

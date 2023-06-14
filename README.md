@@ -13,22 +13,6 @@ git submodule add git@github.com:wowsomeco/unity_wowcore.git Assets/wcore
 
 from your root project.
 
-## Core Concept
-
-We believe that classic hierarchical initiation is still the best approach for game development e.g. even though Unity makes it easy for us to initalize components by simply adding Awake() as well as Update() methods in them, we're quite against this approach since you can't really control the execution order (don't ever bring up Script Execution Order to hack this issue since you'll end up solving issues with another ones). That's why most if not all of the code in this submodule require you to call the Init() as well as Update(float dt) in them manually. That way we can be sure which script needs to be executed one prior to another in the caller class(es). This also means you can control the Update lifecycle of the children objects when the game is paused, all you need to do is put something condition to return if it's currently paused prior to calling the children update methods and all the children gameobject will automagically get paused e.g.
-
-```csharp
-// the game controller update
-public void UpdateSceneController(float dt) {
-  // when paused, it will return and wont call the update loop below
-  if (IsPaused) return;
-
-  for (int i = 0; i < _gameObjects.Count; ++i) {
-    _gameObjects[i].UpdateObject(dt);
-  }
-}
-```
-
 ## Contents
 
 - WEngine

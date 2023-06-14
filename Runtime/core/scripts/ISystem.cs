@@ -15,6 +15,5 @@
 
   public interface ISceneController {
     void InitSceneController(ISceneStarter sceneStarter);
-    void UpdateSceneController(float dt);
   }
 }

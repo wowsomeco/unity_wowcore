@@ -50,11 +50,11 @@ namespace Wowsome {
     }
 
     public static Vector2 Pos(this Image img) {
-      return img.rectTransform.Pos();
+      return img.rectTransform.LocalPos();
     }
 
     public static Image SetPos(this Image img, Vector2 pos) {
-      img.rectTransform.SetPos(pos);
+      img.rectTransform.SetLocalPos(pos);
       return img;
     }
 
@@ -64,12 +64,12 @@ namespace Wowsome {
     }
 
     public static Image SetLocalX(this Image img, float x) {
-      img.rectTransform.SetX(x);
+      img.rectTransform.SetLocalX(x);
       return img;
     }
 
     public static Image SetLocalY(this Image img, float y) {
-      img.rectTransform.SetY(y);
+      img.rectTransform.SetLocalY(y);
       return img;
     }
 

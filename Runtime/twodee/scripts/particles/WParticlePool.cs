@@ -63,13 +63,15 @@ namespace Wowsome.TwoDee {
       };
     }
 
-    public void UpdateSceneController(float dt) {
+    #endregion
+
+    void Update() {
+      float dt = Time.deltaTime;
+
       foreach (WParticleObject obj in _objects) {
         obj.UpdateObject(dt);
       }
     }
-
-    #endregion
 
     void Clone(PrefabConfig config) {
       for (int i = 0; i < config.initCount; ++i) {
@@ -81,4 +83,3 @@ namespace Wowsome.TwoDee {
     }
   }
 }
-

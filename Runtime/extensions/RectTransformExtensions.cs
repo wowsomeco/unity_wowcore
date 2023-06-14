@@ -35,7 +35,7 @@ namespace Wowsome {
     }
 
     public static RectTransform Normalize(this RectTransform rt) {
-      rt.SetPos(Vector2.zero);
+      rt.SetLocalPos(Vector2.zero);
       rt.SetScale(Vector2.one);
       rt.SetRotation(0f);
       return rt;
@@ -52,73 +52,73 @@ namespace Wowsome {
 
     #region Position
 
-    public static RectTransform SetPos(this RectTransform rt, Vector2 pos) {
+    public static RectTransform SetLocalPos(this RectTransform rt, Vector2 pos) {
       rt.anchoredPosition = pos;
       return rt;
     }
 
-    public static RectTransform SetPos(this RectTransform rt, float[] pos) {
-      rt.SetPos(new Vector2(pos[0], pos[1]));
+    public static RectTransform SetLocalPos(this RectTransform rt, float[] pos) {
+      rt.SetLocalPos(new Vector2(pos[0], pos[1]));
       return rt;
     }
 
-    public static RectTransform SetPos(this RectTransform rt, List<float> pos) {
-      rt.SetPos(new Vector2(pos[0], pos[1]));
+    public static RectTransform SetLocalPos(this RectTransform rt, List<float> pos) {
+      rt.SetLocalPos(new Vector2(pos[0], pos[1]));
       return rt;
     }
 
     public static RectTransform SetWorldPos(this RectTransform rt, Vector2 pos) {
-      rt.transform.SetPos(pos);
+      rt.transform.SetWorldPos(pos);
       return rt;
     }
 
-    public static RectTransform AddPosY(this RectTransform rt, float delta) {
-      Vector2 addPos = rt.Pos();
+    public static RectTransform AddLocalPosY(this RectTransform rt, float delta) {
+      Vector2 addPos = rt.LocalPos();
       addPos.y += delta;
-      rt.SetPos(addPos);
+      rt.SetLocalPos(addPos);
 
       return rt;
     }
 
-    public static RectTransform AddPosX(this RectTransform rt, float delta) {
-      Vector2 addPos = rt.Pos();
+    public static RectTransform AddLocalPosX(this RectTransform rt, float delta) {
+      Vector2 addPos = rt.LocalPos();
       addPos.x += delta;
-      rt.SetPos(addPos);
+      rt.SetLocalPos(addPos);
 
       return rt;
     }
 
-    public static RectTransform AddPos(this RectTransform rt, Vector2 offset) {
-      Vector2 pos = rt.Pos();
-      rt.SetPos(pos + offset);
+    public static RectTransform AddLocalPos(this RectTransform rt, Vector2 offset) {
+      Vector2 pos = rt.LocalPos();
+      rt.SetLocalPos(pos + offset);
 
       return rt;
     }
 
-    public static Vector2 Pos(this RectTransform rt) {
+    public static Vector2 LocalPos(this RectTransform rt) {
       return rt.anchoredPosition;
     }
 
-    public static float X(this RectTransform rt) {
-      return rt.Pos().x;
+    public static float LocalX(this RectTransform rt) {
+      return rt.LocalPos().x;
     }
 
-    public static RectTransform SetX(this RectTransform rt, float x) {
-      Vector2 pos = rt.Pos();
+    public static RectTransform SetLocalX(this RectTransform rt, float x) {
+      Vector2 pos = rt.LocalPos();
       pos.x = x;
-      rt.SetPos(pos);
+      rt.SetLocalPos(pos);
 
       return rt;
     }
 
-    public static float Y(this RectTransform rt) {
-      return rt.Pos().y;
+    public static float LocalY(this RectTransform rt) {
+      return rt.LocalPos().y;
     }
 
-    public static RectTransform SetY(this RectTransform rt, float y) {
-      Vector2 pos = rt.Pos();
+    public static RectTransform SetLocalY(this RectTransform rt, float y) {
+      Vector2 pos = rt.LocalPos();
       pos.y = y;
-      rt.SetPos(pos);
+      rt.SetLocalPos(pos);
 
       return rt;
     }
@@ -201,7 +201,7 @@ namespace Wowsome {
 
     public static void SetSize(this RectTransform rt, Rect rect, bool ignorePos = false) {
       if (!ignorePos) {
-        rt.SetPos(new Vector2(rect.x, rect.y));
+        rt.SetLocalPos(new Vector2(rect.x, rect.y));
       }
       rt.SetSize(new Vector2(rect.width, rect.height));
     }
@@ -240,7 +240,7 @@ namespace Wowsome {
     public static void Copy(this RectTransform rectTransform, RectTransform other) {
       rectTransform.SetSize(other.Size());
       rectTransform.SetScale(other.Scale());
-      rectTransform.SetPos(other.Pos());
+      rectTransform.SetLocalPos(other.LocalPos());
     }
 
     public static void SetOneOfSize(this RectTransform rt, int idx, float value) {

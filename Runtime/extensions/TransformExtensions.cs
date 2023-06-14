@@ -2,29 +2,29 @@
 
 namespace Wowsome {
   public static class TransformExt {
-    public static Transform SetPos(this Transform t, Vector2 pos) {
+    public static Transform SetWorldPos(this Transform t, Vector2 pos) {
       t.position = new Vector3(pos.x, pos.y, t.position.z);
 
       return t;
     }
 
-    public static Transform SetPos(this Transform t, Vector3 pos) {
+    public static Transform SetWorldPos(this Transform t, Vector3 pos) {
       t.position = pos;
 
       return t;
     }
 
-    public static Transform SetPos(this Transform t, float x, float y) {
-      return t.SetPos(new Vector2(x, y));
+    public static Transform SetWorldPos(this Transform t, float x, float y) {
+      return t.SetWorldPos(new Vector2(x, y));
     }
 
-    public static Transform SetPos(this Transform t, Transform other) {
-      return t.SetPos(other.position);
+    public static Transform SetWorldPos(this Transform t, Transform other) {
+      return t.SetWorldPos(other.position);
     }
 
-    public static Transform AddPos(this Transform t, Vector2 pos) {
+    public static Transform AddWorldPos(this Transform t, Vector2 pos) {
       Vector2 curPos = t.WorldPos();
-      return t.SetPos(curPos.x + pos.x, curPos.y + pos.y);
+      return t.SetWorldPos(curPos.x + pos.x, curPos.y + pos.y);
     }
 
     public static Transform SetLocalPos(this Transform t, Vector2 pos) {
@@ -47,24 +47,24 @@ namespace Wowsome {
       return t;
     }
 
-    public static float X(this Transform t) => t.position.x;
+    public static float WorldX(this Transform t) => t.position.x;
 
-    public static Transform AddX(this Transform t, float x) {
+    public static Transform AddWorldX(this Transform t, float x) {
       Vector3 curPos = t.position;
       t.position = new Vector3(curPos.x + x, curPos.y, curPos.z);
 
       return t;
     }
 
-    public static Transform SetY(this Transform t, float y) {
+    public static Transform SetWorldY(this Transform t, float y) {
       t.position = new Vector3(t.position.x, y, t.position.z);
 
       return t;
     }
 
-    public static float Y(this Transform t) => t.position.y;
+    public static float WorldY(this Transform t) => t.position.y;
 
-    public static Transform AddY(this Transform t, float y) {
+    public static Transform AddWorldY(this Transform t, float y) {
       Vector3 curPos = t.position;
       t.position = new Vector3(curPos.x, curPos.y + y, curPos.z);
 

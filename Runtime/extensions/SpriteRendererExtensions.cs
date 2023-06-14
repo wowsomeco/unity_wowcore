@@ -153,7 +153,7 @@ namespace Wowsome {
     }
 
     public static SpriteRenderer SetPos(this SpriteRenderer renderer, Vector2 worldPos) {
-      renderer.transform.SetPos(worldPos);
+      renderer.transform.SetWorldPos(worldPos);
 
       return renderer;
     }
@@ -165,7 +165,7 @@ namespace Wowsome {
     }
 
     public static SpriteRenderer AddPos(this SpriteRenderer renderer, Vector2 delta) {
-      renderer.transform.AddPos(delta);
+      renderer.transform.AddWorldPos(delta);
       return renderer;
     }
 
@@ -182,7 +182,7 @@ namespace Wowsome {
     }
 
     public static SpriteRenderer SetY(this SpriteRenderer renderer, float y) {
-      renderer.transform.SetY(y);
+      renderer.transform.SetWorldY(y);
 
       return renderer;
     }
