@@ -41,7 +41,7 @@ namespace Wowsome {
 
     public static Transform SetLocalY(this Transform t, float y) => t.SetLocalPos(new Vector2(t.localPosition.x, y));
 
-    public static Transform SetX(this Transform t, float x) {
+    public static Transform SetWorldX(this Transform t, float x) {
       t.position = new Vector3(x, t.position.y, t.position.z);
 
       return t;

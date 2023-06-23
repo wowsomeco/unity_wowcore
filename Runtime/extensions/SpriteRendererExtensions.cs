@@ -169,8 +169,8 @@ namespace Wowsome {
       return renderer;
     }
 
-    public static SpriteRenderer SetX(this SpriteRenderer renderer, float x) {
-      renderer.transform.SetX(x);
+    public static SpriteRenderer SetWorldX(this SpriteRenderer renderer, float x) {
+      renderer.transform.SetWorldX(x);
 
       return renderer;
     }
@@ -181,7 +181,7 @@ namespace Wowsome {
       return renderer;
     }
 
-    public static SpriteRenderer SetY(this SpriteRenderer renderer, float y) {
+    public static SpriteRenderer SetWorldY(this SpriteRenderer renderer, float y) {
       renderer.transform.SetWorldY(y);
 
       return renderer;
