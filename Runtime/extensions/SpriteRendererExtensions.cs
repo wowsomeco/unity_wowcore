@@ -14,7 +14,7 @@ namespace Wowsome {
 
     public static SpriteRenderer AnchorToCamera(this SpriteRenderer s, Camera c, Vector3 screenAnchor) {
       Vector2 pos = c.ViewportToWorldPoint(screenAnchor);
-      return s.SetPos(pos);
+      return s.SetWorldPos(pos);
     }
 
     public static Vector2 MidLeftCameraPos(this SpriteRenderer s, Camera c) {
@@ -152,7 +152,7 @@ namespace Wowsome {
       return renderer;
     }
 
-    public static SpriteRenderer SetPos(this SpriteRenderer renderer, Vector2 worldPos) {
+    public static SpriteRenderer SetWorldPos(this SpriteRenderer renderer, Vector2 worldPos) {
       renderer.transform.SetWorldPos(worldPos);
 
       return renderer;
@@ -164,7 +164,7 @@ namespace Wowsome {
       return renderer;
     }
 
-    public static SpriteRenderer AddPos(this SpriteRenderer renderer, Vector2 delta) {
+    public static SpriteRenderer AddWorldPos(this SpriteRenderer renderer, Vector2 delta) {
       renderer.transform.AddWorldPos(delta);
       return renderer;
     }
@@ -175,11 +175,17 @@ namespace Wowsome {
       return renderer;
     }
 
+    public static float WorldX(this SpriteRenderer renderer) {
+      return renderer.transform.WorldX();
+    }
+
     public static SpriteRenderer SetLocalX(this SpriteRenderer renderer, float x) {
       renderer.transform.SetLocalX(x);
 
       return renderer;
     }
+
+    public static float LocalX(this SpriteRenderer renderer) => renderer.transform.LocalX();
 
     public static SpriteRenderer SetWorldY(this SpriteRenderer renderer, float y) {
       renderer.transform.SetWorldY(y);
@@ -187,11 +193,17 @@ namespace Wowsome {
       return renderer;
     }
 
+    public static float WorldY(this SpriteRenderer renderer) {
+      return renderer.transform.WorldY();
+    }
+
     public static SpriteRenderer SetLocalY(this SpriteRenderer renderer, float y) {
       renderer.transform.SetLocalY(y);
 
       return renderer;
     }
+
+    public static float LocalY(this SpriteRenderer renderer) => renderer.transform.LocalY();
 
     public static SpriteRenderer SetParent(this SpriteRenderer renderer, Transform parent) {
       renderer.transform.SetParent(parent);
