@@ -11,5 +11,15 @@ namespace Wowsome {
 
       return obj;
     }
+
+    public static TObject LoadJSON<TObject>(this string path, bool assertIfNull = true) {
+      TextAsset ta = Resources.Load<TextAsset>(path);
+
+      if (assertIfNull) {
+        Assert.Null<TObject>(ta, $"Can't load JSON from path = {path}");
+      }
+
+      return JsonUtility.FromJson<TObject>(ta.text);
+    }
   }
 }
