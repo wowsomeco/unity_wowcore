@@ -183,6 +183,8 @@ namespace Wowsome.Tween {
   public class InterpolationInt : InterpolationBase<int> {
     public InterpolationInt(Timing timing, int f, int t, bool autoPlay = false) : base(timing, f, t, autoPlay) { }
 
+    public InterpolationInt(int f, int t, float duration, float delay = 0f, bool autoPlay = true) : base(new Timing(duration, delay), f, t, autoPlay) { }
+
     public override int Lerp() {
       return (int)Mathf.Lerp(_from, _to, Time.Value);
     }
