@@ -12,6 +12,16 @@ namespace Wowsome {
       return obj;
     }
 
+    public static TComponent CloneResource<TComponent>(this string path, Transform parent, bool assertIfNull = true) where TComponent : UnityEngine.Component {
+      TComponent obj = path.LoadResource<TComponent>();
+
+      if (null != obj) {
+        return obj.Clone<TComponent>(parent);
+      }
+
+      return null;
+    }
+
     public static TObject LoadJSON<TObject>(this string path, bool assertIfNull = true) {
       TextAsset ta = Resources.Load<TextAsset>(path);
 
