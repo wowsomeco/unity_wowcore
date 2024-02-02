@@ -237,6 +237,15 @@ namespace Wowsome {
       }
     }
 
+    public static void SetMinSize(this RectTransform trans, float minSize) {
+      Vector2 newSize = trans.Size();
+      float biggest = Mathf.Max(newSize.x, newSize.y);
+      if (biggest < minSize) {
+        float ratio = minSize / biggest;
+        SetSize(trans, newSize *= ratio);
+      }
+    }
+
     public static void Copy(this RectTransform rectTransform, RectTransform other) {
       rectTransform.SetSize(other.Size());
       rectTransform.SetScale(other.Scale());
