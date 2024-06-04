@@ -51,5 +51,9 @@ namespace Wowsome {
     public static void Error(params object[] msg) {
       Log(() => "red", msg);
     }
+
+    public static void White(params object[] msg) {
+      Log(() => "white", msg);
+    }
   }
 }
