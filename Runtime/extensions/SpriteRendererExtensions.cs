@@ -61,6 +61,16 @@ namespace Wowsome {
       return lhs.bounds.Intersects(rhs.bounds);
     }
 
+    public static bool Intersects(this IList<SpriteRenderer> renderers, SpriteRenderer other) {
+      foreach (SpriteRenderer sr in renderers) {
+        if (sr.bounds.Intersects(other.bounds)) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
     public static bool Contains(this SpriteRenderer sr, Vector2 point) {
       return sr.bounds.Contains(point.ToVector3().SetZ(sr.transform.position.z));
     }
