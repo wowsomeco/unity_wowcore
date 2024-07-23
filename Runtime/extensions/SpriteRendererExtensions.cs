@@ -93,6 +93,12 @@ namespace Wowsome {
       return renderer;
     }
 
+    public static SpriteRenderer SetMaterial(this SpriteRenderer renderer, Material mat) {
+      renderer.material = mat;
+
+      return renderer;
+    }
+
     public static float Alpha(this SpriteRenderer renderer) {
       return renderer.color.a;
     }
