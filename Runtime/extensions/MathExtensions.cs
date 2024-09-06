@@ -8,6 +8,10 @@ namespace Wowsome {
       return val.CompareTo(lower) < 0 ? lower : val.CompareTo(upper) > 0 ? upper : val;
     }
 
+    public static T ClampMin<T>(this T val, T lower) where T : IComparable<T> {
+      return val.CompareTo(lower) < 0 ? lower : val;
+    }
+
     public static System.Random GetRandom() {
       return new System.Random(Guid.NewGuid().GetHashCode());
     }
