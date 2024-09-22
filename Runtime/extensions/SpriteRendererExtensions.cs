@@ -233,6 +233,12 @@ namespace Wowsome {
       return renderer;
     }
 
+    public static SpriteRenderer AddSortingOrder(this SpriteRenderer renderer, int delta) {
+      renderer.sortingOrder += delta;
+
+      return renderer;
+    }
+
     public static Vector3 Size(this SpriteRenderer renderer) => renderer.bounds.size;
 
     public static float Width(this SpriteRenderer renderer) => renderer.Size().x;

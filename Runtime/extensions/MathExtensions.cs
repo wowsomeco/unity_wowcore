@@ -12,6 +12,10 @@ namespace Wowsome {
       return val.CompareTo(lower) < 0 ? lower : val;
     }
 
+    public static T ClampMax<T>(this T val, T upper) where T : IComparable<T> {
+      return val.CompareTo(upper) > 0 ? upper : val;
+    }
+
     public static System.Random GetRandom() {
       return new System.Random(Guid.NewGuid().GetHashCode());
     }
