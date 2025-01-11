@@ -99,6 +99,21 @@ namespace Wowsome {
   }
 
   [Serializable]
+  public struct RangeDataInt {
+    public int min;
+    public int max;
+
+    public int GetRand() {
+      if (min == max) {
+        return max;
+      }
+
+      int rand = MathExtensions.RandomBetween(min, max);
+      return rand;
+    }
+  }
+
+  [Serializable]
   public class TimeData {
     public RangeData duration;
     public RangeData delay;
