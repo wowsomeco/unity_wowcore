@@ -132,5 +132,12 @@ namespace Wowsome {
     public static Image Normalize(this Image img) {
       return img.SetAlpha(1f).SetRotation(0f).SetScale(1f);
     }
+
+    public static Vector2 TopCenterCameraPos(this Image img, Camera c) {
+      Vector2 pos = c.ViewportToWorldPoint(new Vector2(0.5f, 1f));
+      Rect rect = img.rectTransform.RectWorldPos();
+
+      return pos.AddY(rect.size.y.Half());
+    }
   }
 }
