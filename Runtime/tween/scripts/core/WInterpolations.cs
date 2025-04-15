@@ -175,6 +175,8 @@ namespace Wowsome.Tween {
 
     public InterpolationFloat(float f, float t, Timing timing, float delay = 0f) : this(timing, f, t, true) { }
 
+    public InterpolationFloat(float duration, float delay = 0f) : this(new Timing(duration, delay), 0f, 1f, true) { }
+
     public override float Lerp() {
       return Mathf.Lerp(_from, _to, Time.Value);
     }

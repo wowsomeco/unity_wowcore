@@ -23,6 +23,13 @@ namespace Wowsome.Tween {
     bool _isBackwards = false;
     ObservableTimer _timer = null;
 
+    public WPingPong(float duration, int count = -1) : this(new PingPongOptions {
+      From = 0f,
+      To = 1f,
+      Duration = duration,
+      Count = count
+    }) { }
+
     public WPingPong(float f, float t, float duration, int count = -1) : this(new PingPongOptions {
       From = f,
       To = t,
