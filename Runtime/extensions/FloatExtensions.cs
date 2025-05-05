@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace Wowsome {
   public static class FloatExt {
+    public static float Parabola(this float t) => 4f * t * (1f - t);
+
     public static bool IsWithin(this float v, float min, float max) {
       return v > min && v < max;
     }
